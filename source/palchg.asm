@@ -8,6 +8,10 @@ rdslt		:= 0x000C
 enaslt		:= 0x0024
 romid		:= 0x002D
 exptbl		:= 0xFCC1
+vdp_port0	:= 0x98
+vdp_port1	:= 0x99
+vdp_port2	:= 0x9A
+vdp_port3	:= 0x9B
 
 			org		0x4000
 			ds		"AB"					; ID
@@ -34,12 +38,16 @@ start_address::
 			call	get_game_slot
 			; ハッシュを求める
 			call	nz, get_hash
-			; ハッシュに対応するカラーパレットをセットする
-			
+			; ハッシュに対応するカラーパレットセット番号を求める
+			call	hash_to_palette_num
+			; カラーパレットセット番号 (palette_set_num) に対応するパレットをセットする
+			call	update_palette_set_address
+			call	update_palette
 			; [ESC]キーをチェックして、押されていなければ BIOS へ戻る
-			
+			call	check_esc_key			; ESCが押されていれば Zf = 1, 押されていなければ Zf = 0
+			ret		nz						; 押されていない場合、BIOSへ戻る
 			; 設定メニュー
-			
+			ret								; ★まだ作ってない
 			endscope
 
 ; =============================================================================
@@ -111,6 +119,7 @@ get_game_slot::
 			add		a, exptbl & 255			; exptbl の対象領域を求める
 			ld		l, a
 			ld		h, exptbl >> 8			; HL = exptbl[ primary_slot(rom_slot) ]
+			ld		a, b
 			jp		go_next_slot
 
 	slot_loop:
@@ -225,11 +234,155 @@ get_hash_sub_end::
 			org		get_hash_sub_on_rom + (get_hash_sub - hash_sub)
 
 ; =============================================================================
+;	[ESC]キーが押されているか確認する
+; =============================================================================
+			scope	check_esc_key
+check_esc_key::
+			di
+			in		a, [ 0xAA ]			; PPI port B
+			and		a, 0b11110000
+			or		a, 7				; MSXキーマトリクス 行7 (bit2 が ESC に対応。押されてると 0)
+			out		[ 0xAA ], a			; PPI port B : キーマトリクス 行7 を選択する
+			nop
+			in		a, [ 0xA9 ]			; MSXキーマトリクス
+			ei
+			and		a, 0b00000100		; ESCキーを抽出。押されてれば 0 になるので Zf = 1, 押されていなければ Zf = 0
+			ret
+			endscope
+
+; =============================================================================
+;	hash値に対応する palette_set_num を求める
+; =============================================================================
+			scope	hash_to_palette_num
+hash_to_palette_num::
+			ld		bc, [ hash ]
+			ld		hl, hash_table
+		loop:
+			; hash_table配列の現在の参照要素の hash値を DE に、palette_set_numを A に格納
+			ld		e, [hl]
+			inc		hl
+			ld		d, [hl]
+			inc		hl
+			ld		a, [hl]
+			inc		hl
+			; 番兵(palette_set_num = 0xFF)か？
+			inc		a					; 番兵ならここで 0x00 になる
+			jr		z, not_found
+			dec		a					; inc a をキャンセルして戻す
+			; DE と BC を比較する
+			ex		de, hl
+			or		a, a
+			sbc		hl, bc
+			ex		de, hl
+			jr		nz, loop
+			; hash_table に該当が見つからなかった場合は、強制的に palette_set_num = 0 にする
+			; hash_table に該当が見つかった場合は、palette_set_num = hash_table から引いた値にする
+		not_found:
+			ld		[ palette_set_num ], a
+			ret
+			endscope
+
+; =============================================================================
+;	palette_set_num に対応する palette_set のアドレスを求める
+; =============================================================================
+			scope	update_palette_set_address
+update_palette_set_address::
+			; アドレス計算
+			ld		a, [ palette_set_num ]
+			ld		l, a
+			ld		h, 0
+			add		hl, hl
+			add		hl, hl
+			add		hl, hl
+			add		hl, hl
+			add		hl, hl
+			ld		de, palette_set_array
+			add		hl, de					; HL = palette_set_array + [palette_set_num] * 32
+			; 求めたアドレスを変数に保存
+			ld		[ palette_set_address ], hl
+			ret
+			endscope
+
+; =============================================================================
+;	palette_set_address に保存されてるアドレスにあるパレット値に基づいて
+;	カラーパレットを変更する
+; =============================================================================
+			scope	update_palette
+update_palette::
+			; VDP R#16 = 0 : palette index = 0
+			di
+			xor		a, a
+			ld		[ vdp_port1 ], a
+			ld		a, 0x80 | 16
+			ld		[ vdp_port1 ], a
+			ei
+			; 16 palette (32byte) 設定する
+			ld		hl, [ palette_set_address ]
+			ld		bc, (32 << 8) | vdp_port3
+			otir
+			ret
+			endscope
+
+; =============================================================================
+;	カラーパレットセット（32セット）
+; =============================================================================
+palette		macro	vr, vg, vb
+			db		(vb & 7) | ((vr & 7) << 4)
+			db		(vg & 7)
+			endm
+
+palette_set_array::
+			include	"palette00.asm"
+			include	"palette01.asm"
+			include	"palette02.asm"
+			include	"palette03.asm"
+			include	"palette04.asm"
+			include	"palette05.asm"
+			include	"palette06.asm"
+			include	"palette07.asm"
+			include	"palette08.asm"
+			include	"palette09.asm"
+			include	"palette10.asm"
+			include	"palette11.asm"
+			include	"palette12.asm"
+			include	"palette13.asm"
+			include	"palette14.asm"
+			include	"palette15.asm"
+			include	"palette16.asm"
+			include	"palette17.asm"
+			include	"palette18.asm"
+			include	"palette19.asm"
+			include	"palette20.asm"
+			include	"palette21.asm"
+			include	"palette22.asm"
+			include	"palette23.asm"
+			include	"palette24.asm"
+			include	"palette25.asm"
+			include	"palette26.asm"
+			include	"palette27.asm"
+			include	"palette28.asm"
+			include	"palette29.asm"
+			include	"palette30.asm"
+			include	"palette31.asm"
+
+; =============================================================================
+;	hash値とパレットセットの対応表
+; =============================================================================
+hash_entry	macro	vhash, vpalette_set_num
+			dw		vhash
+			db		vpalette_set_num
+			endm
+
+			include	"hash_to_palette.asm"
+
+; =============================================================================
 ;	ワークエリア
 ; =============================================================================
 
-rom_slot	:= 0xC000						; 1byte  : このROMが装着されているスロットのスロット番号
-signature	:= rom_slot + 1					; 2bytes : ゲームカートリッジの探索時のワークエリア
-cartridge	:= signature + 2				; 1byte  : ゲームカートリッジのスロット番号、見つからない場合は 0x00
-hash		:= cartridge + 1				; 2bytes : ゲームカートリッジのハッシュ値
-hash_sub	:= hash + 2						; hash_sub_size bytes: ハッシュ計算ルーチン置き場
+rom_slot			:= 0xC000						; 1byte  : このROMが装着されているスロットのスロット番号
+signature			:= rom_slot + 1					; 2bytes : ゲームカートリッジの探索時のワークエリア
+cartridge			:= signature + 2				; 1byte  : ゲームカートリッジのスロット番号、見つからない場合は 0x00
+palette_set_address	:= cartridge + 1				; 2bytes : 選択したパレットセットのアドレス
+hash				:= palette_set_address + 2		; 2bytes : ゲームカートリッジのハッシュ値
+palette_set_num		:= hash + 2						; 1byte  : 選択中のパレットセット番号
+hash_sub			:= hash + 2						; hash_sub_size bytes: ハッシュ計算ルーチン置き場
