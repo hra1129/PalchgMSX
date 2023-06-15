@@ -231,7 +231,7 @@ get_hash_sub::
 get_hash_sub_end::
 			endscope
 
-			org		get_hash_sub_on_rom + (get_hash_sub - hash_sub)
+			org		get_hash_sub_on_rom + (get_hash_sub_end - get_hash_sub)
 
 ; =============================================================================
 ;	[ESC]ƒL[‚ª‰Ÿ‚³‚ê‚Ä‚¢‚é‚©Šm”F‚·‚é
@@ -312,13 +312,13 @@ update_palette::
 			; VDP R#16 = 0 : palette index = 0
 			di
 			xor		a, a
-			ld		[ vdp_port1 ], a
+			out		[ vdp_port1 ], a
 			ld		a, 0x80 | 16
-			ld		[ vdp_port1 ], a
+			out		[ vdp_port1 ], a
 			ei
 			; 16 palette (32byte) İ’è‚·‚é
 			ld		hl, [ palette_set_address ]
-			ld		bc, (32 << 8) | vdp_port3
+			ld		bc, (32 << 8) | vdp_port2
 			otir
 			ret
 			endscope
@@ -385,4 +385,4 @@ cartridge			:= signature + 2				; 1byte  : ƒQ[ƒ€ƒJ[ƒgƒŠƒbƒW‚ÌƒXƒƒbƒg”Ô†AŒ©‚
 palette_set_address	:= cartridge + 1				; 2bytes : ‘I‘ğ‚µ‚½ƒpƒŒƒbƒgƒZƒbƒg‚ÌƒAƒhƒŒƒX
 hash				:= palette_set_address + 2		; 2bytes : ƒQ[ƒ€ƒJ[ƒgƒŠƒbƒW‚ÌƒnƒbƒVƒ…’l
 palette_set_num		:= hash + 2						; 1byte  : ‘I‘ğ’†‚ÌƒpƒŒƒbƒgƒZƒbƒg”Ô†
-hash_sub			:= hash + 2						; hash_sub_size bytes: ƒnƒbƒVƒ…ŒvZƒ‹[ƒ`ƒ“’u‚«ê
+hash_sub			:= palette_set_num + 1			; hash_sub_size bytes: ƒnƒbƒVƒ…ŒvZƒ‹[ƒ`ƒ“’u‚«ê
