@@ -7,11 +7,36 @@
 rdslt		:= 0x000C
 enaslt		:= 0x0024
 romid		:= 0x002D
+setwrt		:= 0x0053
+ldirvm		:= 0x005C
+chgmod		:= 0x005F
+gtstck		:= 0x00D5
+gttrig		:= 0x00D8
+cgpnt		:= 0xF91F						; font address ( slot#(1byte), address(2bytes) )
 exptbl		:= 0xFCC1
 vdp_port0	:= 0x98
 vdp_port1	:= 0x99
 vdp_port2	:= 0x9A
 vdp_port3	:= 0x9B
+rg0sav		:= 0xF3DF
+rg1sav		:= 0xF3E0
+rg2sav		:= 0xF3E1
+rg3sav		:= 0xF3E2
+rg4sav		:= 0xF3E3
+rg5sav		:= 0xF3E4
+rg6sav		:= 0xF3E5
+rg7sav		:= 0xF3E6
+rg8sav		:= 0xFFE7
+
+locate		macro	vx, vy
+			ld		hl, (vy << 8) | vx
+			call	set_locate
+			endm
+
+print		macro	str
+			ld		de, str
+			call	print_de_string
+			endm
 
 			org		0x4000
 			ds		"AB"					; ID
@@ -43,11 +68,102 @@ start_address::
 			; カラーパレットセット番号 (palette_set_num) に対応するパレットをセットする
 			call	update_palette_set_address
 			call	update_palette
-			; [ESC]キーをチェックして、押されていなければ BIOS へ戻る
+			; [ESC]キーをチェックして、押されていればメニューへ入る
 			call	check_esc_key			; ESCが押されていれば Zf = 1, 押されていなければ Zf = 0
-			ret		nz						; 押されていない場合、BIOSへ戻る
-			; 設定メニュー
+			jp		z, enter_menu			; 押されている場合、メニューへ。
+			; ゲームパッド1 の Bボタン をチェックして、押されていなければ BIOS へ戻る
+			ld		a, 3
+			call	gttrig
+			or		a, a
+			ret		z
+		enter_menu::
+			; 設定メニューのための初期化
+			ld		a, 1
+			call	chgmod					; SCREEN 1
+			; スプライト2倍拡大, 16x16
+			ld		a, [ rg1sav ]
+			or		a, 0b00000011
+			di
+			out		[ vdp_port1 ], a
+			ld		a, 0x80 | 1
+			out		[ vdp_port1 ], a
+			ei
+			; パレット#0 を不透明にする
+			ld		a, [ rg8sav ]
+			or		a, 0b00100000
+			di
+			out		[ vdp_port1 ], a
+			ld		a, 0x80 | 8
+			out		[ vdp_port1 ], a
+			ei
+			; フォントを設定
+			ld		hl, font_data
+			ld		de, 0x0000
+			ld		bc, 8 * 256
+			call	ldirvm
+			; スプライトを設定
+			ld		hl, sprite_pattern_data
+			ld		de, 0x3800
+			ld		bc, 32
+			call	ldirvm
+			ld		hl, sprite_attribute_data
+			ld		de, 0x1B00
+			ld		bc, 4 * 16 + 1
+			call	ldirvm
+			; 文字を表示
+			locate	7, 0
+			print	s_title
+		st:
+			jp		st
 			ret								; ★まだ作ってない
+			endscope
+
+; =============================================================================
+;	set_locate
+;	input:
+;		L .... X座標
+;		H .... Y座標
+;	output:
+;		なし
+;	break:
+;		AF, HL
+; =============================================================================
+			scope	set_locate
+set_locate::
+			ld		a, h					; A = 0b000YYyyy
+			rrca
+			rrca
+			rrca							; A = 0byyy000YY
+			ld		h, a					; H = 0byyy000YY
+			and		a, 0b11100000			; A = 0byyy00000
+			or		a, l					; L = 0b000XXXXX
+			di
+			out		[ vdp_port1 ], a		; set VRAM address LSB 8bit
+			ld		a, h					; A = 0byyy000YY
+			and		a, 0b00000011			; A = 0b000000YY
+			or		a, 0b01011000			; set VRAM write bit and offset 0x1800
+			out		[ vdp_port1 ], a		; set VRAM address MSB 2bit
+			ei
+			ret
+			endscope
+
+; =============================================================================
+;	PRINT DE (ASCII-Z string)
+;	input:
+;		DE ... ASCII-Z文字列
+;	output:
+;		DE ... 指定された文字列の最後の 0 を示すアドレス
+;	break:
+;		AF, DE
+; =============================================================================
+			scope	print_de_string
+print_de_string::
+			ld		a, [de]
+			or		a, a
+			ret		z
+			out		[ vdp_port0 ], a
+			inc		de
+			jr		print_de_string
 			endscope
 
 ; =============================================================================
@@ -322,6 +438,85 @@ update_palette::
 			otir
 			ret
 			endscope
+
+; =============================================================================
+;	フォントデータ
+; =============================================================================
+font_data::
+			include	"font.asm"
+
+; =============================================================================
+;	スプライトデータ
+;	16ドット x 16ドット 2倍拡大スプライトを 4x4 で並べる
+;	1個水平32ドット、4個で 128ドットなので、左にセンタリング 64ドット
+; =============================================================================
+sprite_pattern_data::
+			db		0b01111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b11111111
+			db		0b01111111
+			db		0b00000000
+
+			db		0b11111100
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111110
+			db		0b11111100
+			db		0b00000000
+
+sprite_attribute_data::
+;			  		Y          , X          , pat, color
+			db		63 + 32 * 0, 64 + 32 * 0, 0  , 0
+			db		63 + 32 * 0, 64 + 32 * 1, 0  , 1
+			db		63 + 32 * 0, 64 + 32 * 2, 0  , 2
+			db		63 + 32 * 0, 64 + 32 * 3, 0  , 3
+
+			db		63 + 32 * 1, 64 + 32 * 0, 0  , 4
+			db		63 + 32 * 1, 64 + 32 * 1, 0  , 5
+			db		63 + 32 * 1, 64 + 32 * 2, 0  , 6
+			db		63 + 32 * 1, 64 + 32 * 3, 0  , 7
+
+			db		63 + 32 * 2, 64 + 32 * 0, 0  , 8
+			db		63 + 32 * 2, 64 + 32 * 1, 0  , 9
+			db		63 + 32 * 2, 64 + 32 * 2, 0  , 10
+			db		63 + 32 * 2, 64 + 32 * 3, 0  , 11
+
+			db		63 + 32 * 3, 64 + 32 * 0, 0  , 12
+			db		63 + 32 * 3, 64 + 32 * 1, 0  , 13
+			db		63 + 32 * 3, 64 + 32 * 2, 0  , 14
+			db		63 + 32 * 3, 64 + 32 * 3, 0  , 15
+
+			db		208
+
+; =============================================================================
+;	文字列
+; =============================================================================
+s_title::
+			ds		"<PALETTE CHANGER>"
+			db		0
 
 ; =============================================================================
 ;	カラーパレットセット（32セット）
