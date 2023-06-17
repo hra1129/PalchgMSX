@@ -50,208 +50,354 @@ Define macro {PRINT MACRO STR}
 004014: c8
 
 [	CALL GET_THIS_SLOT] Z80:18cyc, R800:5cyc
-004015: cd 05 41
+004015: cd f7 41
 
 [	CALL GET_GAME_SLOT] Z80:18cyc, R800:5cyc
-004018: cd 3b 41
+004018: cd 2d 42
 
 [	CALL NZ , GET_HASH] Z80:18cyc(branch), 11cyc(through), R800:5cyc(branch), 3cyc(through)
-00401b: c4 90 41
+00401b: c4 82 42
 
 [	CALL HASH_TO_PALETTE_NUM] Z80:18cyc, R800:5cyc
-00401e: cd e0 41
+00401e: cd d2 42
 
 [	CALL UPDATE_PALETTE_SET_ADDRESS] Z80:18cyc, R800:5cyc
-004021: cd fc 41
+004021: cd ee 42
 
 [	CALL UPDATE_PALETTE] Z80:18cyc, R800:5cyc
-004024: cd 0f 42
+004024: cd 01 43
+
+[	CALL DETECT_CPU_TYPE] Z80:18cyc, R800:5cyc
+004027: cd 45 41
 
 [	CALL CHECK_ESC_KEY] Z80:18cyc, R800:5cyc
-004027: cd d0 41
+00402a: cd c2 42
 
 [	JP Z , ENTER_MENU] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-00402a: ca 34 40
+00402d: ca 37 40
 
 [	LD A , 3] Z80:8cyc, R800:2cyc
-00402d: 3e 03
+004030: 3e 03
 
 [	CALL GTTRIG] Z80:18cyc, R800:5cyc
-00402f: cd d8 00
+004032: cd d8 00
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-004032: b7
+004035: b7
 
 [	RET Z] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
-004033: c8
+004036: c8
 
 [ENTER_MENU ::]
-	global label address: 0x004034
+	global label address: 0x004037
+
+[	CALL INITIALIZE_MENU] Z80:18cyc, R800:5cyc
+004037: cd 43 40
+
+[MAIN_LOOP :]
+	label address: 0x00403a
+
+[	CALL UPDATE_INPUT] Z80:18cyc, R800:5cyc
+00403a: cd e4 40
+
+[	CALL SHOW_CURSOR] Z80:18cyc, R800:5cyc
+00403d: cd 06 41
+
+[	JP MAIN_LOOP] Z80:11cyc, R800:5cyc
+004040: c3 3a 40
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE INITIALIZE_MENU]
+	Scope path: INITIALIZE_MENU:
+
+[INITIALIZE_MENU ::]
+	global label address: 0x004043
 
 [	LD A , 1] Z80:8cyc, R800:2cyc
-004034: 3e 01
+004043: 3e 01
 
 [	CALL CHGMOD] Z80:18cyc, R800:5cyc
-004036: cd 5f 00
+004045: cd 5f 00
 
 [	LD A , [ RG1SAV ]] Z80:14cyc, R800:6cyc
-004039: 3a e0 f3
+004048: 3a e0 f3
 
 [	OR A , 0B00000011] Z80:8cyc, R800:2cyc
-00403c: f6 03
+00404b: f6 03
 
 [	DI] Z80:5cyc, R800:2cyc
-00403e: f3
+00404d: f3
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-00403f: d3 99
+00404e: d3 99
 
 [	LD A , 0X80 | 1] Z80:8cyc, R800:2cyc
-004041: 3e 81
+004050: 3e 81
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-004043: d3 99
+004052: d3 99
 
 [	EI] Z80:5cyc, R800:1cyc
-004045: fb
+004054: fb
 
 [	LD A , [ RG8SAV ]] Z80:14cyc, R800:6cyc
-004046: 3a e7 ff
+004055: 3a e7 ff
 
 [	OR A , 0B00100000] Z80:8cyc, R800:2cyc
-004049: f6 20
+004058: f6 20
 
 [	DI] Z80:5cyc, R800:2cyc
-00404b: f3
+00405a: f3
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-00404c: d3 99
+00405b: d3 99
 
 [	LD A , 0X80 | 8] Z80:8cyc, R800:2cyc
-00404e: 3e 88
+00405d: 3e 88
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-004050: d3 99
+00405f: d3 99
 
 [	EI] Z80:5cyc, R800:1cyc
-004052: fb
+004061: fb
 
 [	LD HL , FONT_DATA] Z80:11cyc, R800:3cyc
-004053: 21 21 42
+004062: 21 13 43
 
 [	LD DE , 0X0000] Z80:11cyc, R800:3cyc
-004056: 11 00 00
+004065: 11 00 00
 
 [	LD BC , 8 * 256] Z80:11cyc, R800:3cyc
-004059: 01 00 08
+004068: 01 00 08
 
 [	CALL LDIRVM] Z80:18cyc, R800:5cyc
-00405c: cd 5c 00
+00406b: cd 5c 00
 
 [	LD HL , SPRITE_PATTERN_DATA] Z80:11cyc, R800:3cyc
-00405f: 21 21 4a
+00406e: 21 13 4b
 
 [	LD DE , 0X3800] Z80:11cyc, R800:3cyc
-004062: 11 00 38
+004071: 11 00 38
 
 [	LD BC , 32] Z80:11cyc, R800:3cyc
-004065: 01 20 00
+004074: 01 20 00
 
 [	CALL LDIRVM] Z80:18cyc, R800:5cyc
-004068: cd 5c 00
+004077: cd 5c 00
 
 [	LD HL , SPRITE_ATTRIBUTE_DATA] Z80:11cyc, R800:3cyc
-00406b: 21 41 4a
+00407a: 21 33 4b
 
 [	LD DE , 0X1B00] Z80:11cyc, R800:3cyc
-00406e: 11 00 1b
+00407d: 11 00 1b
 
 [	LD BC , 4 * 16 + 1] Z80:11cyc, R800:3cyc
-004071: 01 41 00
+004080: 01 41 00
 
 [	CALL LDIRVM] Z80:18cyc, R800:5cyc
-004074: cd 5c 00
+004083: cd 5c 00
 
 ((LOCATE 7 , 0))
-	Scope path: ENTRY:@MACRO0:
+	Scope path: INITIALIZE_MENU:@MACRO0:
 [	LD HL , ( 0 << 8 ) | 7] Z80:11cyc, R800:3cyc
-004077: 21 07 00
+004086: 21 07 00
 
 [	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
-00407a: cd b2 40
+004089: cd 07 41
 
 ((PRINT S_TITLE))
-	Scope path: ENTRY:@MACRO1:
+	Scope path: INITIALIZE_MENU:@MACRO1:
 [	LD DE , S_TITLE] Z80:11cyc, R800:3cyc
-00407d: 11 82 4a
+00408c: 11 74 4b
 
 [	CALL PRINT_DE_STRING] Z80:18cyc, R800:5cyc
-004080: cd c6 40
+00408f: cd 1b 41
 
 [	LD A , [ CARTRIDGE ]] Z80:14cyc, R800:6cyc
-004083: 3a 03 c0
+004092: 3a 03 c0
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-004086: b7
+004095: b7
 
 [	JP Z , GAME_NOT_FOUND] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-004087: ca ae 40
+004096: ca bd 40
 
 ((LOCATE 2 , 1))
-	Scope path: ENTRY:@MACRO2:
+	Scope path: INITIALIZE_MENU:@MACRO2:
 [	LD HL , ( 1 << 8 ) | 2] Z80:11cyc, R800:3cyc
-00408a: 21 02 01
+004099: 21 02 01
 
 [	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
-00408d: cd b2 40
+00409c: cd 07 41
 
 ((PRINT S_GAME_SLOT))
-	Scope path: ENTRY:@MACRO3:
+	Scope path: INITIALIZE_MENU:@MACRO3:
 [	LD DE , S_GAME_SLOT] Z80:11cyc, R800:3cyc
-004090: 11 94 4a
+00409f: 11 86 4b
 
 [	CALL PRINT_DE_STRING] Z80:18cyc, R800:5cyc
-004093: cd c6 40
+0040a2: cd 1b 41
 
 [	LD A , [ CARTRIDGE ]] Z80:14cyc, R800:6cyc
-004096: 3a 03 c0
+0040a5: 3a 03 c0
 
 [	CALL PRINT_SLOT_NUM] Z80:18cyc, R800:5cyc
-004099: cd f0 40
+0040a8: cd e2 41
 
 ((LOCATE 2 , 2))
-	Scope path: ENTRY:@MACRO4:
+	Scope path: INITIALIZE_MENU:@MACRO4:
 [	LD HL , ( 2 << 8 ) | 2] Z80:11cyc, R800:3cyc
-00409c: 21 02 02
+0040ab: 21 02 02
 
 [	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
-00409f: cd b2 40
+0040ae: cd 07 41
 
 ((PRINT S_GAME_HASH))
-	Scope path: ENTRY:@MACRO5:
+	Scope path: INITIALIZE_MENU:@MACRO5:
 [	LD DE , S_GAME_HASH] Z80:11cyc, R800:3cyc
-0040a2: 11 a9 4a
+0040b1: 11 9c 4b
 
 [	CALL PRINT_DE_STRING] Z80:18cyc, R800:5cyc
-0040a5: cd c6 40
+0040b4: cd 1b 41
 
 [	LD HL , [ HASH ]] Z80:17cyc, R800:7cyc
-0040a8: 2a 06 c0
+0040b7: 2a 0a c0
 
-[	CALL PRINT_HL_HEX] Z80:18cyc, R800:5cyc
-0040ab: cd ce 40
+[	CALL PRINT_HL_HEX4] Z80:18cyc, R800:5cyc
+0040ba: cd 23 41
 
 [GAME_NOT_FOUND ::]
-	global label address: 0x0040ae
+	global label address: 0x0040bd
 
-[ST :]
-	label address: 0x0040ae
+((LOCATE 11 , 3))
+	Scope path: INITIALIZE_MENU:@MACRO6:
+[	LD HL , ( 3 << 8 ) | 11] Z80:11cyc, R800:3cyc
+0040bd: 21 0b 03
 
-[	JP ST] Z80:11cyc, R800:5cyc
-0040ae: c3 ae 40
+[	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
+0040c0: cd 07 41
+
+((PRINT S_CPU_SPEED))
+	Scope path: INITIALIZE_MENU:@MACRO7:
+[	LD DE , S_CPU_SPEED] Z80:11cyc, R800:3cyc
+0040c3: 11 b3 4b
+
+[	CALL PRINT_DE_STRING] Z80:18cyc, R800:5cyc
+0040c6: cd 1b 41
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+0040c9: af
+
+[	LD [ CPU_SPEED ] , A] Z80:14cyc, R800:6cyc
+0040ca: 32 06 c0
+
+[	CALL SHOW_CPU_SPEED] Z80:18cyc, R800:5cyc
+0040cd: cd 6e 41
+
+((LOCATE 11 , 4))
+	Scope path: INITIALIZE_MENU:@MACRO8:
+[	LD HL , ( 4 << 8 ) | 11] Z80:11cyc, R800:3cyc
+0040d0: 21 0b 04
+
+[	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
+0040d3: cd 07 41
+
+((PRINT S_PALETTE_NUM))
+	Scope path: INITIALIZE_MENU:@MACRO9:
+[	LD DE , S_PALETTE_NUM] Z80:11cyc, R800:3cyc
+0040d6: 11 b8 4b
+
+[	CALL PRINT_DE_STRING] Z80:18cyc, R800:5cyc
+0040d9: cd 1b 41
+
+[	LD A , [ PALETTE_SET_NUM ]] Z80:14cyc, R800:6cyc
+0040dc: 3a 0c c0
+
+[	CALL SHOW_PALETTE_NUM] Z80:18cyc, R800:5cyc
+0040df: cd d5 41
+
+[	EI] Z80:5cyc, R800:1cyc
+0040e2: fb
 
 [	RET] Z80:11cyc, R800:5cyc
-0040b1: c9
+0040e3: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE UPDATE_INPUT]
+	Scope path: UPDATE_INPUT:
+
+[UPDATE_INPUT ::]
+	global label address: 0x0040e4
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+0040e4: af
+
+[	CALL GTTRIG] Z80:18cyc, R800:5cyc
+0040e5: cd d8 00
+
+[	LD [ PRESS_A_BUTTON ] , A] Z80:14cyc, R800:6cyc
+0040e8: 32 08 c0
+
+[	OR A , A] Z80:5cyc, R800:1cyc
+0040eb: b7
+
+[	JP NZ , CHECK_ARROW_KEY] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+0040ec: c2 f6 40
+
+[	INC A] Z80:5cyc, R800:1cyc
+0040ef: 3c
+
+[	CALL GTTRIG] Z80:18cyc, R800:5cyc
+0040f0: cd d8 00
+
+[	LD [ PRESS_A_BUTTON ] , A] Z80:14cyc, R800:6cyc
+0040f3: 32 08 c0
+
+[CHECK_ARROW_KEY :]
+	label address: 0x0040f6
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+0040f6: af
+
+[	CALL GTSTCK] Z80:18cyc, R800:5cyc
+0040f7: cd d5 00
+
+[	PUSH AF] Z80:12cyc, R800:6cyc
+0040fa: f5
+
+[	LD A , 1] Z80:8cyc, R800:2cyc
+0040fb: 3e 01
+
+[	CALL GTSTCK] Z80:18cyc, R800:5cyc
+0040fd: cd d5 00
+
+[	POP BC] Z80:11cyc, R800:5cyc
+004100: c1
+
+[	OR A , B] Z80:5cyc, R800:1cyc
+004101: b0
+
+[	LD [ PRESS_ARROW_BURRON ] , A] Z80:14cyc, R800:6cyc
+004102: 32 09 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+004105: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE SHOW_CURSOR]
+	Scope path: SHOW_CURSOR:
+
+[SHOW_CURSOR ::]
+	global label address: 0x004106
+
+[	RET] Z80:11cyc, R800:5cyc
+004106: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -260,52 +406,52 @@ Define macro {PRINT MACRO STR}
 	Scope path: SET_LOCATE:
 
 [SET_LOCATE ::]
-	global label address: 0x0040b2
+	global label address: 0x004107
 
 [	LD A , H] Z80:5cyc, R800:2cyc
-0040b2: 7c
+004107: 7c
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040b3: 0f
+004108: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040b4: 0f
+004109: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040b5: 0f
+00410a: 0f
 
 [	LD H , A] Z80:5cyc, R800:2cyc
-0040b6: 67
+00410b: 67
 
 [	AND A , 0B11100000] Z80:8cyc, R800:2cyc
-0040b7: e6 e0
+00410c: e6 e0
 
 [	OR A , L] Z80:5cyc, R800:1cyc
-0040b9: b5
+00410e: b5
 
 [	DI] Z80:5cyc, R800:2cyc
-0040ba: f3
+00410f: f3
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-0040bb: d3 99
+004110: d3 99
 
 [	LD A , H] Z80:5cyc, R800:2cyc
-0040bd: 7c
+004112: 7c
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-0040be: e6 03
+004113: e6 03
 
 [	OR A , 0B01011000] Z80:8cyc, R800:2cyc
-0040c0: f6 58
+004115: f6 58
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-0040c2: d3 99
+004117: d3 99
 
 [	EI] Z80:5cyc, R800:1cyc
-0040c4: fb
+004119: fb
 
 [	RET] Z80:11cyc, R800:5cyc
-0040c5: c9
+00411a: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -314,25 +460,25 @@ Define macro {PRINT MACRO STR}
 	Scope path: PRINT_DE_STRING:
 
 [PRINT_DE_STRING ::]
-	global label address: 0x0040c6
+	global label address: 0x00411b
 
 [	LD A , [ DE ]] Z80:8cyc, R800:4cyc
-0040c6: 1a
+00411b: 1a
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-0040c7: b7
+00411c: b7
 
 [	RET Z] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
-0040c8: c8
+00411d: c8
 
 [	OUT [ VDP_PORT0 ] , A] Z80:12cyc, R800:10 or 9cyc
-0040c9: d3 98
+00411e: d3 98
 
 [	INC DE] Z80:7cyc, R800:1cyc
-0040cb: 13
+004120: 13
 
 [	JR PRINT_DE_STRING] Z80:13cyc, R800:3cyc
-0040cc: 18 f8
+004121: 18 f8
 
 [	ENDSCOPE]
 	Scope path: 
@@ -340,80 +486,293 @@ Define macro {PRINT MACRO STR}
 [	SCOPE PRINT_HL_HEX]
 	Scope path: PRINT_HL_HEX:
 
-[PRINT_HL_HEX ::]
-	global label address: 0x0040ce
+[PRINT_HL_HEX4 ::]
+	global label address: 0x004123
 
 [	LD A , H] Z80:5cyc, R800:2cyc
-0040ce: 7c
+004123: 7c
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040cf: 0f
+004124: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040d0: 0f
+004125: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040d1: 0f
+004126: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040d2: 0f
+004127: 0f
 
 [	CALL PUT_HEX_ONE] Z80:18cyc, R800:5cyc
-0040d3: cd e3 40
+004128: cd 38 41
 
 [	LD A , H] Z80:5cyc, R800:2cyc
-0040d6: 7c
+00412b: 7c
 
 [	CALL PUT_HEX_ONE] Z80:18cyc, R800:5cyc
-0040d7: cd e3 40
+00412c: cd 38 41
+
+[PRINT_HL_HEX2 ::]
+	global label address: 0x00412f
 
 [	LD A , L] Z80:5cyc, R800:2cyc
-0040da: 7d
+00412f: 7d
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040db: 0f
+004130: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040dc: 0f
+004131: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040dd: 0f
+004132: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040de: 0f
+004133: 0f
 
 [	CALL PUT_HEX_ONE] Z80:18cyc, R800:5cyc
-0040df: cd e3 40
+004134: cd 38 41
 
 [	LD A , L] Z80:5cyc, R800:2cyc
-0040e2: 7d
+004137: 7d
 
 [PUT_HEX_ONE ::]
-	global label address: 0x0040e3
+	global label address: 0x004138
 
 [	AND A , 0X0F] Z80:8cyc, R800:2cyc
-0040e3: e6 0f
+004138: e6 0f
 
 [	ADD A , 48] Z80:8cyc, R800:2cyc
-0040e5: c6 30
+00413a: c6 30
 
 [	CP A , 57 + 1] Z80:8cyc, R800:2cyc
-0040e7: fe 3a
+00413c: fe 3a
 
 [	JR C , SKIP] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
-0040e9: 38 02
+00413e: 38 02
 
 [	ADD A , 65 - ( 57 + 1 )] Z80:8cyc, R800:2cyc
-0040eb: c6 07
+004140: c6 07
 
 [SKIP :]
-	label address: 0x0040ed
+	label address: 0x004142
 
 [	OUT [ VDP_PORT0 ] , A] Z80:12cyc, R800:10 or 9cyc
-0040ed: d3 98
+004142: d3 98
 
 [	RET] Z80:11cyc, R800:5cyc
-0040ef: c9
+004144: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE DETECT_CPU_TYPE]
+	Scope path: DETECT_CPU_TYPE:
+
+[DETECT_CPU_TYPE ::]
+	global label address: 0x004145
+
+[	LD A , [ ROMID ]] Z80:14cyc, R800:6cyc
+004145: 3a 2d 00
+
+[	CP A , 2] Z80:8cyc, R800:2cyc
+004148: fe 02
+
+[	JP C , IS_MSX1_OR_MSX2] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00414a: da 63 41
+
+[	CP A , 3] Z80:8cyc, R800:2cyc
+00414d: fe 03
+
+[	JP NC , IS_MSX_TURBO_R] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
+00414f: d2 68 41
+
+[	LD A , 8] Z80:8cyc, R800:2cyc
+004152: 3e 08
+
+[	OUT [ 0X40 ] , A] Z80:12cyc, R800:10 or 9cyc
+004154: d3 40
+
+[	IN A , [ 0X40 ]] Z80:12cyc, R800:10 or 9cyc
+004156: db 40
+
+[	CPL] Z80:5cyc, R800:1cyc
+004158: 2f
+
+[	CP A , 8] Z80:8cyc, R800:2cyc
+004159: fe 08
+
+[	JR NZ , IS_MSX1_OR_MSX2] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
+00415b: 20 06
+
+[IS_PANASONIC_MSX2P :]
+	label address: 0x00415d
+
+[	LD A , 1] Z80:8cyc, R800:2cyc
+00415d: 3e 01
+
+[	LD [ CPU_TYPE ] , A] Z80:14cyc, R800:6cyc
+00415f: 32 07 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+004162: c9
+
+[IS_MSX1_OR_MSX2 :]
+	label address: 0x004163
+
+[	XOR A , A] Z80:5cyc, R800:1cyc
+004163: af
+
+[	LD [ CPU_TYPE ] , A] Z80:14cyc, R800:6cyc
+004164: 32 07 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+004167: c9
+
+[IS_MSX_TURBO_R :]
+	label address: 0x004168
+
+[	LD A , 2] Z80:8cyc, R800:2cyc
+004168: 3e 02
+
+[	LD [ CPU_TYPE ] , A] Z80:14cyc, R800:6cyc
+00416a: 32 07 c0
+
+[	RET] Z80:11cyc, R800:5cyc
+00416d: c9
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE SHOW_CPU_SPEED]
+	Scope path: SHOW_CPU_SPEED:
+
+[SHOW_CPU_SPEED ::]
+	global label address: 0x00416e
+
+((LOCATE 15 , 3))
+	Scope path: SHOW_CPU_SPEED:@MACRO10:
+[	LD HL , ( 3 << 8 ) | 15] Z80:11cyc, R800:3cyc
+00416e: 21 0f 03
+
+[	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
+004171: cd 07 41
+
+[	LD A , [ CPU_SPEED ]] Z80:14cyc, R800:6cyc
+004174: 3a 06 c0
+
+[	ADD A , A] Z80:5cyc, R800:1cyc
+004177: 87
+
+[	LD L , A] Z80:5cyc, R800:2cyc
+004178: 6f
+
+[	LD H , 0] Z80:8cyc, R800:2cyc
+004179: 26 00
+
+[	LD DE , PS_CPU_MODE] Z80:11cyc, R800:3cyc
+00417b: 11 85 41
+
+[	ADD HL , DE] Z80:12cyc, R800:1cyc
+00417e: 19
+
+[	LD E , [ HL ]] Z80:8cyc, R800:4cyc
+00417f: 5e
+
+[	INC HL] Z80:7cyc, R800:1cyc
+004180: 23
+
+[	LD D , [ HL ]] Z80:8cyc, R800:4cyc
+004181: 56
+
+[	JP PRINT_DE_STRING] Z80:11cyc, R800:5cyc
+004182: c3 1b 41
+
+[PS_CPU_MODE :]
+	label address: 0x004185
+
+[	DW S_CPU_MODE0]
+004185: 8d 41
+
+[	DW S_CPU_MODE1]
+004187: 9f 41
+
+[	DW S_CPU_MODE2]
+004189: b1 41
+
+[	DW S_CPU_MODE3]
+00418b: c3 41
+
+[S_CPU_MODE0 :]
+	label address: 0x00418d
+
+[	DS "Z80-3.58MHz      "]
+00418d: 5a 38 30 2d 33 2e 35 38
+004195: 4d 48 7a 20 20 20 20 20
+00419d: 20
+
+[	DB 0]
+00419e: 00
+
+[S_CPU_MODE1 :]
+	label address: 0x00419f
+
+[	DS "Z80-5.38MHz      "]
+00419f: 5a 38 30 2d 35 2e 33 38
+0041a7: 4d 48 7a 20 20 20 20 20
+0041af: 20
+
+[	DB 0]
+0041b0: 00
+
+[S_CPU_MODE2 :]
+	label address: 0x0041b1
+
+[	DS "R800-7.16MHz(ROM)"]
+0041b1: 52 38 30 30 2d 37 2e 31
+0041b9: 36 4d 48 7a 28 52 4f 4d
+0041c1: 29
+
+[	DB 0]
+0041c2: 00
+
+[S_CPU_MODE3 :]
+	label address: 0x0041c3
+
+[	DS "R800-7.16MHz(RAM)"]
+0041c3: 52 38 30 30 2d 37 2e 31
+0041cb: 36 4d 48 7a 28 52 41 4d
+0041d3: 29
+
+[	DB 0]
+0041d4: 00
+
+[	ENDSCOPE]
+	Scope path: 
+
+[	SCOPE SHOW_PALETTE_NUM]
+	Scope path: SHOW_PALETTE_NUM:
+
+[SHOW_PALETTE_NUM ::]
+	global label address: 0x0041d5
+
+((LOCATE 20 , 4))
+	Scope path: SHOW_PALETTE_NUM:@MACRO11:
+[	LD HL , ( 4 << 8 ) | 20] Z80:11cyc, R800:3cyc
+0041d5: 21 14 04
+
+[	CALL SET_LOCATE] Z80:18cyc, R800:5cyc
+0041d8: cd 07 41
+
+[	LD A , [ PALETTE_SET_NUM ]] Z80:14cyc, R800:6cyc
+0041db: 3a 0c c0
+
+[	LD L , A] Z80:5cyc, R800:2cyc
+0041de: 6f
+
+[	JP PRINT_HL_HEX2] Z80:11cyc, R800:5cyc
+0041df: c3 2f 41
 
 [	ENDSCOPE]
 	Scope path: 
@@ -422,46 +781,46 @@ Define macro {PRINT MACRO STR}
 	Scope path: PRINT_SLOT_NUM:
 
 [PRINT_SLOT_NUM ::]
-	global label address: 0x0040f0
+	global label address: 0x0041e2
 
 [	LD L , A] Z80:5cyc, R800:2cyc
-0040f0: 6f
+0041e2: 6f
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-0040f1: e6 03
+0041e3: e6 03
 
 [	CALL PUT_HEX_ONE] Z80:18cyc, R800:5cyc
-0040f3: cd e3 40
+0041e5: cd 38 41
 
 [	LD A , L] Z80:5cyc, R800:2cyc
-0040f6: 7d
+0041e8: 7d
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-0040f7: b7
+0041e9: b7
 
 [	RET P] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
-0040f8: f0
+0041ea: f0
 
 [	LD A , 45] Z80:8cyc, R800:2cyc
-0040f9: 3e 2d
+0041eb: 3e 2d
 
 [	OUT [ VDP_PORT0 ] , A] Z80:12cyc, R800:10 or 9cyc
-0040fb: d3 98
+0041ed: d3 98
 
 [	LD A , L] Z80:5cyc, R800:2cyc
-0040fd: 7d
+0041ef: 7d
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040fe: 0f
+0041f0: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-0040ff: 0f
+0041f1: 0f
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-004100: e6 03
+0041f2: e6 03
 
 [	JP PUT_HEX_ONE] Z80:11cyc, R800:5cyc
-004102: c3 e3 40
+0041f4: c3 38 41
 
 [	ENDSCOPE]
 	Scope path: 
@@ -470,130 +829,130 @@ Define macro {PRINT MACRO STR}
 	Scope path: GET_THIS_SLOT:
 
 [GET_THIS_SLOT ::]
-	global label address: 0x004105
+	global label address: 0x0041f7
 
 [	DI] Z80:5cyc, R800:2cyc
-004105: f3
+0041f7: f3
 
 [	IN A , [ 0XA8 ]] Z80:12cyc, R800:10 or 9cyc
-004106: db a8
+0041f8: db a8
 
 [	LD C , A] Z80:5cyc, R800:2cyc
-004108: 4f
+0041fa: 4f
 
 [	AND A , 0B00001100] Z80:8cyc, R800:2cyc
-004109: e6 0c
+0041fb: e6 0c
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-00410b: 47
+0041fd: 47
 
 [	RLCA] Z80:5cyc, R800:1cyc
-00410c: 07
+0041fe: 07
 
 [	RLCA] Z80:5cyc, R800:1cyc
-00410d: 07
+0041ff: 07
 
 [	RLCA] Z80:5cyc, R800:1cyc
-00410e: 07
+004200: 07
 
 [	RLCA] Z80:5cyc, R800:1cyc
-00410f: 07
+004201: 07
 
 [	OR A , B] Z80:5cyc, R800:1cyc
-004110: b0
+004202: b0
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-004111: 47
+004203: 47
 
 [	LD A , C] Z80:5cyc, R800:2cyc
-004112: 79
+004204: 79
 
 [	AND A , 0B00110011] Z80:8cyc, R800:2cyc
-004113: e6 33
+004205: e6 33
 
 [	OR A , B] Z80:5cyc, R800:1cyc
-004115: b0
+004207: b0
 
 [	OUT [ 0XA8 ] , A] Z80:12cyc, R800:10 or 9cyc
-004116: d3 a8
+004208: d3 a8
 
 [	LD HL , 0XFFFF] Z80:11cyc, R800:3cyc
-004118: 21 ff ff
+00420a: 21 ff ff
 
 [	LD A , [ HL ]] Z80:8cyc, R800:4cyc
-00411b: 7e
+00420d: 7e
 
 [	CPL] Z80:5cyc, R800:1cyc
-00411c: 2f
+00420e: 2f
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-00411d: 47
+00420f: 47
 
 [	LD [ HL ] , A] Z80:8cyc, R800:4cyc
-00411e: 77
+004210: 77
 
 [	CPL] Z80:5cyc, R800:1cyc
-00411f: 2f
+004211: 2f
 
 [	CP A , [ HL ]] Z80:8cyc, R800:4cyc
-004120: be
+004212: be
 
 [	LD A , 0] Z80:8cyc, R800:2cyc
-004121: 3e 00
+004213: 3e 00
 
 [	JR Z , NOT_EXTENDED] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
-004123: 28 05
+004215: 28 05
 
 [	LD A , B] Z80:5cyc, R800:2cyc
-004125: 78
+004217: 78
 
 [	AND A , 0B00001100] Z80:8cyc, R800:2cyc
-004126: e6 0c
+004218: e6 0c
 
 [	OR A , 0X80] Z80:8cyc, R800:2cyc
-004128: f6 80
+00421a: f6 80
 
 [NOT_EXTENDED :]
-	label address: 0x00412a
+	label address: 0x00421c
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-00412a: 47
+00421c: 47
 
 [	LD A , C] Z80:5cyc, R800:2cyc
-00412b: 79
+00421d: 79
 
 [	RRCA] Z80:5cyc, R800:1cyc
-00412c: 0f
+00421e: 0f
 
 [	RRCA] Z80:5cyc, R800:1cyc
-00412d: 0f
+00421f: 0f
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-00412e: e6 03
+004220: e6 03
 
 [	OR A , B] Z80:5cyc, R800:1cyc
-004130: b0
+004222: b0
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-004131: 47
+004223: 47
 
 [	LD A , C] Z80:5cyc, R800:2cyc
-004132: 79
+004224: 79
 
 [	OUT [ 0XA8 ] , A] Z80:12cyc, R800:10 or 9cyc
-004133: d3 a8
+004225: d3 a8
 
 [	EI] Z80:5cyc, R800:1cyc
-004135: fb
+004227: fb
 
 [	LD A , B] Z80:5cyc, R800:2cyc
-004136: 78
+004228: 78
 
 [	LD [ ROM_SLOT ] , A] Z80:14cyc, R800:6cyc
-004137: 32 00 c0
+004229: 32 00 c0
 
 [	RET] Z80:11cyc, R800:5cyc
-00413a: c9
+00422c: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -602,157 +961,157 @@ Define macro {PRINT MACRO STR}
 	Scope path: GET_GAME_SLOT:
 
 [GET_GAME_SLOT ::]
-	global label address: 0x00413b
+	global label address: 0x00422d
 
 [	XOR A , A] Z80:5cyc, R800:1cyc
-00413b: af
+00422d: af
 
 [	LD [ CARTRIDGE ] , A] Z80:14cyc, R800:6cyc
-00413c: 32 03 c0
+00422e: 32 03 c0
 
 [	LD A , [ ROM_SLOT ]] Z80:14cyc, R800:6cyc
-00413f: 3a 00 c0
+004231: 3a 00 c0
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-004142: 47
+004234: 47
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-004143: e6 03
+004235: e6 03
 
 [	ADD A , EXPTBL & 255] Z80:8cyc, R800:2cyc
-004145: c6 c1
+004237: c6 c1
 
 [	LD L , A] Z80:5cyc, R800:2cyc
-004147: 6f
+004239: 6f
 
 [	LD H , EXPTBL >> 8] Z80:8cyc, R800:2cyc
-004148: 26 fc
+00423a: 26 fc
 
 [	LD A , B] Z80:5cyc, R800:2cyc
-00414a: 78
+00423c: 78
 
 [	JP GO_NEXT_SLOT] Z80:11cyc, R800:5cyc
-00414b: c3 70 41
+00423d: c3 62 42
 
 [SLOT_LOOP :]
-	label address: 0x00414e
+	label address: 0x004240
 
 [	PUSH HL] Z80:12cyc, R800:6cyc
-00414e: e5
+004240: e5
 
 [	PUSH AF] Z80:12cyc, R800:6cyc
-00414f: f5
+004241: f5
 
 [	LD HL , 0X4000] Z80:11cyc, R800:3cyc
-004150: 21 00 40
+004242: 21 00 40
 
 [	CALL RDSLT] Z80:18cyc, R800:5cyc
-004153: cd 0c 00
+004245: cd 0c 00
 
 [	LD [ SIGNATURE + 0 ] , A] Z80:14cyc, R800:6cyc
-004156: 32 01 c0
+004248: 32 01 c0
 
 [	POP AF] Z80:11cyc, R800:5cyc
-004159: f1
+00424b: f1
 
 [	PUSH AF] Z80:12cyc, R800:6cyc
-00415a: f5
+00424c: f5
 
 [	INC HL] Z80:7cyc, R800:1cyc
-00415b: 23
+00424d: 23
 
 [	CALL RDSLT] Z80:18cyc, R800:5cyc
-00415c: cd 0c 00
+00424e: cd 0c 00
 
 [	LD [ SIGNATURE + 1 ] , A] Z80:14cyc, R800:6cyc
-00415f: 32 02 c0
+004251: 32 02 c0
 
 [	POP AF] Z80:11cyc, R800:5cyc
-004162: f1
+004254: f1
 
 [	LD HL , [ SIGNATURE ]] Z80:17cyc, R800:7cyc
-004163: 2a 01 c0
+004255: 2a 01 c0
 
 [	LD DE , 65 + ( 66 << 8 )] Z80:11cyc, R800:3cyc
-004166: 11 41 42
+004258: 11 41 42
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-004169: b7
+00425b: b7
 
 [	SBC HL , DE] Z80:17cyc, R800:2cyc
-00416a: ed 52
+00425c: ed 52
 
 [	POP HL] Z80:11cyc, R800:5cyc
-00416c: e1
+00425e: e1
 
 [	JP Z , DETECT_CARTRIDGE] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-00416d: ca 8b 41
+00425f: ca 7d 42
 
 [GO_NEXT_SLOT :]
-	label address: 0x004170
+	label address: 0x004262
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-004170: b7
+004262: b7
 
 [	JP P , GO_NEXT_PRIMARY_SLOT] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-004171: f2 7b 41
+004263: f2 6d 42
 
 [GO_NEXT_EXTEND_SLOT :]
-	label address: 0x004174
+	label address: 0x004266
 
 [	ADD A , 0B00000100] Z80:8cyc, R800:2cyc
-004174: c6 04
+004266: c6 04
 
 [	BIT 4 , A] Z80:10cyc, R800:2cyc
-004176: cb 67
+004268: cb 67
 
 [	JP Z , SLOT_LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-004178: ca 4e 41
+00426a: ca 40 42
 
 [GO_NEXT_PRIMARY_SLOT :]
-	label address: 0x00417b
+	label address: 0x00426d
 
 [	AND A , 0B00000011] Z80:8cyc, R800:2cyc
-00417b: e6 03
+00426d: e6 03
 
 [	ADD A , 0B00000001] Z80:8cyc, R800:2cyc
-00417d: c6 01
+00426f: c6 01
 
 [	CP A , 4] Z80:8cyc, R800:2cyc
-00417f: fe 04
+004271: fe 04
 
 [	RET Z] Z80:12cyc(branch), 6cyc(through), R800:5cyc(branch), 1cyc(through)
-004181: c8
+004273: c8
 
 [	LD B , A] Z80:5cyc, R800:2cyc
-004182: 47
+004274: 47
 
 [	INC HL] Z80:7cyc, R800:1cyc
-004183: 23
+004275: 23
 
 [	LD A , [ HL ]] Z80:8cyc, R800:4cyc
-004184: 7e
+004276: 7e
 
 [	AND A , 0B10000000] Z80:8cyc, R800:2cyc
-004185: e6 80
+004277: e6 80
 
 [	OR A , B] Z80:5cyc, R800:1cyc
-004187: b0
+004279: b0
 
 [	JP SLOT_LOOP] Z80:11cyc, R800:5cyc
-004188: c3 4e 41
+00427a: c3 40 42
 
 [DETECT_CARTRIDGE :]
-	label address: 0x00418b
+	label address: 0x00427d
 
 [	LD [ CARTRIDGE ] , A] Z80:14cyc, R800:6cyc
-00418b: 32 03 c0
+00427d: 32 03 c0
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-00418e: b7
+004280: b7
 
 [	RET] Z80:11cyc, R800:5cyc
-00418f: c9
+004281: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -761,166 +1120,166 @@ Define macro {PRINT MACRO STR}
 	Scope path: GET_HASH:
 
 [GET_HASH ::]
-	global label address: 0x004190
+	global label address: 0x004282
 
 [	LD HL , GET_HASH_SUB_ON_ROM] Z80:11cyc, R800:3cyc
-004190: 21 9e 41
+004282: 21 90 42
 
 [	LD DE , GET_HASH_SUB] Z80:11cyc, R800:3cyc
-004193: 11 09 c0
+004285: 11 0d c0
 
 [	LD BC , GET_HASH_SUB_END - GET_HASH_SUB] Z80:11cyc, R800:3cyc
-004196: 01 32 00
+004288: 01 32 00
 
 [	LDIR] Z80:23cyc(BC!=0), 18cyc(BC=0), R800:?cyc(BC!=0), 7cyc(BC=0)
-004199: ed b0
+00428b: ed b0
 
 [	JP GET_HASH_SUB] Z80:11cyc, R800:5cyc
-00419b: c3 09 c0
+00428d: c3 0d c0
 
 [	ENDSCOPE]
 	Scope path: 
 
 [GET_HASH_SUB_ON_ROM ::]
-	global label address: 0x00419e
+	global label address: 0x004290
 
 [	ORG HASH_SUB]
-	code address: 0x00c009
+	code address: 0x00c00d
 
 [	SCOPE GET_HASH_SUB]
 	Scope path: GET_HASH_SUB:
 
 [GET_HASH_SUB ::]
-	global label address: 0x00c009
+	global label address: 0x00c00d
 
 [	LD A , [ CARTRIDGE ]] Z80:14cyc, R800:6cyc
-00c009: 3a 03 c0
+00c00d: 3a 03 c0
 
 [	LD H , 0X40] Z80:8cyc, R800:2cyc
-00c00c: 26 40
+00c010: 26 40
 
 [	CALL ENASLT] Z80:18cyc, R800:5cyc
-00c00e: cd 24 00
+00c012: cd 24 00
 
 [	LD HL , 0X4000] Z80:11cyc, R800:3cyc
-00c011: 21 00 40
+00c015: 21 00 40
 
 [	LD DE , 0X1234] Z80:11cyc, R800:3cyc
-00c014: 11 34 12
+00c018: 11 34 12
 
 [	LD BC , 0X4000] Z80:11cyc, R800:3cyc
-00c017: 01 00 40
+00c01b: 01 00 40
 
 [LOOP :]
-	label address: 0x00c01a
+	label address: 0x00c01e
 
 [	LD A , [ HL ]] Z80:8cyc, R800:4cyc
-00c01a: 7e
+00c01e: 7e
 
 [	INC HL] Z80:7cyc, R800:1cyc
-00c01b: 23
+00c01f: 23
 
 [	INC A] Z80:5cyc, R800:1cyc
-00c01c: 3c
+00c020: 3c
 
 [	XOR A , E] Z80:5cyc, R800:1cyc
-00c01d: ab
+00c021: ab
 
 [	ADD A , 3] Z80:8cyc, R800:2cyc
-00c01e: c6 03
+00c022: c6 03
 
 [	LD E , A] Z80:5cyc, R800:2cyc
-00c020: 5f
+00c024: 5f
 
 [	LD A , [ HL ]] Z80:8cyc, R800:4cyc
-00c021: 7e
+00c025: 7e
 
 [	INC HL] Z80:7cyc, R800:1cyc
-00c022: 23
+00c026: 23
 
 [	ADC A , 7] Z80:8cyc, R800:2cyc
-00c023: ce 07
+00c027: ce 07
 
 [	XOR A , D] Z80:5cyc, R800:1cyc
-00c025: aa
+00c029: aa
 
 [	DEC A] Z80:5cyc, R800:1cyc
-00c026: 3d
+00c02a: 3d
 
 [	LD D , A] Z80:5cyc, R800:2cyc
-00c027: 57
+00c02b: 57
 
 [	DEC BC] Z80:7cyc, R800:1cyc
-00c028: 0b
+00c02c: 0b
 
 [	LD A , C] Z80:5cyc, R800:2cyc
-00c029: 79
+00c02d: 79
 
 [	OR A , B] Z80:5cyc, R800:1cyc
-00c02a: b0
+00c02e: b0
 
 [	JP NZ , LOOP] Z80:11cyc, R800:5cyc(cond=true), 3cyc(cond=false)
-00c02b: c2 1a c0
+00c02f: c2 1e c0
 
 [	LD [ HASH ] , DE] Z80:22cyc, R800:8cyc
-00c02e: ed 53 06 c0
+00c032: ed 53 0a c0
 
 [	LD A , [ ROM_SLOT ]] Z80:14cyc, R800:6cyc
-00c032: 3a 00 c0
+00c036: 3a 00 c0
 
 [	LD H , 0X40] Z80:8cyc, R800:2cyc
-00c035: 26 40
+00c039: 26 40
 
 [	CALL ENASLT] Z80:18cyc, R800:5cyc
-00c037: cd 24 00
+00c03b: cd 24 00
 
 [	RET] Z80:11cyc, R800:5cyc
-00c03a: c9
+00c03e: c9
 
 [GET_HASH_SUB_END ::]
-	global label address: 0x00c03b
+	global label address: 0x00c03f
 
 [	ENDSCOPE]
 	Scope path: 
 
 [	ORG GET_HASH_SUB_ON_ROM + ( GET_HASH_SUB_END - GET_HASH_SUB )]
-	code address: 0x0041d0
+	code address: 0x0042c2
 
 [	SCOPE CHECK_ESC_KEY]
 	Scope path: CHECK_ESC_KEY:
 
 [CHECK_ESC_KEY ::]
-	global label address: 0x0041d0
+	global label address: 0x0042c2
 
 [	DI] Z80:5cyc, R800:2cyc
-0041d0: f3
+0042c2: f3
 
 [	IN A , [ 0XAA ]] Z80:12cyc, R800:10 or 9cyc
-0041d1: db aa
+0042c3: db aa
 
 [	AND A , 0B11110000] Z80:8cyc, R800:2cyc
-0041d3: e6 f0
+0042c5: e6 f0
 
 [	OR A , 7] Z80:8cyc, R800:2cyc
-0041d5: f6 07
+0042c7: f6 07
 
 [	OUT [ 0XAA ] , A] Z80:12cyc, R800:10 or 9cyc
-0041d7: d3 aa
+0042c9: d3 aa
 
 [	NOP] Z80:5cyc, R800:1cyc
-0041d9: 00
+0042cb: 00
 
 [	IN A , [ 0XA9 ]] Z80:12cyc, R800:10 or 9cyc
-0041da: db a9
+0042cc: db a9
 
 [	EI] Z80:5cyc, R800:1cyc
-0041dc: fb
+0042ce: fb
 
 [	AND A , 0B00000100] Z80:8cyc, R800:2cyc
-0041dd: e6 04
+0042cf: e6 04
 
 [	RET] Z80:11cyc, R800:5cyc
-0041df: c9
+0042d1: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -929,67 +1288,67 @@ Define macro {PRINT MACRO STR}
 	Scope path: HASH_TO_PALETTE_NUM:
 
 [HASH_TO_PALETTE_NUM ::]
-	global label address: 0x0041e0
+	global label address: 0x0042d2
 
 [	LD BC , [ HASH ]] Z80:22cyc, R800:8cyc
-0041e0: ed 4b 06 c0
+0042d2: ed 4b 0a c0
 
 [	LD HL , HASH_TABLE] Z80:11cyc, R800:3cyc
-0041e4: 21 c0 4e
+0042d6: 21 c2 4f
 
 [LOOP :]
-	label address: 0x0041e7
+	label address: 0x0042d9
 
 [	LD E , [ HL ]] Z80:8cyc, R800:4cyc
-0041e7: 5e
+0042d9: 5e
 
 [	INC HL] Z80:7cyc, R800:1cyc
-0041e8: 23
+0042da: 23
 
 [	LD D , [ HL ]] Z80:8cyc, R800:4cyc
-0041e9: 56
+0042db: 56
 
 [	INC HL] Z80:7cyc, R800:1cyc
-0041ea: 23
+0042dc: 23
 
 [	LD A , [ HL ]] Z80:8cyc, R800:4cyc
-0041eb: 7e
+0042dd: 7e
 
 [	INC HL] Z80:7cyc, R800:1cyc
-0041ec: 23
+0042de: 23
 
 [	INC A] Z80:5cyc, R800:1cyc
-0041ed: 3c
+0042df: 3c
 
 [	JR Z , NOT_FOUND] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
-0041ee: 28 08
+0042e0: 28 08
 
 [	DEC A] Z80:5cyc, R800:1cyc
-0041f0: 3d
+0042e2: 3d
 
 [	EX DE , HL] Z80:5cyc, R800:1cyc
-0041f1: eb
+0042e3: eb
 
 [	OR A , A] Z80:5cyc, R800:1cyc
-0041f2: b7
+0042e4: b7
 
 [	SBC HL , BC] Z80:17cyc, R800:2cyc
-0041f3: ed 42
+0042e5: ed 42
 
 [	EX DE , HL] Z80:5cyc, R800:1cyc
-0041f5: eb
+0042e7: eb
 
 [	JR NZ , LOOP] Z80:13cyc(cond=true), 8cyc(cond=false), R800:3cyc(cond=true), 2cyc(cond=false)
-0041f6: 20 ef
+0042e8: 20 ef
 
 [NOT_FOUND :]
-	label address: 0x0041f8
+	label address: 0x0042ea
 
 [	LD [ PALETTE_SET_NUM ] , A] Z80:14cyc, R800:6cyc
-0041f8: 32 08 c0
+0042ea: 32 0c c0
 
 [	RET] Z80:11cyc, R800:5cyc
-0041fb: c9
+0042ed: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -998,43 +1357,43 @@ Define macro {PRINT MACRO STR}
 	Scope path: UPDATE_PALETTE_SET_ADDRESS:
 
 [UPDATE_PALETTE_SET_ADDRESS ::]
-	global label address: 0x0041fc
+	global label address: 0x0042ee
 
 [	LD A , [ PALETTE_SET_NUM ]] Z80:14cyc, R800:6cyc
-0041fc: 3a 08 c0
+0042ee: 3a 0c c0
 
 [	LD L , A] Z80:5cyc, R800:2cyc
-0041ff: 6f
+0042f1: 6f
 
 [	LD H , 0] Z80:8cyc, R800:2cyc
-004200: 26 00
+0042f2: 26 00
 
 [	ADD HL , HL] Z80:12cyc, R800:1cyc
-004202: 29
+0042f4: 29
 
 [	ADD HL , HL] Z80:12cyc, R800:1cyc
-004203: 29
+0042f5: 29
 
 [	ADD HL , HL] Z80:12cyc, R800:1cyc
-004204: 29
+0042f6: 29
 
 [	ADD HL , HL] Z80:12cyc, R800:1cyc
-004205: 29
+0042f7: 29
 
 [	ADD HL , HL] Z80:12cyc, R800:1cyc
-004206: 29
+0042f8: 29
 
 [	LD DE , PALETTE_SET_ARRAY] Z80:11cyc, R800:3cyc
-004207: 11 c0 4a
+0042f9: 11 c2 4b
 
 [	ADD HL , DE] Z80:12cyc, R800:1cyc
-00420a: 19
+0042fc: 19
 
 [	LD [ PALETTE_SET_ADDRESS ] , HL] Z80:17cyc, R800:7cyc
-00420b: 22 04 c0
+0042fd: 22 04 c0
 
 [	RET] Z80:11cyc, R800:5cyc
-00420e: c9
+004300: c9
 
 [	ENDSCOPE]
 	Scope path: 
@@ -1043,5195 +1402,5214 @@ Define macro {PRINT MACRO STR}
 	Scope path: UPDATE_PALETTE:
 
 [UPDATE_PALETTE ::]
-	global label address: 0x00420f
+	global label address: 0x004301
 
 [	DI] Z80:5cyc, R800:2cyc
-00420f: f3
+004301: f3
 
 [	XOR A , A] Z80:5cyc, R800:1cyc
-004210: af
+004302: af
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-004211: d3 99
+004303: d3 99
 
 [	LD A , 0X80 | 16] Z80:8cyc, R800:2cyc
-004213: 3e 90
+004305: 3e 90
 
 [	OUT [ VDP_PORT1 ] , A] Z80:12cyc, R800:10 or 9cyc
-004215: d3 99
+004307: d3 99
 
 [	EI] Z80:5cyc, R800:1cyc
-004217: fb
+004309: fb
 
 [	LD HL , [ PALETTE_SET_ADDRESS ]] Z80:17cyc, R800:7cyc
-004218: 2a 04 c0
+00430a: 2a 04 c0
 
 [	LD BC , ( 32 << 8 ) | VDP_PORT2] Z80:11cyc, R800:3cyc
-00421b: 01 9a 20
+00430d: 01 9a 20
 
 [	OTIR] Z80:23 or 18cyc, R800:? or 12 or 11cyc
-00421e: ed b3
+004310: ed b3
 
 [	RET] Z80:11cyc, R800:5cyc
-004220: c9
+004312: c9
 
 [	ENDSCOPE]
 	Scope path: 
 
 [FONT_DATA ::]
-	global label address: 0x004221
+	global label address: 0x004313
 
 [	INCLUDE ".//font.asm"] begin
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004221: 00 00 00 00 00 00 00 00
+004313: 00 00 00 00 00 00 00 00
 
 [	DB 0X3F , 0X21 , 0X3F , 0X21 , 0X3F , 0X21 , 0X43 , 0X00]
-004229: 3f 21 3f 21 3f 21 43 00
+00431b: 3f 21 3f 21 3f 21 43 00
 
 [	DB 0X08 , 0X49 , 0X2A , 0X08 , 0X14 , 0X22 , 0X41 , 0X00]
-004231: 08 49 2a 08 14 22 41 00
+004323: 08 49 2a 08 14 22 41 00
 
 [	DB 0X10 , 0X11 , 0X76 , 0X18 , 0X34 , 0X52 , 0X11 , 0X00]
-004239: 10 11 76 18 34 52 11 00
+00432b: 10 11 76 18 34 52 11 00
 
 [	DB 0X08 , 0X08 , 0X7F , 0X08 , 0X1C , 0X2A , 0X49 , 0X00]
-004241: 08 08 7f 08 1c 2a 49 00
+004333: 08 08 7f 08 1c 2a 49 00
 
 [	DB 0X08 , 0X14 , 0X3E , 0X49 , 0X1C , 0X2A , 0X7F , 0X00]
-004249: 08 14 3e 49 1c 2a 7f 00
+00433b: 08 14 3e 49 1c 2a 7f 00
 
 [	DB 0X08 , 0X08 , 0X3E , 0X08 , 0X08 , 0X08 , 0X7F , 0X00]
-004251: 08 08 3e 08 08 08 7f 00
+004343: 08 08 3e 08 08 08 7f 00
 
 [	DB 0X7F , 0X41 , 0X41 , 0X7F , 0X41 , 0X41 , 0X7F , 0X00]
-004259: 7f 41 41 7f 41 41 7f 00
+00434b: 7f 41 41 7f 41 41 7f 00
 
 [	DB 0X20 , 0X3E , 0X48 , 0X3E , 0X28 , 0X7F , 0X08 , 0X00]
-004261: 20 3e 48 3e 28 7f 08 00
+004353: 20 3e 48 3e 28 7f 08 00
 
 [	DB 0X7F , 0X49 , 0X49 , 0X7F , 0X41 , 0X41 , 0X43 , 0X00]
-004269: 7f 49 49 7f 41 41 43 00
+00435b: 7f 49 49 7f 41 41 43 00
 
 [	DB 0X04 , 0X6E , 0X54 , 0X7F , 0X5E , 0X6A , 0X06 , 0X00]
-004271: 04 6e 54 7f 5e 6a 06 00
+004363: 04 6e 54 7f 5e 6a 06 00
 
 [	DB 0X08 , 0X14 , 0X22 , 0X5D , 0X0A , 0X12 , 0X26 , 0X00]
-004279: 08 14 22 5d 0a 12 26 00
+00436b: 08 14 22 5d 0a 12 26 00
 
 [	DB 0X64 , 0X2E , 0X75 , 0X24 , 0X75 , 0X66 , 0X38 , 0X00]
-004281: 64 2e 75 24 75 66 38 00
+004373: 64 2e 75 24 75 66 38 00
 
 [	DB 0X3E , 0X10 , 0X3E , 0X22 , 0X3E , 0X22 , 0X3E , 0X00]
-004289: 3e 10 3e 22 3e 22 3e 00
+00437b: 3e 10 3e 22 3e 22 3e 00
 
 [	DB 0X06 , 0X38 , 0X08 , 0X7F , 0X08 , 0X08 , 0X08 , 0X00]
-004291: 06 38 08 7f 08 08 08 00
+004383: 06 38 08 7f 08 08 08 00
 
 [	DB 0X7E , 0X10 , 0X1E , 0X22 , 0X22 , 0X42 , 0X0C , 0X00]
-004299: 7e 10 1e 22 22 42 0c 00
+00438b: 7e 10 1e 22 22 42 0c 00
 
 [	DB 0X00 , 0X7E , 0X28 , 0X28 , 0X48 , 0X48 , 0X47 , 0X00]
-0042a1: 00 7e 28 28 48 48 47 00
+004393: 00 7e 28 28 48 48 47 00
 
 [	DB 0X18 , 0X18 , 0X18 , 0XFF , 0XFF , 0X00 , 0X00 , 0X00]
-0042a9: 18 18 18 ff ff 00 00 00
+00439b: 18 18 18 ff ff 00 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0XFF , 0XFF , 0X18 , 0X18 , 0X18]
-0042b1: 00 00 00 ff ff 18 18 18
+0043a3: 00 00 00 ff ff 18 18 18
 
 [	DB 0X18 , 0X18 , 0X18 , 0XF8 , 0XF8 , 0X18 , 0X18 , 0X18]
-0042b9: 18 18 18 f8 f8 18 18 18
+0043ab: 18 18 18 f8 f8 18 18 18
 
 [	DB 0X18 , 0X18 , 0X18 , 0X1F , 0X1F , 0X18 , 0X18 , 0X18]
-0042c1: 18 18 18 1f 1f 18 18 18
+0043b3: 18 18 18 1f 1f 18 18 18
 
 [	DB 0X18 , 0X18 , 0X18 , 0XFF , 0XFF , 0X18 , 0X18 , 0X18]
-0042c9: 18 18 18 ff ff 18 18 18
+0043bb: 18 18 18 ff ff 18 18 18
 
 [	DB 0X18 , 0X18 , 0X18 , 0X18 , 0X18 , 0X18 , 0X18 , 0X18]
-0042d1: 18 18 18 18 18 18 18 18
+0043c3: 18 18 18 18 18 18 18 18
 
 [	DB 0X00 , 0X00 , 0X00 , 0XFF , 0XFF , 0X00 , 0X00 , 0X00]
-0042d9: 00 00 00 ff ff 00 00 00
+0043cb: 00 00 00 ff ff 00 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X0F , 0X1F , 0X18 , 0X18 , 0X18]
-0042e1: 00 00 00 0f 1f 18 18 18
+0043d3: 00 00 00 0f 1f 18 18 18
 
 [	DB 0X00 , 0X00 , 0X00 , 0XF0 , 0XF8 , 0X18 , 0X18 , 0X18]
-0042e9: 00 00 00 f0 f8 18 18 18
+0043db: 00 00 00 f0 f8 18 18 18
 
 [	DB 0X18 , 0X18 , 0X18 , 0X1F , 0X0F , 0X00 , 0X00 , 0X00]
-0042f1: 18 18 18 1f 0f 00 00 00
+0043e3: 18 18 18 1f 0f 00 00 00
 
 [	DB 0X18 , 0X18 , 0X18 , 0XF8 , 0XF0 , 0X00 , 0X00 , 0X00]
-0042f9: 18 18 18 f8 f0 00 00 00
+0043eb: 18 18 18 f8 f0 00 00 00
 
 [	DB 0X81 , 0X42 , 0X24 , 0X18 , 0X18 , 0X24 , 0X42 , 0X81]
-004301: 81 42 24 18 18 24 42 81
+0043f3: 81 42 24 18 18 24 42 81
 
 [	DB 0X08 , 0X08 , 0X7F , 0X08 , 0X14 , 0X22 , 0X41 , 0X00]
-004309: 08 08 7f 08 14 22 41 00
+0043fb: 08 08 7f 08 14 22 41 00
 
 [	DB 0X08 , 0X08 , 0X7F , 0X49 , 0X7F , 0X08 , 0X08 , 0X00]
-004311: 08 08 7f 49 7f 08 08 00
+004403: 08 08 7f 49 7f 08 08 00
 
 [	DB 0X08 , 0X08 , 0X2A , 0X29 , 0X49 , 0X08 , 0X18 , 0X00]
-004319: 08 08 2a 29 49 08 18 00
+00440b: 08 08 2a 29 49 08 18 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004321: 00 00 00 00 00 00 00 00
+004413: 00 00 00 00 00 00 00 00
 
 [	DB 0X08 , 0X1C , 0X1C , 0X1C , 0X08 , 0X00 , 0X08 , 0X00]
-004329: 08 1c 1c 1c 08 00 08 00
+00441b: 08 1c 1c 1c 08 00 08 00
 
 [	DB 0X14 , 0X14 , 0X28 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004331: 14 14 28 00 00 00 00 00
+004423: 14 14 28 00 00 00 00 00
 
 [	DB 0X00 , 0X14 , 0X3E , 0X14 , 0X3E , 0X14 , 0X00 , 0X00]
-004339: 00 14 3e 14 3e 14 00 00
+00442b: 00 14 3e 14 3e 14 00 00
 
 [	DB 0X14 , 0X3F , 0X54 , 0X3E , 0X15 , 0X7E , 0X14 , 0X00]
-004341: 14 3f 54 3e 15 7e 14 00
+004433: 14 3f 54 3e 15 7e 14 00
 
 [	DB 0X21 , 0X52 , 0X24 , 0X08 , 0X12 , 0X25 , 0X42 , 0X00]
-004349: 21 52 24 08 12 25 42 00
+00443b: 21 52 24 08 12 25 42 00
 
 [	DB 0X18 , 0X24 , 0X24 , 0X19 , 0X26 , 0X44 , 0X3B , 0X00]
-004351: 18 24 24 19 26 44 3b 00
+004443: 18 24 24 19 26 44 3b 00
 
 [	DB 0X18 , 0X18 , 0X08 , 0X10 , 0X00 , 0X00 , 0X00 , 0X00]
-004359: 18 18 08 10 00 00 00 00
+00444b: 18 18 08 10 00 00 00 00
 
 [	DB 0X04 , 0X08 , 0X10 , 0X10 , 0X10 , 0X08 , 0X04 , 0X00]
-004361: 04 08 10 10 10 08 04 00
+004453: 04 08 10 10 10 08 04 00
 
 [	DB 0X10 , 0X08 , 0X04 , 0X04 , 0X04 , 0X08 , 0X10 , 0X00]
-004369: 10 08 04 04 04 08 10 00
+00445b: 10 08 04 04 04 08 10 00
 
 [	DB 0X00 , 0X2A , 0X1C , 0X08 , 0X1C , 0X2A , 0X00 , 0X00]
-004371: 00 2a 1c 08 1c 2a 00 00
+004463: 00 2a 1c 08 1c 2a 00 00
 
 [	DB 0X00 , 0X08 , 0X08 , 0X3E , 0X08 , 0X08 , 0X00 , 0X00]
-004379: 00 08 08 3e 08 08 00 00
+00446b: 00 08 08 3e 08 08 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X18 , 0X18 , 0X08 , 0X10]
-004381: 00 00 00 00 18 18 08 10
+004473: 00 00 00 00 18 18 08 10
 
 [	DB 0X00 , 0X00 , 0X00 , 0X3E , 0X00 , 0X00 , 0X00 , 0X00]
-004389: 00 00 00 3e 00 00 00 00
+00447b: 00 00 00 3e 00 00 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X18 , 0X18 , 0X00]
-004391: 00 00 00 00 00 18 18 00
+004483: 00 00 00 00 00 18 18 00
 
 [	DB 0X00 , 0X02 , 0X04 , 0X08 , 0X10 , 0X20 , 0X00 , 0X00]
-004399: 00 02 04 08 10 20 00 00
+00448b: 00 02 04 08 10 20 00 00
 
 [	DB 0X3C , 0X42 , 0X46 , 0X5A , 0X62 , 0X42 , 0X3C , 0X00]
-0043a1: 3c 42 46 5a 62 42 3c 00
+004493: 3c 42 46 5a 62 42 3c 00
 
 [	DB 0X08 , 0X18 , 0X08 , 0X08 , 0X08 , 0X08 , 0X1C , 0X00]
-0043a9: 08 18 08 08 08 08 1c 00
+00449b: 08 18 08 08 08 08 1c 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X06 , 0X38 , 0X40 , 0X7F , 0X00]
-0043b1: 3e 41 41 06 38 40 7f 00
+0044a3: 3e 41 41 06 38 40 7f 00
 
 [	DB 0X3E , 0X41 , 0X01 , 0X1E , 0X01 , 0X41 , 0X3E , 0X00]
-0043b9: 3e 41 01 1e 01 41 3e 00
+0044ab: 3e 41 01 1e 01 41 3e 00
 
 [	DB 0X0C , 0X14 , 0X24 , 0X44 , 0X44 , 0X7F , 0X04 , 0X00]
-0043c1: 0c 14 24 44 44 7f 04 00
+0044b3: 0c 14 24 44 44 7f 04 00
 
 [	DB 0X7F , 0X40 , 0X40 , 0X7E , 0X01 , 0X01 , 0X7E , 0X00]
-0043c9: 7f 40 40 7e 01 01 7e 00
+0044bb: 7f 40 40 7e 01 01 7e 00
 
 [	DB 0X3E , 0X41 , 0X40 , 0X7E , 0X41 , 0X41 , 0X3E , 0X00]
-0043d1: 3e 41 40 7e 41 41 3e 00
+0044c3: 3e 41 40 7e 41 41 3e 00
 
 [	DB 0X7F , 0X41 , 0X02 , 0X04 , 0X04 , 0X08 , 0X08 , 0X00]
-0043d9: 7f 41 02 04 04 08 08 00
+0044cb: 7f 41 02 04 04 08 08 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X3E , 0X41 , 0X41 , 0X3E , 0X00]
-0043e1: 3e 41 41 3e 41 41 3e 00
+0044d3: 3e 41 41 3e 41 41 3e 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X3F , 0X01 , 0X01 , 0X3E , 0X00]
-0043e9: 3e 41 41 3f 01 01 3e 00
+0044db: 3e 41 41 3f 01 01 3e 00
 
 [	DB 0X00 , 0X18 , 0X18 , 0X00 , 0X18 , 0X18 , 0X00 , 0X00]
-0043f1: 00 18 18 00 18 18 00 00
+0044e3: 00 18 18 00 18 18 00 00
 
 [	DB 0X00 , 0X18 , 0X18 , 0X00 , 0X18 , 0X18 , 0X08 , 0X10]
-0043f9: 00 18 18 00 18 18 08 10
+0044eb: 00 18 18 00 18 18 08 10
 
 [	DB 0X03 , 0X0C , 0X30 , 0X40 , 0X30 , 0X0C , 0X03 , 0X00]
-004401: 03 0c 30 40 30 0c 03 00
+0044f3: 03 0c 30 40 30 0c 03 00
 
 [	DB 0X00 , 0X00 , 0X3E , 0X00 , 0X3E , 0X00 , 0X00 , 0X00]
-004409: 00 00 3e 00 3e 00 00 00
+0044fb: 00 00 3e 00 3e 00 00 00
 
 [	DB 0X60 , 0X18 , 0X06 , 0X01 , 0X06 , 0X18 , 0X60 , 0X00]
-004411: 60 18 06 01 06 18 60 00
+004503: 60 18 06 01 06 18 60 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X06 , 0X08 , 0X00 , 0X08 , 0X00]
-004419: 3e 41 41 06 08 00 08 00
+00450b: 3e 41 41 06 08 00 08 00
 
 [	DB 0X3C , 0X42 , 0X02 , 0X32 , 0X4A , 0X4A , 0X3C , 0X00]
-004421: 3c 42 02 32 4a 4a 3c 00
+004513: 3c 42 02 32 4a 4a 3c 00
 
 [	DB 0X1C , 0X22 , 0X41 , 0X41 , 0X41 , 0X7F , 0X41 , 0X00]
-004429: 1c 22 41 41 41 7f 41 00
+00451b: 1c 22 41 41 41 7f 41 00
 
 [	DB 0X7E , 0X41 , 0X41 , 0X7E , 0X41 , 0X41 , 0X7E , 0X00]
-004431: 7e 41 41 7e 41 41 7e 00
+004523: 7e 41 41 7e 41 41 7e 00
 
 [	DB 0X3E , 0X41 , 0X40 , 0X40 , 0X40 , 0X41 , 0X3E , 0X00]
-004439: 3e 41 40 40 40 41 3e 00
+00452b: 3e 41 40 40 40 41 3e 00
 
 [	DB 0X7C , 0X42 , 0X41 , 0X41 , 0X41 , 0X42 , 0X7C , 0X00]
-004441: 7c 42 41 41 41 42 7c 00
+004533: 7c 42 41 41 41 42 7c 00
 
 [	DB 0X7F , 0X40 , 0X40 , 0X7E , 0X40 , 0X40 , 0X7F , 0X00]
-004449: 7f 40 40 7e 40 40 7f 00
+00453b: 7f 40 40 7e 40 40 7f 00
 
 [	DB 0X7F , 0X40 , 0X40 , 0X7E , 0X40 , 0X40 , 0X40 , 0X00]
-004451: 7f 40 40 7e 40 40 40 00
+004543: 7f 40 40 7e 40 40 40 00
 
 [	DB 0X3E , 0X41 , 0X40 , 0X4F , 0X41 , 0X41 , 0X3E , 0X00]
-004459: 3e 41 40 4f 41 41 3e 00
+00454b: 3e 41 40 4f 41 41 3e 00
 
 [	DB 0X41 , 0X41 , 0X41 , 0X7F , 0X41 , 0X41 , 0X41 , 0X00]
-004461: 41 41 41 7f 41 41 41 00
+004553: 41 41 41 7f 41 41 41 00
 
 [	DB 0X1C , 0X08 , 0X08 , 0X08 , 0X08 , 0X08 , 0X1C , 0X00]
-004469: 1c 08 08 08 08 08 1c 00
+00455b: 1c 08 08 08 08 08 1c 00
 
 [	DB 0X01 , 0X01 , 0X01 , 0X01 , 0X41 , 0X41 , 0X3E , 0X00]
-004471: 01 01 01 01 41 41 3e 00
+004563: 01 01 01 01 41 41 3e 00
 
 [	DB 0X43 , 0X4C , 0X70 , 0X48 , 0X44 , 0X42 , 0X41 , 0X00]
-004479: 43 4c 70 48 44 42 41 00
+00456b: 43 4c 70 48 44 42 41 00
 
 [	DB 0X40 , 0X40 , 0X40 , 0X40 , 0X40 , 0X40 , 0X7F , 0X00]
-004481: 40 40 40 40 40 40 7f 00
+004573: 40 40 40 40 40 40 7f 00
 
 [	DB 0X41 , 0X63 , 0X55 , 0X49 , 0X41 , 0X41 , 0X41 , 0X00]
-004489: 41 63 55 49 41 41 41 00
+00457b: 41 63 55 49 41 41 41 00
 
 [	DB 0X41 , 0X61 , 0X51 , 0X49 , 0X45 , 0X43 , 0X41 , 0X00]
-004491: 41 61 51 49 45 43 41 00
+004583: 41 61 51 49 45 43 41 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X41 , 0X41 , 0X41 , 0X3E , 0X00]
-004499: 3e 41 41 41 41 41 3e 00
+00458b: 3e 41 41 41 41 41 3e 00
 
 [	DB 0X7E , 0X41 , 0X41 , 0X41 , 0X7E , 0X40 , 0X40 , 0X00]
-0044a1: 7e 41 41 41 7e 40 40 00
+004593: 7e 41 41 41 7e 40 40 00
 
 [	DB 0X3E , 0X41 , 0X41 , 0X41 , 0X4D , 0X52 , 0X3D , 0X00]
-0044a9: 3e 41 41 41 4d 52 3d 00
+00459b: 3e 41 41 41 4d 52 3d 00
 
 [	DB 0X7E , 0X41 , 0X41 , 0X41 , 0X7E , 0X48 , 0X47 , 0X00]
-0044b1: 7e 41 41 41 7e 48 47 00
+0045a3: 7e 41 41 41 7e 48 47 00
 
 [	DB 0X3E , 0X41 , 0X40 , 0X3E , 0X01 , 0X41 , 0X3E , 0X00]
-0044b9: 3e 41 40 3e 01 41 3e 00
+0045ab: 3e 41 40 3e 01 41 3e 00
 
 [	DB 0X7F , 0X08 , 0X08 , 0X08 , 0X08 , 0X08 , 0X08 , 0X00]
-0044c1: 7f 08 08 08 08 08 08 00
+0045b3: 7f 08 08 08 08 08 08 00
 
 [	DB 0X41 , 0X41 , 0X41 , 0X41 , 0X41 , 0X41 , 0X3E , 0X00]
-0044c9: 41 41 41 41 41 41 3e 00
+0045bb: 41 41 41 41 41 41 3e 00
 
 [	DB 0X41 , 0X41 , 0X22 , 0X22 , 0X14 , 0X14 , 0X08 , 0X00]
-0044d1: 41 41 22 22 14 14 08 00
+0045c3: 41 41 22 22 14 14 08 00
 
 [	DB 0X41 , 0X41 , 0X41 , 0X49 , 0X55 , 0X63 , 0X41 , 0X00]
-0044d9: 41 41 41 49 55 63 41 00
+0045cb: 41 41 41 49 55 63 41 00
 
 [	DB 0X41 , 0X22 , 0X14 , 0X08 , 0X14 , 0X22 , 0X41 , 0X00]
-0044e1: 41 22 14 08 14 22 41 00
+0045d3: 41 22 14 08 14 22 41 00
 
 [	DB 0X41 , 0X22 , 0X14 , 0X08 , 0X08 , 0X08 , 0X08 , 0X00]
-0044e9: 41 22 14 08 08 08 08 00
+0045db: 41 22 14 08 08 08 08 00
 
 [	DB 0X7F , 0X02 , 0X04 , 0X08 , 0X10 , 0X20 , 0X7F , 0X00]
-0044f1: 7f 02 04 08 10 20 7f 00
+0045e3: 7f 02 04 08 10 20 7f 00
 
 [	DB 0X1C , 0X10 , 0X10 , 0X10 , 0X10 , 0X10 , 0X1C , 0X00]
-0044f9: 1c 10 10 10 10 10 1c 00
+0045eb: 1c 10 10 10 10 10 1c 00
 
 [	DB 0X22 , 0X14 , 0X3E , 0X08 , 0X3E , 0X08 , 0X08 , 0X00]
-004501: 22 14 3e 08 3e 08 08 00
+0045f3: 22 14 3e 08 3e 08 08 00
 
 [	DB 0X1C , 0X04 , 0X04 , 0X04 , 0X04 , 0X04 , 0X1C , 0X00]
-004509: 1c 04 04 04 04 04 1c 00
+0045fb: 1c 04 04 04 04 04 1c 00
 
 [	DB 0X08 , 0X14 , 0X22 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004511: 08 14 22 00 00 00 00 00
+004603: 08 14 22 00 00 00 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X7F , 0X00]
-004519: 00 00 00 00 00 00 7f 00
+00460b: 00 00 00 00 00 00 7f 00
 
 [	DB 0X18 , 0X18 , 0X10 , 0X08 , 0X00 , 0X00 , 0X00 , 0X00]
-004521: 18 18 10 08 00 00 00 00
+004613: 18 18 10 08 00 00 00 00
 
 [	DB 0X00 , 0X3C , 0X02 , 0X3E , 0X42 , 0X42 , 0X3D , 0X00]
-004529: 00 3c 02 3e 42 42 3d 00
+00461b: 00 3c 02 3e 42 42 3d 00
 
 [	DB 0X40 , 0X40 , 0X40 , 0X7E , 0X41 , 0X41 , 0X7E , 0X00]
-004531: 40 40 40 7e 41 41 7e 00
+004623: 40 40 40 7e 41 41 7e 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X3E , 0X40 , 0X40 , 0X3E , 0X00]
-004539: 00 00 00 3e 40 40 3e 00
+00462b: 00 00 00 3e 40 40 3e 00
 
 [	DB 0X01 , 0X01 , 0X01 , 0X3F , 0X41 , 0X41 , 0X3F , 0X00]
-004541: 01 01 01 3f 41 41 3f 00
+004633: 01 01 01 3f 41 41 3f 00
 
 [	DB 0X00 , 0X00 , 0X3E , 0X41 , 0X7F , 0X40 , 0X3E , 0X00]
-004549: 00 00 3e 41 7f 40 3e 00
+00463b: 00 00 3e 41 7f 40 3e 00
 
 [	DB 0X0E , 0X10 , 0X10 , 0X7E , 0X10 , 0X10 , 0X10 , 0X00]
-004551: 0e 10 10 7e 10 10 10 00
+004643: 0e 10 10 7e 10 10 10 00
 
 [	DB 0X00 , 0X00 , 0X3E , 0X41 , 0X3F , 0X01 , 0X3E , 0X00]
-004559: 00 00 3e 41 3f 01 3e 00
+00464b: 00 00 3e 41 3f 01 3e 00
 
 [	DB 0X40 , 0X40 , 0X40 , 0X7E , 0X41 , 0X41 , 0X41 , 0X00]
-004561: 40 40 40 7e 41 41 41 00
+004653: 40 40 40 7e 41 41 41 00
 
 [	DB 0X08 , 0X08 , 0X00 , 0X08 , 0X08 , 0X08 , 0X08 , 0X00]
-004569: 08 08 00 08 08 08 08 00
+00465b: 08 08 00 08 08 08 08 00
 
 [	DB 0X04 , 0X04 , 0X00 , 0X04 , 0X04 , 0X04 , 0X44 , 0X38]
-004571: 04 04 00 04 04 04 44 38
+004663: 04 04 00 04 04 04 44 38
 
 [	DB 0X20 , 0X20 , 0X20 , 0X26 , 0X38 , 0X24 , 0X22 , 0X00]
-004579: 20 20 20 26 38 24 22 00
+00466b: 20 20 20 26 38 24 22 00
 
 [	DB 0X10 , 0X08 , 0X08 , 0X08 , 0X08 , 0X08 , 0X04 , 0X00]
-004581: 10 08 08 08 08 08 04 00
+004673: 10 08 08 08 08 08 04 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X76 , 0X49 , 0X49 , 0X49 , 0X00]
-004589: 00 00 00 76 49 49 49 00
+00467b: 00 00 00 76 49 49 49 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X7C , 0X42 , 0X41 , 0X41 , 0X00]
-004591: 00 00 00 7c 42 41 41 00
+004683: 00 00 00 7c 42 41 41 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X3E , 0X41 , 0X41 , 0X3E , 0X00]
-004599: 00 00 00 3e 41 41 3e 00
+00468b: 00 00 00 3e 41 41 3e 00
 
 [	DB 0X00 , 0X00 , 0X7E , 0X41 , 0X41 , 0X7E , 0X40 , 0X40]
-0045a1: 00 00 7e 41 41 7e 40 40
+004693: 00 00 7e 41 41 7e 40 40
 
 [	DB 0X00 , 0X00 , 0X3F , 0X41 , 0X41 , 0X3F , 0X01 , 0X01]
-0045a9: 00 00 3f 41 41 3f 01 01
+00469b: 00 00 3f 41 41 3f 01 01
 
 [	DB 0X00 , 0X00 , 0X5E , 0X60 , 0X40 , 0X40 , 0X40 , 0X00]
-0045b1: 00 00 5e 60 40 40 40 00
+0046a3: 00 00 5e 60 40 40 40 00
 
 [	DB 0X00 , 0X00 , 0X3F , 0X40 , 0X3E , 0X01 , 0X7E , 0X00]
-0045b9: 00 00 3f 40 3e 01 7e 00
+0046ab: 00 00 3f 40 3e 01 7e 00
 
 [	DB 0X00 , 0X08 , 0X08 , 0X7F , 0X08 , 0X08 , 0X07 , 0X00]
-0045c1: 00 08 08 7f 08 08 07 00
+0046b3: 00 08 08 7f 08 08 07 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X41 , 0X41 , 0X41 , 0X3F , 0X00]
-0045c9: 00 00 00 41 41 41 3f 00
+0046bb: 00 00 00 41 41 41 3f 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X41 , 0X22 , 0X14 , 0X08 , 0X00]
-0045d1: 00 00 00 41 22 14 08 00
+0046c3: 00 00 00 41 22 14 08 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X41 , 0X49 , 0X49 , 0X36 , 0X00]
-0045d9: 00 00 00 41 49 49 36 00
+0046cb: 00 00 00 41 49 49 36 00
 
 [	DB 0X00 , 0X00 , 0X63 , 0X14 , 0X08 , 0X14 , 0X63 , 0X00]
-0045e1: 00 00 63 14 08 14 63 00
+0046d3: 00 00 63 14 08 14 63 00
 
 [	DB 0X00 , 0X00 , 0X41 , 0X41 , 0X41 , 0X3F , 0X01 , 0X3E]
-0045e9: 00 00 41 41 41 3f 01 3e
+0046db: 00 00 41 41 41 3f 01 3e
 
 [	DB 0X00 , 0X00 , 0X7F , 0X03 , 0X1C , 0X60 , 0X7F , 0X00]
-0045f1: 00 00 7f 03 1c 60 7f 00
+0046e3: 00 00 7f 03 1c 60 7f 00
 
 [	DB 0X0C , 0X10 , 0X10 , 0X20 , 0X10 , 0X10 , 0X0C , 0X00]
-0045f9: 0c 10 10 20 10 10 0c 00
+0046eb: 0c 10 10 20 10 10 0c 00
 
 [	DB 0X08 , 0X08 , 0X08 , 0X00 , 0X08 , 0X08 , 0X08 , 0X00]
-004601: 08 08 08 00 08 08 08 00
+0046f3: 08 08 08 00 08 08 08 00
 
 [	DB 0X18 , 0X04 , 0X04 , 0X02 , 0X04 , 0X04 , 0X18 , 0X00]
-004609: 18 04 04 02 04 04 18 00
+0046fb: 18 04 04 02 04 04 18 00
 
 [	DB 0X00 , 0X00 , 0X30 , 0X49 , 0X06 , 0X00 , 0X00 , 0X00]
-004611: 00 00 30 49 06 00 00 00
+004703: 00 00 30 49 06 00 00 00
 
 [	DB 0X08 , 0X18 , 0X3E , 0X7E , 0X3E , 0X18 , 0X08 , 0X00]
-004619: 08 18 3e 7e 3e 18 08 00
+00470b: 08 18 3e 7e 3e 18 08 00
 
 [	DB 0X08 , 0X1C , 0X3E , 0X7F , 0X7F , 0X2A , 0X1C , 0X00]
-004621: 08 1c 3e 7f 7f 2a 1c 00
+004713: 08 1c 3e 7f 7f 2a 1c 00
 
 [	DB 0X36 , 0X7F , 0X7F , 0X7F , 0X3E , 0X1C , 0X08 , 0X00]
-004629: 36 7f 7f 7f 3e 1c 08 00
+00471b: 36 7f 7f 7f 3e 1c 08 00
 
 [	DB 0X08 , 0X1C , 0X1C , 0X6B , 0X7F , 0X2A , 0X1C , 0X00]
-004631: 08 1c 1c 6b 7f 2a 1c 00
+004723: 08 1c 1c 6b 7f 2a 1c 00
 
 [	DB 0X08 , 0X1C , 0X3E , 0X7F , 0X3E , 0X1C , 0X08 , 0X00]
-004639: 08 1c 3e 7f 3e 1c 08 00
+00472b: 08 1c 3e 7f 3e 1c 08 00
 
 [	DB 0X1C , 0X22 , 0X41 , 0X41 , 0X41 , 0X22 , 0X1C , 0X00]
-004641: 1c 22 41 41 41 22 1c 00
+004733: 1c 22 41 41 41 22 1c 00
 
 [	DB 0X1C , 0X3E , 0X7F , 0X7F , 0X7F , 0X3E , 0X1C , 0X00]
-004649: 1c 3e 7f 7f 7f 3e 1c 00
+00473b: 1c 3e 7f 7f 7f 3e 1c 00
 
 [	DB 0X08 , 0X3C , 0X10 , 0X3E , 0X64 , 0X40 , 0X3E , 0X00]
-004651: 08 3c 10 3e 64 40 3e 00
+004743: 08 3c 10 3e 64 40 3e 00
 
 [	DB 0X00 , 0X08 , 0X3E , 0X08 , 0X3D , 0X2E , 0X1A , 0X00]
-004659: 00 08 3e 08 3d 2e 1a 00
+00474b: 00 08 3e 08 3d 2e 1a 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X42 , 0X42 , 0X40 , 0X20 , 0X00]
-004661: 00 00 00 42 42 40 20 00
+004753: 00 00 00 42 42 40 20 00
 
 [	DB 0X00 , 0X1C , 0X00 , 0X3C , 0X02 , 0X02 , 0X0C , 0X00]
-004669: 00 1c 00 3c 02 02 0c 00
+00475b: 00 1c 00 3c 02 02 0c 00
 
 [	DB 0X00 , 0X1C , 0X00 , 0X3E , 0X04 , 0X18 , 0X26 , 0X00]
-004671: 00 1c 00 3e 04 18 26 00
+004763: 00 1c 00 3e 04 18 26 00
 
 [	DB 0X00 , 0X12 , 0X7D , 0X10 , 0X3E , 0X51 , 0X36 , 0X00]
-004679: 00 12 7d 10 3e 51 36 00
+00476b: 00 12 7d 10 3e 51 36 00
 
 [	DB 0X00 , 0X24 , 0X2E , 0X71 , 0X12 , 0X10 , 0X08 , 0X00]
-004681: 00 24 2e 71 12 10 08 00
+004773: 00 24 2e 71 12 10 08 00
 
 [	DB 0X00 , 0X04 , 0X0E , 0X55 , 0X55 , 0X66 , 0X08 , 0X00]
-004689: 00 04 0e 55 55 66 08 00
+00477b: 00 04 0e 55 55 66 08 00
 
 [	DB 0X00 , 0X08 , 0X0E , 0X08 , 0X3C , 0X4A , 0X30 , 0X00]
-004691: 00 08 0e 08 3c 4a 30 00
+004783: 00 08 0e 08 3c 4a 30 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X3C , 0X02 , 0X0C , 0X00]
-004699: 00 00 00 00 3c 02 0c 00
+00478b: 00 00 00 00 3c 02 0c 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-0046a1: 00 00 00 00 00 00 00 00
+004793: 00 00 00 00 00 00 00 00
 
 [	DB 0X10 , 0X7D , 0X12 , 0X3E , 0X55 , 0X59 , 0X32 , 0X00]
-0046a9: 10 7d 12 3e 55 59 32 00
+00479b: 10 7d 12 3e 55 59 32 00
 
 [	DB 0X00 , 0X42 , 0X41 , 0X41 , 0X41 , 0X50 , 0X20 , 0X00]
-0046b1: 00 42 41 41 41 50 20 00
+0047a3: 00 42 41 41 41 50 20 00
 
 [	DB 0X1C , 0X00 , 0X1C , 0X22 , 0X02 , 0X02 , 0X1C , 0X00]
-0046b9: 1c 00 1c 22 02 02 1c 00
+0047ab: 1c 00 1c 22 02 02 1c 00
 
 [	DB 0X1C , 0X00 , 0X3E , 0X04 , 0X08 , 0X14 , 0X27 , 0X00]
-0046c1: 1c 00 3e 04 08 14 27 00
+0047b3: 1c 00 3e 04 08 14 27 00
 
 [	DB 0X12 , 0X7D , 0X10 , 0X3E , 0X51 , 0X51 , 0X32 , 0X00]
-0046c9: 12 7d 10 3e 51 51 32 00
+0047bb: 12 7d 10 3e 51 51 32 00
 
 [	DB 0X12 , 0X11 , 0X79 , 0X25 , 0X24 , 0X44 , 0X48 , 0X00]
-0046d1: 12 11 79 25 24 44 48 00
+0047c3: 12 11 79 25 24 44 48 00
 
 [	DB 0X10 , 0X3E , 0X08 , 0X3E , 0X04 , 0X20 , 0X18 , 0X00]
-0046d9: 10 3e 08 3e 04 20 18 00
+0047cb: 10 3e 08 3e 04 20 18 00
 
 [	DB 0X02 , 0X0C , 0X10 , 0X20 , 0X10 , 0X0C , 0X02 , 0X00]
-0046e1: 02 0c 10 20 10 0c 02 00
+0047d3: 02 0c 10 20 10 0c 02 00
 
 [	DB 0X02 , 0X42 , 0X5F , 0X42 , 0X42 , 0X42 , 0X24 , 0X00]
-0046e9: 02 42 5f 42 42 42 24 00
+0047db: 02 42 5f 42 42 42 24 00
 
 [	DB 0X00 , 0X3E , 0X04 , 0X00 , 0X00 , 0X40 , 0X3E , 0X00]
-0046f1: 00 3e 04 00 00 40 3e 00
+0047e3: 00 3e 04 00 00 40 3e 00
 
 [	DB 0X08 , 0X08 , 0X3E , 0X04 , 0X0C , 0X20 , 0X1C , 0X00]
-0046f9: 08 08 3e 04 0c 20 1c 00
+0047eb: 08 08 3e 04 0c 20 1c 00
 
 [	DB 0X00 , 0X20 , 0X20 , 0X20 , 0X22 , 0X22 , 0X1C , 0X00]
-004701: 00 20 20 20 22 22 1c 00
+0047f3: 00 20 20 20 22 22 1c 00
 
 [	DB 0X04 , 0X7E , 0X04 , 0X0C , 0X14 , 0X0C , 0X04 , 0X00]
-004709: 04 7e 04 0c 14 0c 04 00
+0047fb: 04 7e 04 0c 14 0c 04 00
 
 [	DB 0X24 , 0X24 , 0X7E , 0X24 , 0X2C , 0X20 , 0X1E , 0X00]
-004711: 24 24 7e 24 2c 20 1e 00
+004803: 24 24 7e 24 2c 20 1e 00
 
 [	DB 0X3C , 0X08 , 0X10 , 0X7E , 0X20 , 0X20 , 0X1C , 0X00]
-004719: 3c 08 10 7e 20 20 1c 00
+00480b: 3c 08 10 7e 20 20 1c 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004721: 00 00 00 00 00 00 00 00
+004813: 00 00 00 00 00 00 00 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X0C , 0X12 , 0X12 , 0X0C]
-004729: 00 00 00 00 0c 12 12 0c
+00481b: 00 00 00 00 0c 12 12 0c
 
 [	DB 0X3C , 0X20 , 0X20 , 0X20 , 0X20 , 0X20 , 0X20 , 0X00]
-004731: 3c 20 20 20 20 20 20 00
+004823: 3c 20 20 20 20 20 20 00
 
 [	DB 0X00 , 0X02 , 0X02 , 0X02 , 0X02 , 0X02 , 0X02 , 0X1E]
-004739: 00 02 02 02 02 02 02 1e
+00482b: 00 02 02 02 02 02 02 1e
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X40 , 0X30 , 0X10]
-004741: 00 00 00 00 00 40 30 10
+004833: 00 00 00 00 00 40 30 10
 
 [	DB 0X00 , 0X00 , 0X00 , 0X18 , 0X18 , 0X00 , 0X00 , 0X00]
-004749: 00 00 00 18 18 00 00 00
+00483b: 00 00 00 18 18 00 00 00
 
 [	DB 0X7E , 0X02 , 0X7E , 0X02 , 0X04 , 0X08 , 0X30 , 0X00]
-004751: 7e 02 7e 02 04 08 30 00
+004843: 7e 02 7e 02 04 08 30 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X3E , 0X0A , 0X0C , 0X10 , 0X00]
-004759: 00 00 00 3e 0a 0c 10 00
+00484b: 00 00 00 3e 0a 0c 10 00
 
 [	DB 0X00 , 0X00 , 0X02 , 0X0C , 0X38 , 0X48 , 0X08 , 0X00]
-004761: 00 00 02 0c 38 48 08 00
+004853: 00 00 02 0c 38 48 08 00
 
 [	DB 0X00 , 0X00 , 0X08 , 0X7F , 0X41 , 0X02 , 0X1C , 0X00]
-004769: 00 00 08 7f 41 02 1c 00
+00485b: 00 00 08 7f 41 02 1c 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X3E , 0X08 , 0X08 , 0X3E , 0X00]
-004771: 00 00 00 3e 08 08 3e 00
+004863: 00 00 00 3e 08 08 3e 00
 
 [	DB 0X00 , 0X00 , 0X08 , 0X7E , 0X18 , 0X28 , 0X48 , 0X00]
-004779: 00 00 08 7e 18 28 48 00
+00486b: 00 00 08 7e 18 28 48 00
 
 [	DB 0X00 , 0X20 , 0X7E , 0X22 , 0X14 , 0X18 , 0X10 , 0X00]
-004781: 00 20 7e 22 14 18 10 00
+004873: 00 20 7e 22 14 18 10 00
 
 [	DB 0X00 , 0X00 , 0X3C , 0X04 , 0X04 , 0X04 , 0X7E , 0X00]
-004789: 00 00 3c 04 04 04 7e 00
+00487b: 00 00 3c 04 04 04 7e 00
 
 [	DB 0X00 , 0X00 , 0X3E , 0X02 , 0X3E , 0X02 , 0X3E , 0X00]
-004791: 00 00 3e 02 3e 02 3e 00
+004883: 00 00 3e 02 3e 02 3e 00
 
 [	DB 0X00 , 0X00 , 0X49 , 0X49 , 0X25 , 0X02 , 0X1C , 0X00]
-004799: 00 00 49 49 25 02 1c 00
+00488b: 00 00 49 49 25 02 1c 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X7F , 0X00 , 0X00 , 0X00 , 0X00]
-0047a1: 00 00 00 7f 00 00 00 00
+004893: 00 00 00 7f 00 00 00 00
 
 [	DB 0X7F , 0X11 , 0X12 , 0X1C , 0X10 , 0X10 , 0X20 , 0X00]
-0047a9: 7f 11 12 1c 10 10 20 00
+00489b: 7f 11 12 1c 10 10 20 00
 
 [	DB 0X02 , 0X0C , 0X38 , 0X48 , 0X08 , 0X08 , 0X08 , 0X00]
-0047b1: 02 0c 38 48 08 08 08 00
+0048a3: 02 0c 38 48 08 08 08 00
 
 [	DB 0X08 , 0X7F , 0X41 , 0X41 , 0X01 , 0X02 , 0X1C , 0X00]
-0047b9: 08 7f 41 41 01 02 1c 00
+0048ab: 08 7f 41 41 01 02 1c 00
 
 [	DB 0X00 , 0X3E , 0X08 , 0X08 , 0X08 , 0X08 , 0X7F , 0X00]
-0047c1: 00 3e 08 08 08 08 7f 00
+0048b3: 00 3e 08 08 08 08 7f 00
 
 [	DB 0X04 , 0X7F , 0X04 , 0X0C , 0X14 , 0X64 , 0X0C , 0X00]
-0047c9: 04 7f 04 0c 14 64 0c 00
+0048bb: 04 7f 04 0c 14 64 0c 00
 
 [	DB 0X10 , 0X10 , 0X7E , 0X12 , 0X22 , 0X22 , 0X46 , 0X00]
-0047d1: 10 10 7e 12 22 22 46 00
+0048c3: 10 10 7e 12 22 22 46 00
 
 [	DB 0X10 , 0X10 , 0X3E , 0X08 , 0X3E , 0X04 , 0X04 , 0X00]
-0047d9: 10 10 3e 08 3e 04 04 00
+0048cb: 10 10 3e 08 3e 04 04 00
 
 [	DB 0X3F , 0X21 , 0X41 , 0X02 , 0X02 , 0X04 , 0X08 , 0X00]
-0047e1: 3f 21 41 02 02 04 08 00
+0048d3: 3f 21 41 02 02 04 08 00
 
 [	DB 0X20 , 0X20 , 0X3F , 0X44 , 0X04 , 0X08 , 0X10 , 0X00]
-0047e9: 20 20 3f 44 04 08 10 00
+0048db: 20 20 3f 44 04 08 10 00
 
 [	DB 0X00 , 0X3E , 0X02 , 0X02 , 0X02 , 0X02 , 0X3E , 0X00]
-0047f1: 00 3e 02 02 02 02 3e 00
+0048e3: 00 3e 02 02 02 02 3e 00
 
 [	DB 0X12 , 0X12 , 0X3F , 0X12 , 0X02 , 0X04 , 0X08 , 0X00]
-0047f9: 12 12 3f 12 02 04 08 00
+0048eb: 12 12 3f 12 02 04 08 00
 
 [	DB 0X30 , 0X08 , 0X31 , 0X09 , 0X02 , 0X04 , 0X38 , 0X00]
-004801: 30 08 31 09 02 04 38 00
+0048f3: 30 08 31 09 02 04 38 00
 
 [	DB 0X3E , 0X02 , 0X04 , 0X08 , 0X08 , 0X14 , 0X22 , 0X00]
-004809: 3e 02 04 08 08 14 22 00
+0048fb: 3e 02 04 08 08 14 22 00
 
 [	DB 0X20 , 0X20 , 0X7E , 0X24 , 0X28 , 0X20 , 0X1C , 0X00]
-004811: 20 20 7e 24 28 20 1c 00
+004903: 20 20 7e 24 28 20 1c 00
 
 [	DB 0X00 , 0X41 , 0X41 , 0X22 , 0X02 , 0X04 , 0X18 , 0X00]
-004819: 00 41 41 22 02 04 18 00
+00490b: 00 41 41 22 02 04 18 00
 
 [	DB 0X3E , 0X22 , 0X22 , 0X5A , 0X06 , 0X04 , 0X18 , 0X00]
-004821: 3e 22 22 5a 06 04 18 00
+004913: 3e 22 22 5a 06 04 18 00
 
 [	DB 0X06 , 0X38 , 0X08 , 0X7F , 0X08 , 0X08 , 0X10 , 0X00]
-004829: 06 38 08 7f 08 08 10 00
+00491b: 06 38 08 7f 08 08 10 00
 
 [	DB 0X48 , 0X49 , 0X25 , 0X01 , 0X02 , 0X04 , 0X38 , 0X00]
-004831: 48 49 25 01 02 04 38 00
+004923: 48 49 25 01 02 04 38 00
 
 [	DB 0X3C , 0X00 , 0X7E , 0X08 , 0X08 , 0X08 , 0X10 , 0X00]
-004839: 3c 00 7e 08 08 08 10 00
+00492b: 3c 00 7e 08 08 08 10 00
 
 [	DB 0X20 , 0X20 , 0X20 , 0X38 , 0X24 , 0X22 , 0X20 , 0X00]
-004841: 20 20 20 38 24 22 20 00
+004933: 20 20 20 38 24 22 20 00
 
 [	DB 0X08 , 0X08 , 0X7E , 0X08 , 0X08 , 0X10 , 0X20 , 0X00]
-004849: 08 08 7e 08 08 10 20 00
+00493b: 08 08 7e 08 08 10 20 00
 
 [	DB 0X00 , 0X00 , 0X3C , 0X00 , 0X00 , 0X00 , 0X7E , 0X00]
-004851: 00 00 3c 00 00 00 7e 00
+004943: 00 00 3c 00 00 00 7e 00
 
 [	DB 0X7E , 0X02 , 0X62 , 0X14 , 0X08 , 0X14 , 0X62 , 0X00]
-004859: 7e 02 62 14 08 14 62 00
+00494b: 7e 02 62 14 08 14 62 00
 
 [	DB 0X08 , 0X7F , 0X02 , 0X04 , 0X1A , 0X69 , 0X08 , 0X00]
-004861: 08 7f 02 04 1a 69 08 00
+004953: 08 7f 02 04 1a 69 08 00
 
 [	DB 0X00 , 0X01 , 0X01 , 0X02 , 0X02 , 0X04 , 0X38 , 0X00]
-004869: 00 01 01 02 02 04 38 00
+00495b: 00 01 01 02 02 04 38 00
 
 [	DB 0X00 , 0X10 , 0X10 , 0X22 , 0X21 , 0X41 , 0X41 , 0X00]
-004871: 00 10 10 22 21 41 41 00
+004963: 00 10 10 22 21 41 41 00
 
 [	DB 0X20 , 0X20 , 0X3E , 0X20 , 0X20 , 0X20 , 0X1E , 0X00]
-004879: 20 20 3e 20 20 20 1e 00
+00496b: 20 20 3e 20 20 20 1e 00
 
 [	DB 0X3F , 0X01 , 0X02 , 0X02 , 0X04 , 0X08 , 0X30 , 0X00]
-004881: 3f 01 02 02 04 08 30 00
+004973: 3f 01 02 02 04 08 30 00
 
 [	DB 0X00 , 0X10 , 0X28 , 0X24 , 0X42 , 0X01 , 0X00 , 0X00]
-004889: 00 10 28 24 42 01 00 00
+00497b: 00 10 28 24 42 01 00 00
 
 [	DB 0X08 , 0X08 , 0X7E , 0X08 , 0X2A , 0X29 , 0X49 , 0X00]
-004891: 08 08 7e 08 2a 29 49 00
+004983: 08 08 7e 08 2a 29 49 00
 
 [	DB 0X00 , 0X7F , 0X01 , 0X21 , 0X16 , 0X08 , 0X04 , 0X00]
-004899: 00 7f 01 21 16 08 04 00
+00498b: 00 7f 01 21 16 08 04 00
 
 [	DB 0X78 , 0X04 , 0X60 , 0X18 , 0X00 , 0X60 , 0X1C , 0X00]
-0048a1: 78 04 60 18 00 60 1c 00
+004993: 78 04 60 18 00 60 1c 00
 
 [	DB 0X10 , 0X10 , 0X20 , 0X24 , 0X42 , 0X4E , 0X71 , 0X00]
-0048a9: 10 10 20 24 42 4e 71 00
+00499b: 10 10 20 24 42 4e 71 00
 
 [	DB 0X01 , 0X01 , 0X22 , 0X14 , 0X08 , 0X14 , 0X62 , 0X00]
-0048b1: 01 01 22 14 08 14 62 00
+0049a3: 01 01 22 14 08 14 62 00
 
 [	DB 0X3C , 0X10 , 0X10 , 0X7E , 0X10 , 0X10 , 0X0E , 0X00]
-0048b9: 3c 10 10 7e 10 10 0e 00
+0049ab: 3c 10 10 7e 10 10 0e 00
 
 [	DB 0X20 , 0X20 , 0X7F , 0X12 , 0X14 , 0X08 , 0X08 , 0X00]
-0048c1: 20 20 7f 12 14 08 08 00
+0049b3: 20 20 7f 12 14 08 08 00
 
 [	DB 0X00 , 0X3C , 0X04 , 0X04 , 0X04 , 0X04 , 0X7E , 0X00]
-0048c9: 00 3c 04 04 04 04 7e 00
+0049bb: 00 3c 04 04 04 04 7e 00
 
 [	DB 0X00 , 0X3E , 0X02 , 0X3E , 0X02 , 0X02 , 0X3E , 0X00]
-0048d1: 00 3e 02 3e 02 02 3e 00
+0049c3: 00 3e 02 3e 02 02 3e 00
 
 [	DB 0X3E , 0X00 , 0X7F , 0X01 , 0X01 , 0X02 , 0X3C , 0X00]
-0048d9: 3e 00 7f 01 01 02 3c 00
+0049cb: 3e 00 7f 01 01 02 3c 00
 
 [	DB 0X00 , 0X22 , 0X22 , 0X22 , 0X04 , 0X04 , 0X08 , 0X00]
-0048e1: 00 22 22 22 04 04 08 00
+0049d3: 00 22 22 22 04 04 08 00
 
 [	DB 0X00 , 0X14 , 0X14 , 0X14 , 0X25 , 0X26 , 0X44 , 0X00]
-0048e9: 00 14 14 14 25 26 44 00
+0049db: 00 14 14 14 25 26 44 00
 
 [	DB 0X00 , 0X20 , 0X20 , 0X20 , 0X22 , 0X2C , 0X30 , 0X00]
-0048f1: 00 20 20 20 22 2c 30 00
+0049e3: 00 20 20 20 22 2c 30 00
 
 [	DB 0X00 , 0X3E , 0X22 , 0X22 , 0X22 , 0X22 , 0X3E , 0X00]
-0048f9: 00 3e 22 22 22 22 3e 00
+0049eb: 00 3e 22 22 22 22 3e 00
 
 [	DB 0X00 , 0X7F , 0X41 , 0X01 , 0X02 , 0X04 , 0X18 , 0X00]
-004901: 00 7f 41 01 02 04 18 00
+0049f3: 00 7f 41 01 02 04 18 00
 
 [	DB 0X00 , 0X60 , 0X10 , 0X01 , 0X02 , 0X0C , 0X70 , 0X00]
-004909: 00 60 10 01 02 0c 70 00
+0049fb: 00 60 10 01 02 0c 70 00
 
 [	DB 0XA0 , 0X50 , 0X50 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004911: a0 50 50 00 00 00 00 00
+004a03: a0 50 50 00 00 00 00 00
 
 [	DB 0X60 , 0X90 , 0X90 , 0X60 , 0X00 , 0X00 , 0X00 , 0X00]
-004919: 60 90 90 60 00 00 00 00
+004a0b: 60 90 90 60 00 00 00 00
 
 [	DB 0X08 , 0X7E , 0X10 , 0X17 , 0X10 , 0X24 , 0X23 , 0X00]
-004921: 08 7e 10 17 10 24 23 00
+004a13: 08 7e 10 17 10 24 23 00
 
 [	DB 0X10 , 0X7C , 0X20 , 0X3C , 0X42 , 0X02 , 0X1C , 0X00]
-004929: 10 7c 20 3c 42 02 1c 00
+004a1b: 10 7c 20 3c 42 02 1c 00
 
 [	DB 0X00 , 0X1C , 0X62 , 0X01 , 0X01 , 0X02 , 0X0C , 0X00]
-004931: 00 1c 62 01 01 02 0c 00
+004a23: 00 1c 62 01 01 02 0c 00
 
 [	DB 0X00 , 0X7E , 0X0C , 0X10 , 0X20 , 0X20 , 0X1C , 0X00]
-004939: 00 7e 0c 10 20 20 1c 00
+004a2b: 00 7e 0c 10 20 20 1c 00
 
 [	DB 0X00 , 0X22 , 0X14 , 0X18 , 0X20 , 0X40 , 0X3E , 0X00]
-004941: 00 22 14 18 20 40 3e 00
+004a33: 00 22 14 18 20 40 3e 00
 
 [	DB 0X24 , 0X72 , 0X25 , 0X24 , 0X5C , 0X66 , 0X18 , 0X00]
-004949: 24 72 25 24 5c 66 18 00
+004a3b: 24 72 25 24 5c 66 18 00
 
 [	DB 0X00 , 0X4E , 0X40 , 0X40 , 0X40 , 0X50 , 0X2E , 0X00]
-004951: 00 4e 40 40 40 50 2e 00
+004a43: 00 4e 40 40 40 50 2e 00
 
 [	DB 0X44 , 0X5E , 0X25 , 0X65 , 0X59 , 0X56 , 0X2B , 0X00]
-004959: 44 5e 25 65 59 56 2b 00
+004a4b: 44 5e 25 65 59 56 2b 00
 
 [	DB 0X20 , 0X6C , 0X32 , 0X62 , 0X62 , 0X6E , 0X2D , 0X00]
-004961: 20 6c 32 62 62 6e 2d 00
+004a53: 20 6c 32 62 62 6e 2d 00
 
 [	DB 0X00 , 0X1C , 0X22 , 0X49 , 0X49 , 0X49 , 0X32 , 0X00]
-004969: 00 1c 22 49 49 49 32 00
+004a5b: 00 1c 22 49 49 49 32 00
 
 [	DB 0X44 , 0X5F , 0X44 , 0X44 , 0X5C , 0X56 , 0X29 , 0X00]
-004971: 44 5f 44 44 5c 56 29 00
+004a63: 44 5f 44 44 5c 56 29 00
 
 [	DB 0X18 , 0X70 , 0X22 , 0X42 , 0X45 , 0X24 , 0X18 , 0X00]
-004979: 18 70 22 42 45 24 18 00
+004a6b: 18 70 22 42 45 24 18 00
 
 [	DB 0X18 , 0X04 , 0X08 , 0X08 , 0X26 , 0X45 , 0X59 , 0X00]
-004981: 18 04 08 08 26 45 59 00
+004a73: 18 04 08 08 26 45 59 00
 
 [	DB 0X00 , 0X18 , 0X24 , 0X24 , 0X42 , 0X01 , 0X01 , 0X00]
-004989: 00 18 24 24 42 01 01 00
+004a7b: 00 18 24 24 42 01 01 00
 
 [	DB 0X0E , 0X44 , 0X5F , 0X44 , 0X5C , 0X56 , 0X29 , 0X00]
-004991: 0e 44 5f 44 5c 56 29 00
+004a83: 0e 44 5f 44 5c 56 29 00
 
 [	DB 0X04 , 0X3E , 0X04 , 0X3E , 0X04 , 0X3C , 0X1A , 0X00]
-004999: 04 3e 04 3e 04 3c 1a 00
+004a8b: 04 3e 04 3e 04 3c 1a 00
 
 [	DB 0X70 , 0X12 , 0X12 , 0X3E , 0X53 , 0X52 , 0X24 , 0X00]
-0049a1: 70 12 12 3e 53 52 24 00
+004a93: 70 12 12 3e 53 52 24 00
 
 [	DB 0X14 , 0X7A , 0X11 , 0X72 , 0X52 , 0X72 , 0X1C , 0X00]
-0049a9: 14 7a 11 72 52 72 1c 00
+004a9b: 14 7a 11 72 52 72 1c 00
 
 [	DB 0X04 , 0X44 , 0X5C , 0X2A , 0X69 , 0X51 , 0X22 , 0X00]
-0049b1: 04 44 5c 2a 69 51 22 00
+004aa3: 04 44 5c 2a 69 51 22 00
 
 [	DB 0X10 , 0X7C , 0X10 , 0X7C , 0X10 , 0X12 , 0X0C , 0X00]
-0049b9: 10 7c 10 7c 10 12 0c 00
+004aab: 10 7c 10 7c 10 12 0c 00
 
 [	DB 0X24 , 0X2E , 0X75 , 0X21 , 0X26 , 0X10 , 0X10 , 0X00]
-0049c1: 24 2e 75 21 26 10 10 00
+004ab3: 24 2e 75 21 26 10 10 00
 
 [	DB 0X04 , 0X4E , 0X55 , 0X65 , 0X6E , 0X44 , 0X08 , 0X00]
-0049c9: 04 4e 55 65 6e 44 08 00
+004abb: 04 4e 55 65 6e 44 08 00
 
 [	DB 0X08 , 0X08 , 0X0E , 0X08 , 0X38 , 0X4C , 0X32 , 0X00]
-0049d1: 08 08 0e 08 38 4c 32 00
+004ac3: 08 08 0e 08 38 4c 32 00
 
 [	DB 0X18 , 0X44 , 0X40 , 0X7C , 0X42 , 0X02 , 0X1C , 0X00]
-0049d9: 18 44 40 7c 42 02 1c 00
+004acb: 18 44 40 7c 42 02 1c 00
 
 [	DB 0X04 , 0X42 , 0X42 , 0X42 , 0X22 , 0X04 , 0X08 , 0X00]
-0049e1: 04 42 42 42 22 04 08 00
+004ad3: 04 42 42 42 22 04 08 00
 
 [	DB 0X3C , 0X08 , 0X10 , 0X3C , 0X42 , 0X32 , 0X3C , 0X00]
-0049e9: 3c 08 10 3c 42 32 3c 00
+004adb: 3c 08 10 3c 42 32 3c 00
 
 [	DB 0X10 , 0X76 , 0X1A , 0X32 , 0X32 , 0X52 , 0X11 , 0X00]
-0049f1: 10 76 1a 32 32 52 11 00
+004ae3: 10 76 1a 32 32 52 11 00
 
 [	DB 0X3C , 0X08 , 0X10 , 0X3C , 0X42 , 0X02 , 0X3C , 0X00]
-0049f9: 3c 08 10 3c 42 02 3c 00
+004aeb: 3c 08 10 3c 42 02 3c 00
 
 [	DB 0X10 , 0X76 , 0X19 , 0X31 , 0X31 , 0X51 , 0X16 , 0X00]
-004a01: 10 76 19 31 31 51 16 00
+004af3: 10 76 19 31 31 51 16 00
 
 [	DB 0X20 , 0X20 , 0X20 , 0X30 , 0X49 , 0X49 , 0X46 , 0X00]
-004a09: 20 20 20 30 49 49 46 00
+004afb: 20 20 20 30 49 49 46 00
 
 [	DB 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00 , 0X00]
-004a11: 00 00 00 00 00 00 00 00
+004b03: 00 00 00 00 00 00 00 00
 
 [	DB 0XFF , 0XFF , 0XFF , 0XFF , 0XFF , 0XFF , 0XFF , 0XFF]
-004a19: ff ff ff ff ff ff ff ff
+004b0b: ff ff ff ff ff ff ff ff
 
 [	INCLUDE ".//font.asm"] end
 
 [SPRITE_PATTERN_DATA ::]
-	global label address: 0x004a21
+	global label address: 0x004b13
 
 [	DB 0B01111111]
-004a21: 7f
+004b13: 7f
 
 [	DB 0B11111111]
-004a22: ff
+004b14: ff
 
 [	DB 0B11111111]
-004a23: ff
+004b15: ff
 
 [	DB 0B11111111]
-004a24: ff
+004b16: ff
 
 [	DB 0B11111111]
-004a25: ff
+004b17: ff
 
 [	DB 0B11111111]
-004a26: ff
+004b18: ff
 
 [	DB 0B11111111]
-004a27: ff
+004b19: ff
 
 [	DB 0B11111111]
-004a28: ff
+004b1a: ff
 
 [	DB 0B11111111]
-004a29: ff
+004b1b: ff
 
 [	DB 0B11111111]
-004a2a: ff
+004b1c: ff
 
 [	DB 0B11111111]
-004a2b: ff
+004b1d: ff
 
 [	DB 0B11111111]
-004a2c: ff
+004b1e: ff
 
 [	DB 0B11111111]
-004a2d: ff
+004b1f: ff
 
 [	DB 0B11111111]
-004a2e: ff
+004b20: ff
 
 [	DB 0B01111111]
-004a2f: 7f
+004b21: 7f
 
 [	DB 0B00000000]
-004a30: 00
+004b22: 00
 
 [	DB 0B11111100]
-004a31: fc
+004b23: fc
 
 [	DB 0B11111110]
-004a32: fe
+004b24: fe
 
 [	DB 0B11111110]
-004a33: fe
+004b25: fe
 
 [	DB 0B11111110]
-004a34: fe
+004b26: fe
 
 [	DB 0B11111110]
-004a35: fe
+004b27: fe
 
 [	DB 0B11111110]
-004a36: fe
+004b28: fe
 
 [	DB 0B11111110]
-004a37: fe
+004b29: fe
 
 [	DB 0B11111110]
-004a38: fe
+004b2a: fe
 
 [	DB 0B11111110]
-004a39: fe
+004b2b: fe
 
 [	DB 0B11111110]
-004a3a: fe
+004b2c: fe
 
 [	DB 0B11111110]
-004a3b: fe
+004b2d: fe
 
 [	DB 0B11111110]
-004a3c: fe
+004b2e: fe
 
 [	DB 0B11111110]
-004a3d: fe
+004b2f: fe
 
 [	DB 0B11111110]
-004a3e: fe
+004b30: fe
 
 [	DB 0B11111100]
-004a3f: fc
+004b31: fc
 
 [	DB 0B00000000]
-004a40: 00
+004b32: 00
 
 [SPRITE_ATTRIBUTE_DATA ::]
-	global label address: 0x004a41
+	global label address: 0x004b33
 
 [	DB 63 + 32 * 0 , 64 + 32 * 0 , 0 , 0]
-004a41: 3f 40 00 00
+004b33: 3f 40 00 00
 
 [	DB 63 + 32 * 0 , 64 + 32 * 1 , 0 , 1]
-004a45: 3f 60 00 01
+004b37: 3f 60 00 01
 
 [	DB 63 + 32 * 0 , 64 + 32 * 2 , 0 , 2]
-004a49: 3f 80 00 02
+004b3b: 3f 80 00 02
 
 [	DB 63 + 32 * 0 , 64 + 32 * 3 , 0 , 3]
-004a4d: 3f a0 00 03
+004b3f: 3f a0 00 03
 
 [	DB 63 + 32 * 1 , 64 + 32 * 0 , 0 , 4]
-004a51: 5f 40 00 04
+004b43: 5f 40 00 04
 
 [	DB 63 + 32 * 1 , 64 + 32 * 1 , 0 , 5]
-004a55: 5f 60 00 05
+004b47: 5f 60 00 05
 
 [	DB 63 + 32 * 1 , 64 + 32 * 2 , 0 , 6]
-004a59: 5f 80 00 06
+004b4b: 5f 80 00 06
 
 [	DB 63 + 32 * 1 , 64 + 32 * 3 , 0 , 7]
-004a5d: 5f a0 00 07
+004b4f: 5f a0 00 07
 
 [	DB 63 + 32 * 2 , 64 + 32 * 0 , 0 , 8]
-004a61: 7f 40 00 08
+004b53: 7f 40 00 08
 
 [	DB 63 + 32 * 2 , 64 + 32 * 1 , 0 , 9]
-004a65: 7f 60 00 09
+004b57: 7f 60 00 09
 
 [	DB 63 + 32 * 2 , 64 + 32 * 2 , 0 , 10]
-004a69: 7f 80 00 0a
+004b5b: 7f 80 00 0a
 
 [	DB 63 + 32 * 2 , 64 + 32 * 3 , 0 , 11]
-004a6d: 7f a0 00 0b
+004b5f: 7f a0 00 0b
 
 [	DB 63 + 32 * 3 , 64 + 32 * 0 , 0 , 12]
-004a71: 9f 40 00 0c
+004b63: 9f 40 00 0c
 
 [	DB 63 + 32 * 3 , 64 + 32 * 1 , 0 , 13]
-004a75: 9f 60 00 0d
+004b67: 9f 60 00 0d
 
 [	DB 63 + 32 * 3 , 64 + 32 * 2 , 0 , 14]
-004a79: 9f 80 00 0e
+004b6b: 9f 80 00 0e
 
 [	DB 63 + 32 * 3 , 64 + 32 * 3 , 0 , 15]
-004a7d: 9f a0 00 0f
+004b6f: 9f a0 00 0f
 
 [	DB 208]
-004a81: d0
+004b73: d0
 
 [S_TITLE ::]
-	global label address: 0x004a82
+	global label address: 0x004b74
 
 [	DS "<PALETTE CHANGER>"]
-004a82: 3c 50 41 4c 45 54 54 45
-004a8a: 20 43 48 41 4e 47 45 52
-004a92: 3e
+004b74: 3c 50 41 4c 45 54 54 45
+004b7c: 20 43 48 41 4e 47 45 52
+004b84: 3e
 
 [	DB 0]
-004a93: 00
+004b85: 00
 
 [S_GAME_SLOT ::]
-	global label address: 0x004a94
+	global label address: 0x004b86
 
-[	DS "GAME CARTRIDGE SLOT#"]
-004a94: 47 41 4d 45 20 43 41 52
-004a9c: 54 52 49 44 47 45 20 53
-004aa4: 4c 4f 54 23
+[	DS "GAME CARTRIDGE SLOT #"]
+004b86: 47 41 4d 45 20 43 41 52
+004b8e: 54 52 49 44 47 45 20 53
+004b96: 4c 4f 54 20 23
 
 [	DB 0]
-004aa8: 00
+004b9b: 00
 
 [S_GAME_HASH ::]
-	global label address: 0x004aa9
+	global label address: 0x004b9c
 
 [	DS "GAME CARTRIDGE HASH 0x"]
-004aa9: 47 41 4d 45 20 43 41 52
-004ab1: 54 52 49 44 47 45 20 48
-004ab9: 41 53 48 20 30 78
+004b9c: 47 41 4d 45 20 43 41 52
+004ba4: 54 52 49 44 47 45 20 48
+004bac: 41 53 48 20 30 78
 
 [	DB 0]
-004abf: 00
+004bb2: 00
+
+[S_CPU_SPEED ::]
+	global label address: 0x004bb3
+
+[	DS "CPU:"]
+004bb3: 43 50 55 3a
+
+[	DS 0]
+004bb7: 30
+
+[S_PALETTE_NUM ::]
+	global label address: 0x004bb8
+
+[	DS "PALETTE#:"]
+004bb8: 50 41 4c 45 54 54 45 23
+004bc0: 3a
+
+[	DS 0]
+004bc1: 30
 
 Define macro {PALETTE MACRO VR , VG , VB}
 
 [PALETTE_SET_ARRAY ::]
-	global label address: 0x004ac0
+	global label address: 0x004bc2
 
 [	INCLUDE ".//palette00.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO6:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ac0: 00
-
-[	DB ( 0 & 7 )]
-004ac1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO7:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ac2: 00
-
-[	DB ( 0 & 7 )]
-004ac3: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO8:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ac4: 22
-
-[	DB ( 6 & 7 )]
-004ac5: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO9:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ac6: 34
-
-[	DB ( 7 & 7 )]
-004ac7: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO10:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ac8: 37
-
-[	DB ( 3 & 7 )]
-004ac9: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO11:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004aca: 47
-
-[	DB ( 4 & 7 )]
-004acb: 04
-
-((PALETTE 5 , 3 , 3))
 	Scope path: @MACRO12:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004acc: 53
-
-[	DB ( 3 & 7 )]
-004acd: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO13:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004ace: 47
-
-[	DB ( 6 & 7 )]
-004acf: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO14:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ad0: 63
-
-[	DB ( 3 & 7 )]
-004ad1: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO15:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ad2: 64
-
-[	DB ( 4 & 7 )]
-004ad3: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO16:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ad4: 63
-
-[	DB ( 6 & 7 )]
-004ad5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO17:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ad6: 65
-
-[	DB ( 6 & 7 )]
-004ad7: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO18:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004ad8: 11
-
-[	DB ( 5 & 7 )]
-004ad9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO19:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004ada: 56
-
-[	DB ( 3 & 7 )]
-004adb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO20:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004adc: 66
-
-[	DB ( 6 & 7 )]
-004add: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO21:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004ade: 77
-
-[	DB ( 7 & 7 )]
-004adf: 07
-
-[	INCLUDE ".//palette00.asm"] end
-
-[	INCLUDE ".//palette01.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO22:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ae0: 00
-
-[	DB ( 0 & 7 )]
-004ae1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO23:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ae2: 00
-
-[	DB ( 0 & 7 )]
-004ae3: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO24:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ae4: 22
-
-[	DB ( 6 & 7 )]
-004ae5: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO25:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ae6: 34
-
-[	DB ( 7 & 7 )]
-004ae7: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO26:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ae8: 37
-
-[	DB ( 3 & 7 )]
-004ae9: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO27:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004aea: 47
-
-[	DB ( 4 & 7 )]
-004aeb: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO28:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004aec: 53
-
-[	DB ( 3 & 7 )]
-004aed: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO29:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004aee: 47
-
-[	DB ( 6 & 7 )]
-004aef: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO30:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004af0: 63
-
-[	DB ( 3 & 7 )]
-004af1: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO31:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004af2: 64
-
-[	DB ( 4 & 7 )]
-004af3: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO32:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004af4: 63
-
-[	DB ( 6 & 7 )]
-004af5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO33:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004af6: 65
-
-[	DB ( 6 & 7 )]
-004af7: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO34:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004af8: 11
-
-[	DB ( 5 & 7 )]
-004af9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO35:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004afa: 56
-
-[	DB ( 3 & 7 )]
-004afb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO36:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004afc: 66
-
-[	DB ( 6 & 7 )]
-004afd: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO37:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004afe: 77
-
-[	DB ( 7 & 7 )]
-004aff: 07
-
-[	INCLUDE ".//palette01.asm"] end
-
-[	INCLUDE ".//palette02.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO38:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b00: 00
-
-[	DB ( 0 & 7 )]
-004b01: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO39:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b02: 00
-
-[	DB ( 0 & 7 )]
-004b03: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO40:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004b04: 22
-
-[	DB ( 6 & 7 )]
-004b05: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO41:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b06: 34
-
-[	DB ( 7 & 7 )]
-004b07: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO42:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b08: 37
-
-[	DB ( 3 & 7 )]
-004b09: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO43:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b0a: 47
-
-[	DB ( 4 & 7 )]
-004b0b: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO44:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b0c: 53
-
-[	DB ( 3 & 7 )]
-004b0d: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO45:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b0e: 47
-
-[	DB ( 6 & 7 )]
-004b0f: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO46:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b10: 63
-
-[	DB ( 3 & 7 )]
-004b11: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO47:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b12: 64
-
-[	DB ( 4 & 7 )]
-004b13: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO48:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b14: 63
-
-[	DB ( 6 & 7 )]
-004b15: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO49:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b16: 65
-
-[	DB ( 6 & 7 )]
-004b17: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO50:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004b18: 11
-
-[	DB ( 5 & 7 )]
-004b19: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO51:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b1a: 56
-
-[	DB ( 3 & 7 )]
-004b1b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO52:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b1c: 66
-
-[	DB ( 6 & 7 )]
-004b1d: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO53:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004b1e: 77
-
-[	DB ( 7 & 7 )]
-004b1f: 07
-
-[	INCLUDE ".//palette02.asm"] end
-
-[	INCLUDE ".//palette03.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO54:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b20: 00
-
-[	DB ( 0 & 7 )]
-004b21: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO55:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b22: 00
-
-[	DB ( 0 & 7 )]
-004b23: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO56:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004b24: 22
-
-[	DB ( 6 & 7 )]
-004b25: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO57:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b26: 34
-
-[	DB ( 7 & 7 )]
-004b27: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO58:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b28: 37
-
-[	DB ( 3 & 7 )]
-004b29: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO59:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b2a: 47
-
-[	DB ( 4 & 7 )]
-004b2b: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO60:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b2c: 53
-
-[	DB ( 3 & 7 )]
-004b2d: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO61:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b2e: 47
-
-[	DB ( 6 & 7 )]
-004b2f: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO62:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b30: 63
-
-[	DB ( 3 & 7 )]
-004b31: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO63:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b32: 64
-
-[	DB ( 4 & 7 )]
-004b33: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO64:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b34: 63
-
-[	DB ( 6 & 7 )]
-004b35: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO65:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b36: 65
-
-[	DB ( 6 & 7 )]
-004b37: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO66:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004b38: 11
-
-[	DB ( 5 & 7 )]
-004b39: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO67:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b3a: 56
-
-[	DB ( 3 & 7 )]
-004b3b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO68:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b3c: 66
-
-[	DB ( 6 & 7 )]
-004b3d: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO69:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004b3e: 77
-
-[	DB ( 7 & 7 )]
-004b3f: 07
-
-[	INCLUDE ".//palette03.asm"] end
-
-[	INCLUDE ".//palette04.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO70:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b40: 00
-
-[	DB ( 0 & 7 )]
-004b41: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO71:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b42: 00
-
-[	DB ( 0 & 7 )]
-004b43: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO72:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004b44: 22
-
-[	DB ( 6 & 7 )]
-004b45: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO73:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b46: 34
-
-[	DB ( 7 & 7 )]
-004b47: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO74:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b48: 37
-
-[	DB ( 3 & 7 )]
-004b49: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO75:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b4a: 47
-
-[	DB ( 4 & 7 )]
-004b4b: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO76:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b4c: 53
-
-[	DB ( 3 & 7 )]
-004b4d: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO77:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b4e: 47
-
-[	DB ( 6 & 7 )]
-004b4f: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO78:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b50: 63
-
-[	DB ( 3 & 7 )]
-004b51: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO79:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b52: 64
-
-[	DB ( 4 & 7 )]
-004b53: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO80:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b54: 63
-
-[	DB ( 6 & 7 )]
-004b55: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO81:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b56: 65
-
-[	DB ( 6 & 7 )]
-004b57: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO82:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004b58: 11
-
-[	DB ( 5 & 7 )]
-004b59: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO83:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b5a: 56
-
-[	DB ( 3 & 7 )]
-004b5b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO84:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b5c: 66
-
-[	DB ( 6 & 7 )]
-004b5d: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO85:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004b5e: 77
-
-[	DB ( 7 & 7 )]
-004b5f: 07
-
-[	INCLUDE ".//palette04.asm"] end
-
-[	INCLUDE ".//palette05.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO86:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b60: 00
-
-[	DB ( 0 & 7 )]
-004b61: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO87:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b62: 00
-
-[	DB ( 0 & 7 )]
-004b63: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO88:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004b64: 22
-
-[	DB ( 6 & 7 )]
-004b65: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO89:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b66: 34
-
-[	DB ( 7 & 7 )]
-004b67: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO90:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b68: 37
-
-[	DB ( 3 & 7 )]
-004b69: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO91:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b6a: 47
-
-[	DB ( 4 & 7 )]
-004b6b: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO92:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b6c: 53
-
-[	DB ( 3 & 7 )]
-004b6d: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO93:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b6e: 47
-
-[	DB ( 6 & 7 )]
-004b6f: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO94:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b70: 63
-
-[	DB ( 3 & 7 )]
-004b71: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO95:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b72: 64
-
-[	DB ( 4 & 7 )]
-004b73: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO96:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b74: 63
-
-[	DB ( 6 & 7 )]
-004b75: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO97:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b76: 65
-
-[	DB ( 6 & 7 )]
-004b77: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO98:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004b78: 11
-
-[	DB ( 5 & 7 )]
-004b79: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO99:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b7a: 56
-
-[	DB ( 3 & 7 )]
-004b7b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO100:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b7c: 66
-
-[	DB ( 6 & 7 )]
-004b7d: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO101:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004b7e: 77
-
-[	DB ( 7 & 7 )]
-004b7f: 07
-
-[	INCLUDE ".//palette05.asm"] end
-
-[	INCLUDE ".//palette06.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO102:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b80: 00
-
-[	DB ( 0 & 7 )]
-004b81: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO103:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004b82: 00
-
-[	DB ( 0 & 7 )]
-004b83: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO104:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004b84: 22
-
-[	DB ( 6 & 7 )]
-004b85: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO105:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b86: 34
-
-[	DB ( 7 & 7 )]
-004b87: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO106:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004b88: 37
-
-[	DB ( 3 & 7 )]
-004b89: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO107:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b8a: 47
-
-[	DB ( 4 & 7 )]
-004b8b: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO108:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b8c: 53
-
-[	DB ( 3 & 7 )]
-004b8d: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO109:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004b8e: 47
-
-[	DB ( 6 & 7 )]
-004b8f: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO110:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b90: 63
-
-[	DB ( 3 & 7 )]
-004b91: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO111:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b92: 64
-
-[	DB ( 4 & 7 )]
-004b93: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO112:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b94: 63
-
-[	DB ( 6 & 7 )]
-004b95: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO113:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b96: 65
-
-[	DB ( 6 & 7 )]
-004b97: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO114:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004b98: 11
-
-[	DB ( 5 & 7 )]
-004b99: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO115:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004b9a: 56
-
-[	DB ( 3 & 7 )]
-004b9b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO116:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004b9c: 66
-
-[	DB ( 6 & 7 )]
-004b9d: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO117:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004b9e: 77
-
-[	DB ( 7 & 7 )]
-004b9f: 07
-
-[	INCLUDE ".//palette06.asm"] end
-
-[	INCLUDE ".//palette07.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO118:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ba0: 00
-
-[	DB ( 0 & 7 )]
-004ba1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO119:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ba2: 00
-
-[	DB ( 0 & 7 )]
-004ba3: 00
-
-((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO120:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ba4: 22
-
-[	DB ( 6 & 7 )]
-004ba5: 06
-
-((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO121:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ba6: 34
-
-[	DB ( 7 & 7 )]
-004ba7: 07
-
-((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO122:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ba8: 37
-
-[	DB ( 3 & 7 )]
-004ba9: 03
-
-((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO123:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004baa: 47
-
-[	DB ( 4 & 7 )]
-004bab: 04
-
-((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO124:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bac: 53
-
-[	DB ( 3 & 7 )]
-004bad: 03
-
-((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO125:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004bae: 47
-
-[	DB ( 6 & 7 )]
-004baf: 06
-
-((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO126:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bb0: 63
-
-[	DB ( 3 & 7 )]
-004bb1: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO127:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bb2: 64
-
-[	DB ( 4 & 7 )]
-004bb3: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO128:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bb4: 63
-
-[	DB ( 6 & 7 )]
-004bb5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO129:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bb6: 65
-
-[	DB ( 6 & 7 )]
-004bb7: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO130:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004bb8: 11
-
-[	DB ( 5 & 7 )]
-004bb9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO131:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bba: 56
-
-[	DB ( 3 & 7 )]
-004bbb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO132:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bbc: 66
-
-[	DB ( 6 & 7 )]
-004bbd: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO133:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004bbe: 77
-
-[	DB ( 7 & 7 )]
-004bbf: 07
-
-[	INCLUDE ".//palette07.asm"] end
-
-[	INCLUDE ".//palette08.asm"] begin
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO134:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004bc0: 00
-
-[	DB ( 0 & 7 )]
-004bc1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO135:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004bc2: 00
 
 [	DB ( 0 & 7 )]
 004bc3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO13:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004bc4: 00
+
+[	DB ( 0 & 7 )]
+004bc5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO136:
+	Scope path: @MACRO14:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004bc4: 22
+004bc6: 22
 
 [	DB ( 6 & 7 )]
-004bc5: 06
+004bc7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO137:
+	Scope path: @MACRO15:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004bc6: 34
+004bc8: 34
 
 [	DB ( 7 & 7 )]
-004bc7: 07
+004bc9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO138:
+	Scope path: @MACRO16:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004bc8: 37
+004bca: 37
 
 [	DB ( 3 & 7 )]
-004bc9: 03
+004bcb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO139:
+	Scope path: @MACRO17:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004bca: 47
+004bcc: 47
 
 [	DB ( 4 & 7 )]
-004bcb: 04
+004bcd: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO140:
+	Scope path: @MACRO18:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bcc: 53
+004bce: 53
 
 [	DB ( 3 & 7 )]
-004bcd: 03
+004bcf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO141:
+	Scope path: @MACRO19:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004bce: 47
+004bd0: 47
 
 [	DB ( 6 & 7 )]
-004bcf: 06
+004bd1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO142:
+	Scope path: @MACRO20:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bd0: 63
+004bd2: 63
 
 [	DB ( 3 & 7 )]
-004bd1: 03
+004bd3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO143:
+	Scope path: @MACRO21:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bd2: 64
+004bd4: 64
 
 [	DB ( 4 & 7 )]
-004bd3: 04
+004bd5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO144:
+	Scope path: @MACRO22:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bd4: 63
-
-[	DB ( 6 & 7 )]
-004bd5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO145:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bd6: 65
+004bd6: 63
 
 [	DB ( 6 & 7 )]
 004bd7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO146:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004bd8: 11
-
-[	DB ( 5 & 7 )]
-004bd9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO147:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bda: 56
-
-[	DB ( 3 & 7 )]
-004bdb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO148:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bdc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO23:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004bd8: 65
 
 [	DB ( 6 & 7 )]
-004bdd: 06
+004bd9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO24:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004bda: 11
+
+[	DB ( 5 & 7 )]
+004bdb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO25:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004bdc: 56
+
+[	DB ( 3 & 7 )]
+004bdd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO26:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004bde: 66
+
+[	DB ( 6 & 7 )]
+004bdf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO149:
+	Scope path: @MACRO27:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004bde: 77
+004be0: 77
 
 [	DB ( 7 & 7 )]
-004bdf: 07
+004be1: 07
 
-[	INCLUDE ".//palette08.asm"] end
+[	INCLUDE ".//palette00.asm"] end
 
-[	INCLUDE ".//palette09.asm"] begin
+[	INCLUDE ".//palette01.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO150:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004be0: 00
-
-[	DB ( 0 & 7 )]
-004be1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO151:
+	Scope path: @MACRO28:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004be2: 00
 
 [	DB ( 0 & 7 )]
 004be3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO29:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004be4: 00
+
+[	DB ( 0 & 7 )]
+004be5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO152:
+	Scope path: @MACRO30:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004be4: 22
+004be6: 22
 
 [	DB ( 6 & 7 )]
-004be5: 06
+004be7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO153:
+	Scope path: @MACRO31:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004be6: 34
+004be8: 34
 
 [	DB ( 7 & 7 )]
-004be7: 07
+004be9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO154:
+	Scope path: @MACRO32:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004be8: 37
+004bea: 37
 
 [	DB ( 3 & 7 )]
-004be9: 03
+004beb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO155:
+	Scope path: @MACRO33:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004bea: 47
+004bec: 47
 
 [	DB ( 4 & 7 )]
-004beb: 04
+004bed: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO156:
+	Scope path: @MACRO34:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bec: 53
+004bee: 53
 
 [	DB ( 3 & 7 )]
-004bed: 03
+004bef: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO157:
+	Scope path: @MACRO35:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004bee: 47
+004bf0: 47
 
 [	DB ( 6 & 7 )]
-004bef: 06
+004bf1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO158:
+	Scope path: @MACRO36:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bf0: 63
+004bf2: 63
 
 [	DB ( 3 & 7 )]
-004bf1: 03
+004bf3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO159:
+	Scope path: @MACRO37:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bf2: 64
+004bf4: 64
 
 [	DB ( 4 & 7 )]
-004bf3: 04
+004bf5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO160:
+	Scope path: @MACRO38:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bf4: 63
-
-[	DB ( 6 & 7 )]
-004bf5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO161:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bf6: 65
+004bf6: 63
 
 [	DB ( 6 & 7 )]
 004bf7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO162:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004bf8: 11
-
-[	DB ( 5 & 7 )]
-004bf9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO163:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004bfa: 56
-
-[	DB ( 3 & 7 )]
-004bfb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO164:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004bfc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO39:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004bf8: 65
 
 [	DB ( 6 & 7 )]
-004bfd: 06
+004bf9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO40:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004bfa: 11
+
+[	DB ( 5 & 7 )]
+004bfb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO41:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004bfc: 56
+
+[	DB ( 3 & 7 )]
+004bfd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO42:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004bfe: 66
+
+[	DB ( 6 & 7 )]
+004bff: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO165:
+	Scope path: @MACRO43:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004bfe: 77
+004c00: 77
 
 [	DB ( 7 & 7 )]
-004bff: 07
+004c01: 07
 
-[	INCLUDE ".//palette09.asm"] end
+[	INCLUDE ".//palette01.asm"] end
 
-[	INCLUDE ".//palette10.asm"] begin
+[	INCLUDE ".//palette02.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO166:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004c00: 00
-
-[	DB ( 0 & 7 )]
-004c01: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO167:
+	Scope path: @MACRO44:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004c02: 00
 
 [	DB ( 0 & 7 )]
 004c03: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO45:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004c04: 00
+
+[	DB ( 0 & 7 )]
+004c05: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO168:
+	Scope path: @MACRO46:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004c04: 22
+004c06: 22
 
 [	DB ( 6 & 7 )]
-004c05: 06
+004c07: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO169:
+	Scope path: @MACRO47:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c06: 34
+004c08: 34
 
 [	DB ( 7 & 7 )]
-004c07: 07
+004c09: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO170:
+	Scope path: @MACRO48:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c08: 37
+004c0a: 37
 
 [	DB ( 3 & 7 )]
-004c09: 03
+004c0b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO171:
+	Scope path: @MACRO49:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c0a: 47
+004c0c: 47
 
 [	DB ( 4 & 7 )]
-004c0b: 04
+004c0d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO172:
+	Scope path: @MACRO50:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c0c: 53
+004c0e: 53
 
 [	DB ( 3 & 7 )]
-004c0d: 03
+004c0f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO173:
+	Scope path: @MACRO51:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c0e: 47
+004c10: 47
 
 [	DB ( 6 & 7 )]
-004c0f: 06
+004c11: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO174:
+	Scope path: @MACRO52:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c10: 63
+004c12: 63
 
 [	DB ( 3 & 7 )]
-004c11: 03
+004c13: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO175:
+	Scope path: @MACRO53:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c12: 64
+004c14: 64
 
 [	DB ( 4 & 7 )]
-004c13: 04
+004c15: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO176:
+	Scope path: @MACRO54:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c14: 63
-
-[	DB ( 6 & 7 )]
-004c15: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO177:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c16: 65
+004c16: 63
 
 [	DB ( 6 & 7 )]
 004c17: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO178:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004c18: 11
-
-[	DB ( 5 & 7 )]
-004c19: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO179:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c1a: 56
-
-[	DB ( 3 & 7 )]
-004c1b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO180:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c1c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO55:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c18: 65
 
 [	DB ( 6 & 7 )]
-004c1d: 06
+004c19: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO56:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004c1a: 11
+
+[	DB ( 5 & 7 )]
+004c1b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO57:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004c1c: 56
+
+[	DB ( 3 & 7 )]
+004c1d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO58:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c1e: 66
+
+[	DB ( 6 & 7 )]
+004c1f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO181:
+	Scope path: @MACRO59:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004c1e: 77
+004c20: 77
 
 [	DB ( 7 & 7 )]
-004c1f: 07
+004c21: 07
 
-[	INCLUDE ".//palette10.asm"] end
+[	INCLUDE ".//palette02.asm"] end
 
-[	INCLUDE ".//palette11.asm"] begin
+[	INCLUDE ".//palette03.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO182:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004c20: 00
-
-[	DB ( 0 & 7 )]
-004c21: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO183:
+	Scope path: @MACRO60:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004c22: 00
 
 [	DB ( 0 & 7 )]
 004c23: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO61:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004c24: 00
+
+[	DB ( 0 & 7 )]
+004c25: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO184:
+	Scope path: @MACRO62:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004c24: 22
+004c26: 22
 
 [	DB ( 6 & 7 )]
-004c25: 06
+004c27: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO185:
+	Scope path: @MACRO63:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c26: 34
+004c28: 34
 
 [	DB ( 7 & 7 )]
-004c27: 07
+004c29: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO186:
+	Scope path: @MACRO64:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c28: 37
+004c2a: 37
 
 [	DB ( 3 & 7 )]
-004c29: 03
+004c2b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO187:
+	Scope path: @MACRO65:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c2a: 47
+004c2c: 47
 
 [	DB ( 4 & 7 )]
-004c2b: 04
+004c2d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO188:
+	Scope path: @MACRO66:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c2c: 53
+004c2e: 53
 
 [	DB ( 3 & 7 )]
-004c2d: 03
+004c2f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO189:
+	Scope path: @MACRO67:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c2e: 47
+004c30: 47
 
 [	DB ( 6 & 7 )]
-004c2f: 06
+004c31: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO190:
+	Scope path: @MACRO68:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c30: 63
+004c32: 63
 
 [	DB ( 3 & 7 )]
-004c31: 03
+004c33: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO191:
+	Scope path: @MACRO69:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c32: 64
+004c34: 64
 
 [	DB ( 4 & 7 )]
-004c33: 04
+004c35: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO192:
+	Scope path: @MACRO70:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c34: 63
-
-[	DB ( 6 & 7 )]
-004c35: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO193:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c36: 65
+004c36: 63
 
 [	DB ( 6 & 7 )]
 004c37: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO194:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004c38: 11
-
-[	DB ( 5 & 7 )]
-004c39: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO195:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c3a: 56
-
-[	DB ( 3 & 7 )]
-004c3b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO196:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c3c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO71:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c38: 65
 
 [	DB ( 6 & 7 )]
-004c3d: 06
+004c39: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO72:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004c3a: 11
+
+[	DB ( 5 & 7 )]
+004c3b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO73:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004c3c: 56
+
+[	DB ( 3 & 7 )]
+004c3d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO74:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c3e: 66
+
+[	DB ( 6 & 7 )]
+004c3f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO197:
+	Scope path: @MACRO75:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004c3e: 77
+004c40: 77
 
 [	DB ( 7 & 7 )]
-004c3f: 07
+004c41: 07
 
-[	INCLUDE ".//palette11.asm"] end
+[	INCLUDE ".//palette03.asm"] end
 
-[	INCLUDE ".//palette12.asm"] begin
+[	INCLUDE ".//palette04.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO198:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004c40: 00
-
-[	DB ( 0 & 7 )]
-004c41: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO199:
+	Scope path: @MACRO76:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004c42: 00
 
 [	DB ( 0 & 7 )]
 004c43: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO77:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004c44: 00
+
+[	DB ( 0 & 7 )]
+004c45: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO200:
+	Scope path: @MACRO78:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004c44: 22
+004c46: 22
 
 [	DB ( 6 & 7 )]
-004c45: 06
+004c47: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO201:
+	Scope path: @MACRO79:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c46: 34
+004c48: 34
 
 [	DB ( 7 & 7 )]
-004c47: 07
+004c49: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO202:
+	Scope path: @MACRO80:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c48: 37
+004c4a: 37
 
 [	DB ( 3 & 7 )]
-004c49: 03
+004c4b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO203:
+	Scope path: @MACRO81:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c4a: 47
+004c4c: 47
 
 [	DB ( 4 & 7 )]
-004c4b: 04
+004c4d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO204:
+	Scope path: @MACRO82:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c4c: 53
+004c4e: 53
 
 [	DB ( 3 & 7 )]
-004c4d: 03
+004c4f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO205:
+	Scope path: @MACRO83:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c4e: 47
+004c50: 47
 
 [	DB ( 6 & 7 )]
-004c4f: 06
+004c51: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO206:
+	Scope path: @MACRO84:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c50: 63
+004c52: 63
 
 [	DB ( 3 & 7 )]
-004c51: 03
+004c53: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO207:
+	Scope path: @MACRO85:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c52: 64
+004c54: 64
 
 [	DB ( 4 & 7 )]
-004c53: 04
+004c55: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO208:
+	Scope path: @MACRO86:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c54: 63
-
-[	DB ( 6 & 7 )]
-004c55: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO209:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c56: 65
+004c56: 63
 
 [	DB ( 6 & 7 )]
 004c57: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO210:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004c58: 11
-
-[	DB ( 5 & 7 )]
-004c59: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO211:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c5a: 56
-
-[	DB ( 3 & 7 )]
-004c5b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO212:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c5c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO87:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c58: 65
 
 [	DB ( 6 & 7 )]
-004c5d: 06
+004c59: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO88:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004c5a: 11
+
+[	DB ( 5 & 7 )]
+004c5b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO89:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004c5c: 56
+
+[	DB ( 3 & 7 )]
+004c5d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO90:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c5e: 66
+
+[	DB ( 6 & 7 )]
+004c5f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO213:
+	Scope path: @MACRO91:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004c5e: 77
+004c60: 77
 
 [	DB ( 7 & 7 )]
-004c5f: 07
+004c61: 07
 
-[	INCLUDE ".//palette12.asm"] end
+[	INCLUDE ".//palette04.asm"] end
 
-[	INCLUDE ".//palette13.asm"] begin
+[	INCLUDE ".//palette05.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO214:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004c60: 00
-
-[	DB ( 0 & 7 )]
-004c61: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO215:
+	Scope path: @MACRO92:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004c62: 00
 
 [	DB ( 0 & 7 )]
 004c63: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO93:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004c64: 00
+
+[	DB ( 0 & 7 )]
+004c65: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO216:
+	Scope path: @MACRO94:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004c64: 22
+004c66: 22
 
 [	DB ( 6 & 7 )]
-004c65: 06
+004c67: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO217:
+	Scope path: @MACRO95:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c66: 34
+004c68: 34
 
 [	DB ( 7 & 7 )]
-004c67: 07
+004c69: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO218:
+	Scope path: @MACRO96:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c68: 37
+004c6a: 37
 
 [	DB ( 3 & 7 )]
-004c69: 03
+004c6b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO219:
+	Scope path: @MACRO97:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c6a: 47
+004c6c: 47
 
 [	DB ( 4 & 7 )]
-004c6b: 04
+004c6d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO220:
+	Scope path: @MACRO98:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c6c: 53
+004c6e: 53
 
 [	DB ( 3 & 7 )]
-004c6d: 03
+004c6f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO221:
+	Scope path: @MACRO99:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c6e: 47
+004c70: 47
 
 [	DB ( 6 & 7 )]
-004c6f: 06
+004c71: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO222:
+	Scope path: @MACRO100:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c70: 63
+004c72: 63
 
 [	DB ( 3 & 7 )]
-004c71: 03
+004c73: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO223:
+	Scope path: @MACRO101:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c72: 64
+004c74: 64
 
 [	DB ( 4 & 7 )]
-004c73: 04
+004c75: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO224:
+	Scope path: @MACRO102:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c74: 63
-
-[	DB ( 6 & 7 )]
-004c75: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO225:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c76: 65
+004c76: 63
 
 [	DB ( 6 & 7 )]
 004c77: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO226:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004c78: 11
-
-[	DB ( 5 & 7 )]
-004c79: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO227:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c7a: 56
-
-[	DB ( 3 & 7 )]
-004c7b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO228:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c7c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO103:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c78: 65
 
 [	DB ( 6 & 7 )]
-004c7d: 06
+004c79: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO104:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004c7a: 11
+
+[	DB ( 5 & 7 )]
+004c7b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO105:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004c7c: 56
+
+[	DB ( 3 & 7 )]
+004c7d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO106:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c7e: 66
+
+[	DB ( 6 & 7 )]
+004c7f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO229:
+	Scope path: @MACRO107:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004c7e: 77
+004c80: 77
 
 [	DB ( 7 & 7 )]
-004c7f: 07
+004c81: 07
 
-[	INCLUDE ".//palette13.asm"] end
+[	INCLUDE ".//palette05.asm"] end
 
-[	INCLUDE ".//palette14.asm"] begin
+[	INCLUDE ".//palette06.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO230:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004c80: 00
-
-[	DB ( 0 & 7 )]
-004c81: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO231:
+	Scope path: @MACRO108:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004c82: 00
 
 [	DB ( 0 & 7 )]
 004c83: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO109:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004c84: 00
+
+[	DB ( 0 & 7 )]
+004c85: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO232:
+	Scope path: @MACRO110:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004c84: 22
+004c86: 22
 
 [	DB ( 6 & 7 )]
-004c85: 06
+004c87: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO233:
+	Scope path: @MACRO111:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c86: 34
+004c88: 34
 
 [	DB ( 7 & 7 )]
-004c87: 07
+004c89: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO234:
+	Scope path: @MACRO112:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004c88: 37
+004c8a: 37
 
 [	DB ( 3 & 7 )]
-004c89: 03
+004c8b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO235:
+	Scope path: @MACRO113:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c8a: 47
+004c8c: 47
 
 [	DB ( 4 & 7 )]
-004c8b: 04
+004c8d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO236:
+	Scope path: @MACRO114:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c8c: 53
+004c8e: 53
 
 [	DB ( 3 & 7 )]
-004c8d: 03
+004c8f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO237:
+	Scope path: @MACRO115:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004c8e: 47
+004c90: 47
 
 [	DB ( 6 & 7 )]
-004c8f: 06
+004c91: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO238:
+	Scope path: @MACRO116:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c90: 63
+004c92: 63
 
 [	DB ( 3 & 7 )]
-004c91: 03
+004c93: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO239:
+	Scope path: @MACRO117:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c92: 64
+004c94: 64
 
 [	DB ( 4 & 7 )]
-004c93: 04
+004c95: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO240:
+	Scope path: @MACRO118:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c94: 63
-
-[	DB ( 6 & 7 )]
-004c95: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO241:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c96: 65
+004c96: 63
 
 [	DB ( 6 & 7 )]
 004c97: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO242:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004c98: 11
-
-[	DB ( 5 & 7 )]
-004c99: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO243:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004c9a: 56
-
-[	DB ( 3 & 7 )]
-004c9b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO244:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004c9c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO119:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c98: 65
 
 [	DB ( 6 & 7 )]
-004c9d: 06
+004c99: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO120:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004c9a: 11
+
+[	DB ( 5 & 7 )]
+004c9b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO121:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004c9c: 56
+
+[	DB ( 3 & 7 )]
+004c9d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO122:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004c9e: 66
+
+[	DB ( 6 & 7 )]
+004c9f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO245:
+	Scope path: @MACRO123:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004c9e: 77
+004ca0: 77
 
 [	DB ( 7 & 7 )]
-004c9f: 07
+004ca1: 07
 
-[	INCLUDE ".//palette14.asm"] end
+[	INCLUDE ".//palette06.asm"] end
 
-[	INCLUDE ".//palette15.asm"] begin
+[	INCLUDE ".//palette07.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO246:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ca0: 00
-
-[	DB ( 0 & 7 )]
-004ca1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO247:
+	Scope path: @MACRO124:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004ca2: 00
 
 [	DB ( 0 & 7 )]
 004ca3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO125:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ca4: 00
+
+[	DB ( 0 & 7 )]
+004ca5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO248:
+	Scope path: @MACRO126:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ca4: 22
+004ca6: 22
 
 [	DB ( 6 & 7 )]
-004ca5: 06
+004ca7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO249:
+	Scope path: @MACRO127:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ca6: 34
+004ca8: 34
 
 [	DB ( 7 & 7 )]
-004ca7: 07
+004ca9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO250:
+	Scope path: @MACRO128:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ca8: 37
+004caa: 37
 
 [	DB ( 3 & 7 )]
-004ca9: 03
+004cab: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO251:
+	Scope path: @MACRO129:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004caa: 47
+004cac: 47
 
 [	DB ( 4 & 7 )]
-004cab: 04
+004cad: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO252:
+	Scope path: @MACRO130:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004cac: 53
+004cae: 53
 
 [	DB ( 3 & 7 )]
-004cad: 03
+004caf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO253:
+	Scope path: @MACRO131:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cae: 47
+004cb0: 47
 
 [	DB ( 6 & 7 )]
-004caf: 06
+004cb1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO254:
+	Scope path: @MACRO132:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cb0: 63
+004cb2: 63
 
 [	DB ( 3 & 7 )]
-004cb1: 03
+004cb3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO255:
+	Scope path: @MACRO133:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cb2: 64
+004cb4: 64
 
 [	DB ( 4 & 7 )]
-004cb3: 04
+004cb5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO256:
+	Scope path: @MACRO134:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cb4: 63
-
-[	DB ( 6 & 7 )]
-004cb5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO257:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cb6: 65
+004cb6: 63
 
 [	DB ( 6 & 7 )]
 004cb7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO258:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004cb8: 11
-
-[	DB ( 5 & 7 )]
-004cb9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO259:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004cba: 56
-
-[	DB ( 3 & 7 )]
-004cbb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO260:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cbc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO135:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cb8: 65
 
 [	DB ( 6 & 7 )]
-004cbd: 06
+004cb9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO136:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004cba: 11
+
+[	DB ( 5 & 7 )]
+004cbb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO137:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004cbc: 56
+
+[	DB ( 3 & 7 )]
+004cbd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO138:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cbe: 66
+
+[	DB ( 6 & 7 )]
+004cbf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO261:
+	Scope path: @MACRO139:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004cbe: 77
+004cc0: 77
 
 [	DB ( 7 & 7 )]
-004cbf: 07
+004cc1: 07
 
-[	INCLUDE ".//palette15.asm"] end
+[	INCLUDE ".//palette07.asm"] end
 
-[	INCLUDE ".//palette16.asm"] begin
+[	INCLUDE ".//palette08.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO262:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004cc0: 00
-
-[	DB ( 0 & 7 )]
-004cc1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO263:
+	Scope path: @MACRO140:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004cc2: 00
 
 [	DB ( 0 & 7 )]
 004cc3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO141:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004cc4: 00
+
+[	DB ( 0 & 7 )]
+004cc5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO264:
+	Scope path: @MACRO142:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004cc4: 22
+004cc6: 22
 
 [	DB ( 6 & 7 )]
-004cc5: 06
+004cc7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO265:
+	Scope path: @MACRO143:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004cc6: 34
+004cc8: 34
 
 [	DB ( 7 & 7 )]
-004cc7: 07
+004cc9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO266:
+	Scope path: @MACRO144:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004cc8: 37
+004cca: 37
 
 [	DB ( 3 & 7 )]
-004cc9: 03
+004ccb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO267:
+	Scope path: @MACRO145:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cca: 47
+004ccc: 47
 
 [	DB ( 4 & 7 )]
-004ccb: 04
+004ccd: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO268:
+	Scope path: @MACRO146:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004ccc: 53
+004cce: 53
 
 [	DB ( 3 & 7 )]
-004ccd: 03
+004ccf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO269:
+	Scope path: @MACRO147:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cce: 47
+004cd0: 47
 
 [	DB ( 6 & 7 )]
-004ccf: 06
+004cd1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO270:
+	Scope path: @MACRO148:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cd0: 63
+004cd2: 63
 
 [	DB ( 3 & 7 )]
-004cd1: 03
+004cd3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO271:
+	Scope path: @MACRO149:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cd2: 64
+004cd4: 64
 
 [	DB ( 4 & 7 )]
-004cd3: 04
+004cd5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO272:
+	Scope path: @MACRO150:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cd4: 63
-
-[	DB ( 6 & 7 )]
-004cd5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO273:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cd6: 65
+004cd6: 63
 
 [	DB ( 6 & 7 )]
 004cd7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO274:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004cd8: 11
-
-[	DB ( 5 & 7 )]
-004cd9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO275:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004cda: 56
-
-[	DB ( 3 & 7 )]
-004cdb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO276:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cdc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO151:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cd8: 65
 
 [	DB ( 6 & 7 )]
-004cdd: 06
+004cd9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO152:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004cda: 11
+
+[	DB ( 5 & 7 )]
+004cdb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO153:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004cdc: 56
+
+[	DB ( 3 & 7 )]
+004cdd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO154:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cde: 66
+
+[	DB ( 6 & 7 )]
+004cdf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO277:
+	Scope path: @MACRO155:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004cde: 77
+004ce0: 77
 
 [	DB ( 7 & 7 )]
-004cdf: 07
+004ce1: 07
 
-[	INCLUDE ".//palette16.asm"] end
+[	INCLUDE ".//palette08.asm"] end
 
-[	INCLUDE ".//palette17.asm"] begin
+[	INCLUDE ".//palette09.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO278:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ce0: 00
-
-[	DB ( 0 & 7 )]
-004ce1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO279:
+	Scope path: @MACRO156:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004ce2: 00
 
 [	DB ( 0 & 7 )]
 004ce3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO157:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ce4: 00
+
+[	DB ( 0 & 7 )]
+004ce5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO280:
+	Scope path: @MACRO158:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ce4: 22
+004ce6: 22
 
 [	DB ( 6 & 7 )]
-004ce5: 06
+004ce7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO281:
+	Scope path: @MACRO159:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ce6: 34
+004ce8: 34
 
 [	DB ( 7 & 7 )]
-004ce7: 07
+004ce9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO282:
+	Scope path: @MACRO160:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ce8: 37
+004cea: 37
 
 [	DB ( 3 & 7 )]
-004ce9: 03
+004ceb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO283:
+	Scope path: @MACRO161:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cea: 47
+004cec: 47
 
 [	DB ( 4 & 7 )]
-004ceb: 04
+004ced: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO284:
+	Scope path: @MACRO162:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004cec: 53
+004cee: 53
 
 [	DB ( 3 & 7 )]
-004ced: 03
+004cef: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO285:
+	Scope path: @MACRO163:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cee: 47
+004cf0: 47
 
 [	DB ( 6 & 7 )]
-004cef: 06
+004cf1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO286:
+	Scope path: @MACRO164:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cf0: 63
+004cf2: 63
 
 [	DB ( 3 & 7 )]
-004cf1: 03
+004cf3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO287:
+	Scope path: @MACRO165:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cf2: 64
+004cf4: 64
 
 [	DB ( 4 & 7 )]
-004cf3: 04
+004cf5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO288:
+	Scope path: @MACRO166:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cf4: 63
-
-[	DB ( 6 & 7 )]
-004cf5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO289:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cf6: 65
+004cf6: 63
 
 [	DB ( 6 & 7 )]
 004cf7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO290:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004cf8: 11
-
-[	DB ( 5 & 7 )]
-004cf9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO291:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004cfa: 56
-
-[	DB ( 3 & 7 )]
-004cfb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO292:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004cfc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO167:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cf8: 65
 
 [	DB ( 6 & 7 )]
-004cfd: 06
+004cf9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO168:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004cfa: 11
+
+[	DB ( 5 & 7 )]
+004cfb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO169:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004cfc: 56
+
+[	DB ( 3 & 7 )]
+004cfd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO170:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004cfe: 66
+
+[	DB ( 6 & 7 )]
+004cff: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO293:
+	Scope path: @MACRO171:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004cfe: 77
+004d00: 77
 
 [	DB ( 7 & 7 )]
-004cff: 07
+004d01: 07
 
-[	INCLUDE ".//palette17.asm"] end
+[	INCLUDE ".//palette09.asm"] end
 
-[	INCLUDE ".//palette18.asm"] begin
+[	INCLUDE ".//palette10.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO294:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004d00: 00
-
-[	DB ( 0 & 7 )]
-004d01: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO295:
+	Scope path: @MACRO172:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004d02: 00
 
 [	DB ( 0 & 7 )]
 004d03: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO173:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d04: 00
+
+[	DB ( 0 & 7 )]
+004d05: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO296:
+	Scope path: @MACRO174:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d04: 22
+004d06: 22
 
 [	DB ( 6 & 7 )]
-004d05: 06
+004d07: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO297:
+	Scope path: @MACRO175:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d06: 34
+004d08: 34
 
 [	DB ( 7 & 7 )]
-004d07: 07
+004d09: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO298:
+	Scope path: @MACRO176:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d08: 37
+004d0a: 37
 
 [	DB ( 3 & 7 )]
-004d09: 03
+004d0b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO299:
+	Scope path: @MACRO177:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d0a: 47
+004d0c: 47
 
 [	DB ( 4 & 7 )]
-004d0b: 04
+004d0d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO300:
+	Scope path: @MACRO178:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d0c: 53
+004d0e: 53
 
 [	DB ( 3 & 7 )]
-004d0d: 03
+004d0f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO301:
+	Scope path: @MACRO179:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d0e: 47
+004d10: 47
 
 [	DB ( 6 & 7 )]
-004d0f: 06
+004d11: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO302:
+	Scope path: @MACRO180:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d10: 63
+004d12: 63
 
 [	DB ( 3 & 7 )]
-004d11: 03
+004d13: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO303:
+	Scope path: @MACRO181:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d12: 64
+004d14: 64
 
 [	DB ( 4 & 7 )]
-004d13: 04
+004d15: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO304:
+	Scope path: @MACRO182:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d14: 63
-
-[	DB ( 6 & 7 )]
-004d15: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO305:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d16: 65
+004d16: 63
 
 [	DB ( 6 & 7 )]
 004d17: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO306:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d18: 11
-
-[	DB ( 5 & 7 )]
-004d19: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO307:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d1a: 56
-
-[	DB ( 3 & 7 )]
-004d1b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO308:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d1c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO183:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d18: 65
 
 [	DB ( 6 & 7 )]
-004d1d: 06
+004d19: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO184:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d1a: 11
+
+[	DB ( 5 & 7 )]
+004d1b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO185:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d1c: 56
+
+[	DB ( 3 & 7 )]
+004d1d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO186:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d1e: 66
+
+[	DB ( 6 & 7 )]
+004d1f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO309:
+	Scope path: @MACRO187:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d1e: 77
+004d20: 77
 
 [	DB ( 7 & 7 )]
-004d1f: 07
+004d21: 07
 
-[	INCLUDE ".//palette18.asm"] end
+[	INCLUDE ".//palette10.asm"] end
 
-[	INCLUDE ".//palette19.asm"] begin
+[	INCLUDE ".//palette11.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO310:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004d20: 00
-
-[	DB ( 0 & 7 )]
-004d21: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO311:
+	Scope path: @MACRO188:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004d22: 00
 
 [	DB ( 0 & 7 )]
 004d23: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO189:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d24: 00
+
+[	DB ( 0 & 7 )]
+004d25: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO312:
+	Scope path: @MACRO190:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d24: 22
+004d26: 22
 
 [	DB ( 6 & 7 )]
-004d25: 06
+004d27: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO313:
+	Scope path: @MACRO191:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d26: 34
+004d28: 34
 
 [	DB ( 7 & 7 )]
-004d27: 07
+004d29: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO314:
+	Scope path: @MACRO192:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d28: 37
+004d2a: 37
 
 [	DB ( 3 & 7 )]
-004d29: 03
+004d2b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO315:
+	Scope path: @MACRO193:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d2a: 47
+004d2c: 47
 
 [	DB ( 4 & 7 )]
-004d2b: 04
+004d2d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO316:
+	Scope path: @MACRO194:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d2c: 53
+004d2e: 53
 
 [	DB ( 3 & 7 )]
-004d2d: 03
+004d2f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO317:
+	Scope path: @MACRO195:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d2e: 47
+004d30: 47
 
 [	DB ( 6 & 7 )]
-004d2f: 06
+004d31: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO318:
+	Scope path: @MACRO196:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d30: 63
+004d32: 63
 
 [	DB ( 3 & 7 )]
-004d31: 03
+004d33: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO319:
+	Scope path: @MACRO197:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d32: 64
+004d34: 64
 
 [	DB ( 4 & 7 )]
-004d33: 04
+004d35: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO320:
+	Scope path: @MACRO198:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d34: 63
-
-[	DB ( 6 & 7 )]
-004d35: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO321:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d36: 65
+004d36: 63
 
 [	DB ( 6 & 7 )]
 004d37: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO322:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d38: 11
-
-[	DB ( 5 & 7 )]
-004d39: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO323:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d3a: 56
-
-[	DB ( 3 & 7 )]
-004d3b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO324:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d3c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO199:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d38: 65
 
 [	DB ( 6 & 7 )]
-004d3d: 06
+004d39: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO200:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d3a: 11
+
+[	DB ( 5 & 7 )]
+004d3b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO201:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d3c: 56
+
+[	DB ( 3 & 7 )]
+004d3d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO202:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d3e: 66
+
+[	DB ( 6 & 7 )]
+004d3f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO325:
+	Scope path: @MACRO203:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d3e: 77
+004d40: 77
 
 [	DB ( 7 & 7 )]
-004d3f: 07
+004d41: 07
 
-[	INCLUDE ".//palette19.asm"] end
+[	INCLUDE ".//palette11.asm"] end
 
-[	INCLUDE ".//palette20.asm"] begin
+[	INCLUDE ".//palette12.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO326:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004d40: 00
-
-[	DB ( 0 & 7 )]
-004d41: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO327:
+	Scope path: @MACRO204:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004d42: 00
 
 [	DB ( 0 & 7 )]
 004d43: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO205:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d44: 00
+
+[	DB ( 0 & 7 )]
+004d45: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO328:
+	Scope path: @MACRO206:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d44: 22
+004d46: 22
 
 [	DB ( 6 & 7 )]
-004d45: 06
+004d47: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO329:
+	Scope path: @MACRO207:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d46: 34
+004d48: 34
 
 [	DB ( 7 & 7 )]
-004d47: 07
+004d49: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO330:
+	Scope path: @MACRO208:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d48: 37
+004d4a: 37
 
 [	DB ( 3 & 7 )]
-004d49: 03
+004d4b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO331:
+	Scope path: @MACRO209:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d4a: 47
+004d4c: 47
 
 [	DB ( 4 & 7 )]
-004d4b: 04
+004d4d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO332:
+	Scope path: @MACRO210:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d4c: 53
+004d4e: 53
 
 [	DB ( 3 & 7 )]
-004d4d: 03
+004d4f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO333:
+	Scope path: @MACRO211:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d4e: 47
+004d50: 47
 
 [	DB ( 6 & 7 )]
-004d4f: 06
+004d51: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO334:
+	Scope path: @MACRO212:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d50: 63
+004d52: 63
 
 [	DB ( 3 & 7 )]
-004d51: 03
+004d53: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO335:
+	Scope path: @MACRO213:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d52: 64
+004d54: 64
 
 [	DB ( 4 & 7 )]
-004d53: 04
+004d55: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO336:
+	Scope path: @MACRO214:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d54: 63
-
-[	DB ( 6 & 7 )]
-004d55: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO337:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d56: 65
+004d56: 63
 
 [	DB ( 6 & 7 )]
 004d57: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO338:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d58: 11
-
-[	DB ( 5 & 7 )]
-004d59: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO339:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d5a: 56
-
-[	DB ( 3 & 7 )]
-004d5b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO340:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d5c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO215:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d58: 65
 
 [	DB ( 6 & 7 )]
-004d5d: 06
+004d59: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO216:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d5a: 11
+
+[	DB ( 5 & 7 )]
+004d5b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO217:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d5c: 56
+
+[	DB ( 3 & 7 )]
+004d5d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO218:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d5e: 66
+
+[	DB ( 6 & 7 )]
+004d5f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO341:
+	Scope path: @MACRO219:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d5e: 77
+004d60: 77
 
 [	DB ( 7 & 7 )]
-004d5f: 07
+004d61: 07
 
-[	INCLUDE ".//palette20.asm"] end
+[	INCLUDE ".//palette12.asm"] end
 
-[	INCLUDE ".//palette21.asm"] begin
+[	INCLUDE ".//palette13.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO342:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004d60: 00
-
-[	DB ( 0 & 7 )]
-004d61: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO343:
+	Scope path: @MACRO220:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004d62: 00
 
 [	DB ( 0 & 7 )]
 004d63: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO221:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d64: 00
+
+[	DB ( 0 & 7 )]
+004d65: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO344:
+	Scope path: @MACRO222:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d64: 22
+004d66: 22
 
 [	DB ( 6 & 7 )]
-004d65: 06
+004d67: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO345:
+	Scope path: @MACRO223:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d66: 34
+004d68: 34
 
 [	DB ( 7 & 7 )]
-004d67: 07
+004d69: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO346:
+	Scope path: @MACRO224:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d68: 37
+004d6a: 37
 
 [	DB ( 3 & 7 )]
-004d69: 03
+004d6b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO347:
+	Scope path: @MACRO225:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d6a: 47
+004d6c: 47
 
 [	DB ( 4 & 7 )]
-004d6b: 04
+004d6d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO348:
+	Scope path: @MACRO226:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d6c: 53
+004d6e: 53
 
 [	DB ( 3 & 7 )]
-004d6d: 03
+004d6f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO349:
+	Scope path: @MACRO227:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d6e: 47
+004d70: 47
 
 [	DB ( 6 & 7 )]
-004d6f: 06
+004d71: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO350:
+	Scope path: @MACRO228:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d70: 63
+004d72: 63
 
 [	DB ( 3 & 7 )]
-004d71: 03
+004d73: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO351:
+	Scope path: @MACRO229:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d72: 64
+004d74: 64
 
 [	DB ( 4 & 7 )]
-004d73: 04
+004d75: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO352:
+	Scope path: @MACRO230:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d74: 63
-
-[	DB ( 6 & 7 )]
-004d75: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO353:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d76: 65
+004d76: 63
 
 [	DB ( 6 & 7 )]
 004d77: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO354:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d78: 11
-
-[	DB ( 5 & 7 )]
-004d79: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO355:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d7a: 56
-
-[	DB ( 3 & 7 )]
-004d7b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO356:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d7c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO231:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d78: 65
 
 [	DB ( 6 & 7 )]
-004d7d: 06
+004d79: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO232:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d7a: 11
+
+[	DB ( 5 & 7 )]
+004d7b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO233:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d7c: 56
+
+[	DB ( 3 & 7 )]
+004d7d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO234:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d7e: 66
+
+[	DB ( 6 & 7 )]
+004d7f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO357:
+	Scope path: @MACRO235:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d7e: 77
+004d80: 77
 
 [	DB ( 7 & 7 )]
-004d7f: 07
+004d81: 07
 
-[	INCLUDE ".//palette21.asm"] end
+[	INCLUDE ".//palette13.asm"] end
 
-[	INCLUDE ".//palette22.asm"] begin
+[	INCLUDE ".//palette14.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO358:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004d80: 00
-
-[	DB ( 0 & 7 )]
-004d81: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO359:
+	Scope path: @MACRO236:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004d82: 00
 
 [	DB ( 0 & 7 )]
 004d83: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO237:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d84: 00
+
+[	DB ( 0 & 7 )]
+004d85: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO360:
+	Scope path: @MACRO238:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d84: 22
+004d86: 22
 
 [	DB ( 6 & 7 )]
-004d85: 06
+004d87: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO361:
+	Scope path: @MACRO239:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d86: 34
+004d88: 34
 
 [	DB ( 7 & 7 )]
-004d87: 07
+004d89: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO362:
+	Scope path: @MACRO240:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d88: 37
+004d8a: 37
 
 [	DB ( 3 & 7 )]
-004d89: 03
+004d8b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO363:
+	Scope path: @MACRO241:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d8a: 47
+004d8c: 47
 
 [	DB ( 4 & 7 )]
-004d8b: 04
+004d8d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO364:
+	Scope path: @MACRO242:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d8c: 53
+004d8e: 53
 
 [	DB ( 3 & 7 )]
-004d8d: 03
+004d8f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO365:
+	Scope path: @MACRO243:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d8e: 47
+004d90: 47
 
 [	DB ( 6 & 7 )]
-004d8f: 06
+004d91: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO366:
+	Scope path: @MACRO244:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d90: 63
+004d92: 63
 
 [	DB ( 3 & 7 )]
-004d91: 03
+004d93: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO367:
+	Scope path: @MACRO245:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d92: 64
+004d94: 64
 
 [	DB ( 4 & 7 )]
-004d93: 04
+004d95: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO368:
+	Scope path: @MACRO246:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d94: 63
-
-[	DB ( 6 & 7 )]
-004d95: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO369:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d96: 65
+004d96: 63
 
 [	DB ( 6 & 7 )]
 004d97: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO370:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d98: 11
-
-[	DB ( 5 & 7 )]
-004d99: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO371:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d9a: 56
-
-[	DB ( 3 & 7 )]
-004d9b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO372:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d9c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO247:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d98: 65
 
 [	DB ( 6 & 7 )]
-004d9d: 06
+004d99: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO248:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d9a: 11
+
+[	DB ( 5 & 7 )]
+004d9b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO249:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d9c: 56
+
+[	DB ( 3 & 7 )]
+004d9d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO250:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d9e: 66
+
+[	DB ( 6 & 7 )]
+004d9f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO373:
+	Scope path: @MACRO251:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d9e: 77
+004da0: 77
 
 [	DB ( 7 & 7 )]
-004d9f: 07
+004da1: 07
 
-[	INCLUDE ".//palette22.asm"] end
+[	INCLUDE ".//palette14.asm"] end
 
-[	INCLUDE ".//palette23.asm"] begin
+[	INCLUDE ".//palette15.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO374:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004da0: 00
-
-[	DB ( 0 & 7 )]
-004da1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO375:
+	Scope path: @MACRO252:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004da2: 00
 
 [	DB ( 0 & 7 )]
 004da3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO253:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004da4: 00
+
+[	DB ( 0 & 7 )]
+004da5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO376:
+	Scope path: @MACRO254:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004da4: 22
+004da6: 22
 
 [	DB ( 6 & 7 )]
-004da5: 06
+004da7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO377:
+	Scope path: @MACRO255:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004da6: 34
+004da8: 34
 
 [	DB ( 7 & 7 )]
-004da7: 07
+004da9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO378:
+	Scope path: @MACRO256:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004da8: 37
+004daa: 37
 
 [	DB ( 3 & 7 )]
-004da9: 03
+004dab: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO379:
+	Scope path: @MACRO257:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004daa: 47
+004dac: 47
 
 [	DB ( 4 & 7 )]
-004dab: 04
+004dad: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO380:
+	Scope path: @MACRO258:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dac: 53
+004dae: 53
 
 [	DB ( 3 & 7 )]
-004dad: 03
+004daf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO381:
+	Scope path: @MACRO259:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004dae: 47
+004db0: 47
 
 [	DB ( 6 & 7 )]
-004daf: 06
+004db1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO382:
+	Scope path: @MACRO260:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004db0: 63
+004db2: 63
 
 [	DB ( 3 & 7 )]
-004db1: 03
+004db3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO383:
+	Scope path: @MACRO261:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004db2: 64
+004db4: 64
 
 [	DB ( 4 & 7 )]
-004db3: 04
+004db5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO384:
+	Scope path: @MACRO262:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004db4: 63
-
-[	DB ( 6 & 7 )]
-004db5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO385:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004db6: 65
+004db6: 63
 
 [	DB ( 6 & 7 )]
 004db7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO386:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004db8: 11
-
-[	DB ( 5 & 7 )]
-004db9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO387:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dba: 56
-
-[	DB ( 3 & 7 )]
-004dbb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO388:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dbc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO263:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004db8: 65
 
 [	DB ( 6 & 7 )]
-004dbd: 06
+004db9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO264:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004dba: 11
+
+[	DB ( 5 & 7 )]
+004dbb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO265:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004dbc: 56
+
+[	DB ( 3 & 7 )]
+004dbd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO266:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004dbe: 66
+
+[	DB ( 6 & 7 )]
+004dbf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO389:
+	Scope path: @MACRO267:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004dbe: 77
+004dc0: 77
 
 [	DB ( 7 & 7 )]
-004dbf: 07
+004dc1: 07
 
-[	INCLUDE ".//palette23.asm"] end
+[	INCLUDE ".//palette15.asm"] end
 
-[	INCLUDE ".//palette24.asm"] begin
+[	INCLUDE ".//palette16.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO390:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004dc0: 00
-
-[	DB ( 0 & 7 )]
-004dc1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO391:
+	Scope path: @MACRO268:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004dc2: 00
 
 [	DB ( 0 & 7 )]
 004dc3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO269:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004dc4: 00
+
+[	DB ( 0 & 7 )]
+004dc5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO392:
+	Scope path: @MACRO270:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004dc4: 22
+004dc6: 22
 
 [	DB ( 6 & 7 )]
-004dc5: 06
+004dc7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO393:
+	Scope path: @MACRO271:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004dc6: 34
+004dc8: 34
 
 [	DB ( 7 & 7 )]
-004dc7: 07
+004dc9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO394:
+	Scope path: @MACRO272:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004dc8: 37
+004dca: 37
 
 [	DB ( 3 & 7 )]
-004dc9: 03
+004dcb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO395:
+	Scope path: @MACRO273:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004dca: 47
+004dcc: 47
 
 [	DB ( 4 & 7 )]
-004dcb: 04
+004dcd: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO396:
+	Scope path: @MACRO274:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dcc: 53
+004dce: 53
 
 [	DB ( 3 & 7 )]
-004dcd: 03
+004dcf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO397:
+	Scope path: @MACRO275:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004dce: 47
+004dd0: 47
 
 [	DB ( 6 & 7 )]
-004dcf: 06
+004dd1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO398:
+	Scope path: @MACRO276:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dd0: 63
+004dd2: 63
 
 [	DB ( 3 & 7 )]
-004dd1: 03
+004dd3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO399:
+	Scope path: @MACRO277:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dd2: 64
+004dd4: 64
 
 [	DB ( 4 & 7 )]
-004dd3: 04
+004dd5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO400:
+	Scope path: @MACRO278:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dd4: 63
-
-[	DB ( 6 & 7 )]
-004dd5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO401:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dd6: 65
+004dd6: 63
 
 [	DB ( 6 & 7 )]
 004dd7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO402:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004dd8: 11
-
-[	DB ( 5 & 7 )]
-004dd9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO403:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dda: 56
-
-[	DB ( 3 & 7 )]
-004ddb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO404:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ddc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO279:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004dd8: 65
 
 [	DB ( 6 & 7 )]
-004ddd: 06
+004dd9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO280:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004dda: 11
+
+[	DB ( 5 & 7 )]
+004ddb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO281:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004ddc: 56
+
+[	DB ( 3 & 7 )]
+004ddd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO282:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004dde: 66
+
+[	DB ( 6 & 7 )]
+004ddf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO405:
+	Scope path: @MACRO283:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004dde: 77
+004de0: 77
 
 [	DB ( 7 & 7 )]
-004ddf: 07
+004de1: 07
 
-[	INCLUDE ".//palette24.asm"] end
+[	INCLUDE ".//palette16.asm"] end
 
-[	INCLUDE ".//palette25.asm"] begin
+[	INCLUDE ".//palette17.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO406:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004de0: 00
-
-[	DB ( 0 & 7 )]
-004de1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO407:
+	Scope path: @MACRO284:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004de2: 00
 
 [	DB ( 0 & 7 )]
 004de3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO285:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004de4: 00
+
+[	DB ( 0 & 7 )]
+004de5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO408:
+	Scope path: @MACRO286:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004de4: 22
+004de6: 22
 
 [	DB ( 6 & 7 )]
-004de5: 06
+004de7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO409:
+	Scope path: @MACRO287:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004de6: 34
+004de8: 34
 
 [	DB ( 7 & 7 )]
-004de7: 07
+004de9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO410:
+	Scope path: @MACRO288:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004de8: 37
+004dea: 37
 
 [	DB ( 3 & 7 )]
-004de9: 03
+004deb: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO411:
+	Scope path: @MACRO289:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004dea: 47
+004dec: 47
 
 [	DB ( 4 & 7 )]
-004deb: 04
+004ded: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO412:
+	Scope path: @MACRO290:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dec: 53
+004dee: 53
 
 [	DB ( 3 & 7 )]
-004ded: 03
+004def: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO413:
+	Scope path: @MACRO291:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004dee: 47
+004df0: 47
 
 [	DB ( 6 & 7 )]
-004def: 06
+004df1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO414:
+	Scope path: @MACRO292:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004df0: 63
+004df2: 63
 
 [	DB ( 3 & 7 )]
-004df1: 03
+004df3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO415:
+	Scope path: @MACRO293:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004df2: 64
+004df4: 64
 
 [	DB ( 4 & 7 )]
-004df3: 04
+004df5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO416:
+	Scope path: @MACRO294:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004df4: 63
-
-[	DB ( 6 & 7 )]
-004df5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO417:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004df6: 65
+004df6: 63
 
 [	DB ( 6 & 7 )]
 004df7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO418:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004df8: 11
-
-[	DB ( 5 & 7 )]
-004df9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO419:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004dfa: 56
-
-[	DB ( 3 & 7 )]
-004dfb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO420:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004dfc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO295:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004df8: 65
 
 [	DB ( 6 & 7 )]
-004dfd: 06
+004df9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO296:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004dfa: 11
+
+[	DB ( 5 & 7 )]
+004dfb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO297:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004dfc: 56
+
+[	DB ( 3 & 7 )]
+004dfd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO298:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004dfe: 66
+
+[	DB ( 6 & 7 )]
+004dff: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO421:
+	Scope path: @MACRO299:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004dfe: 77
+004e00: 77
 
 [	DB ( 7 & 7 )]
-004dff: 07
+004e01: 07
 
-[	INCLUDE ".//palette25.asm"] end
+[	INCLUDE ".//palette17.asm"] end
 
-[	INCLUDE ".//palette26.asm"] begin
+[	INCLUDE ".//palette18.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO422:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004e00: 00
-
-[	DB ( 0 & 7 )]
-004e01: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO423:
+	Scope path: @MACRO300:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004e02: 00
 
 [	DB ( 0 & 7 )]
 004e03: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO301:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004e04: 00
+
+[	DB ( 0 & 7 )]
+004e05: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO424:
+	Scope path: @MACRO302:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004e04: 22
+004e06: 22
 
 [	DB ( 6 & 7 )]
-004e05: 06
+004e07: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO425:
+	Scope path: @MACRO303:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e06: 34
+004e08: 34
 
 [	DB ( 7 & 7 )]
-004e07: 07
+004e09: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO426:
+	Scope path: @MACRO304:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e08: 37
+004e0a: 37
 
 [	DB ( 3 & 7 )]
-004e09: 03
+004e0b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO427:
+	Scope path: @MACRO305:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e0a: 47
+004e0c: 47
 
 [	DB ( 4 & 7 )]
-004e0b: 04
+004e0d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO428:
+	Scope path: @MACRO306:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e0c: 53
+004e0e: 53
 
 [	DB ( 3 & 7 )]
-004e0d: 03
+004e0f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO429:
+	Scope path: @MACRO307:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e0e: 47
+004e10: 47
 
 [	DB ( 6 & 7 )]
-004e0f: 06
+004e11: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO430:
+	Scope path: @MACRO308:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e10: 63
+004e12: 63
 
 [	DB ( 3 & 7 )]
-004e11: 03
+004e13: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO431:
+	Scope path: @MACRO309:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e12: 64
+004e14: 64
 
 [	DB ( 4 & 7 )]
-004e13: 04
+004e15: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO432:
+	Scope path: @MACRO310:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e14: 63
-
-[	DB ( 6 & 7 )]
-004e15: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO433:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e16: 65
+004e16: 63
 
 [	DB ( 6 & 7 )]
 004e17: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO434:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004e18: 11
-
-[	DB ( 5 & 7 )]
-004e19: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO435:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e1a: 56
-
-[	DB ( 3 & 7 )]
-004e1b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO436:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e1c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO311:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e18: 65
 
 [	DB ( 6 & 7 )]
-004e1d: 06
+004e19: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO312:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004e1a: 11
+
+[	DB ( 5 & 7 )]
+004e1b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO313:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004e1c: 56
+
+[	DB ( 3 & 7 )]
+004e1d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO314:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e1e: 66
+
+[	DB ( 6 & 7 )]
+004e1f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO437:
+	Scope path: @MACRO315:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004e1e: 77
+004e20: 77
 
 [	DB ( 7 & 7 )]
-004e1f: 07
+004e21: 07
 
-[	INCLUDE ".//palette26.asm"] end
+[	INCLUDE ".//palette18.asm"] end
 
-[	INCLUDE ".//palette27.asm"] begin
+[	INCLUDE ".//palette19.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO438:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004e20: 00
-
-[	DB ( 0 & 7 )]
-004e21: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO439:
+	Scope path: @MACRO316:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004e22: 00
 
 [	DB ( 0 & 7 )]
 004e23: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO317:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004e24: 00
+
+[	DB ( 0 & 7 )]
+004e25: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO440:
+	Scope path: @MACRO318:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004e24: 22
+004e26: 22
 
 [	DB ( 6 & 7 )]
-004e25: 06
+004e27: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO441:
+	Scope path: @MACRO319:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e26: 34
+004e28: 34
 
 [	DB ( 7 & 7 )]
-004e27: 07
+004e29: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO442:
+	Scope path: @MACRO320:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e28: 37
+004e2a: 37
 
 [	DB ( 3 & 7 )]
-004e29: 03
+004e2b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO443:
+	Scope path: @MACRO321:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e2a: 47
+004e2c: 47
 
 [	DB ( 4 & 7 )]
-004e2b: 04
+004e2d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO444:
+	Scope path: @MACRO322:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e2c: 53
+004e2e: 53
 
 [	DB ( 3 & 7 )]
-004e2d: 03
+004e2f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO445:
+	Scope path: @MACRO323:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e2e: 47
+004e30: 47
 
 [	DB ( 6 & 7 )]
-004e2f: 06
+004e31: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO446:
+	Scope path: @MACRO324:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e30: 63
+004e32: 63
 
 [	DB ( 3 & 7 )]
-004e31: 03
+004e33: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO447:
+	Scope path: @MACRO325:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e32: 64
+004e34: 64
 
 [	DB ( 4 & 7 )]
-004e33: 04
+004e35: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO448:
+	Scope path: @MACRO326:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e34: 63
-
-[	DB ( 6 & 7 )]
-004e35: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO449:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e36: 65
+004e36: 63
 
 [	DB ( 6 & 7 )]
 004e37: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO450:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004e38: 11
-
-[	DB ( 5 & 7 )]
-004e39: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO451:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e3a: 56
-
-[	DB ( 3 & 7 )]
-004e3b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO452:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e3c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO327:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e38: 65
 
 [	DB ( 6 & 7 )]
-004e3d: 06
+004e39: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO328:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004e3a: 11
+
+[	DB ( 5 & 7 )]
+004e3b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO329:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004e3c: 56
+
+[	DB ( 3 & 7 )]
+004e3d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO330:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e3e: 66
+
+[	DB ( 6 & 7 )]
+004e3f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO453:
+	Scope path: @MACRO331:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004e3e: 77
+004e40: 77
 
 [	DB ( 7 & 7 )]
-004e3f: 07
+004e41: 07
 
-[	INCLUDE ".//palette27.asm"] end
+[	INCLUDE ".//palette19.asm"] end
 
-[	INCLUDE ".//palette28.asm"] begin
+[	INCLUDE ".//palette20.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO454:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004e40: 00
-
-[	DB ( 0 & 7 )]
-004e41: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO455:
+	Scope path: @MACRO332:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004e42: 00
 
 [	DB ( 0 & 7 )]
 004e43: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO333:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004e44: 00
+
+[	DB ( 0 & 7 )]
+004e45: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO456:
+	Scope path: @MACRO334:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004e44: 22
+004e46: 22
 
 [	DB ( 6 & 7 )]
-004e45: 06
+004e47: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO457:
+	Scope path: @MACRO335:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e46: 34
+004e48: 34
 
 [	DB ( 7 & 7 )]
-004e47: 07
+004e49: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO458:
+	Scope path: @MACRO336:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e48: 37
+004e4a: 37
 
 [	DB ( 3 & 7 )]
-004e49: 03
+004e4b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO459:
+	Scope path: @MACRO337:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e4a: 47
+004e4c: 47
 
 [	DB ( 4 & 7 )]
-004e4b: 04
+004e4d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO460:
+	Scope path: @MACRO338:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e4c: 53
+004e4e: 53
 
 [	DB ( 3 & 7 )]
-004e4d: 03
+004e4f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO461:
+	Scope path: @MACRO339:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e4e: 47
+004e50: 47
 
 [	DB ( 6 & 7 )]
-004e4f: 06
+004e51: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO462:
+	Scope path: @MACRO340:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e50: 63
+004e52: 63
 
 [	DB ( 3 & 7 )]
-004e51: 03
+004e53: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO463:
+	Scope path: @MACRO341:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e52: 64
+004e54: 64
 
 [	DB ( 4 & 7 )]
-004e53: 04
+004e55: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO464:
+	Scope path: @MACRO342:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e54: 63
-
-[	DB ( 6 & 7 )]
-004e55: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO465:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e56: 65
+004e56: 63
 
 [	DB ( 6 & 7 )]
 004e57: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO466:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004e58: 11
-
-[	DB ( 5 & 7 )]
-004e59: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO467:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e5a: 56
-
-[	DB ( 3 & 7 )]
-004e5b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO468:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e5c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO343:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e58: 65
 
 [	DB ( 6 & 7 )]
-004e5d: 06
+004e59: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO344:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004e5a: 11
+
+[	DB ( 5 & 7 )]
+004e5b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO345:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004e5c: 56
+
+[	DB ( 3 & 7 )]
+004e5d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO346:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e5e: 66
+
+[	DB ( 6 & 7 )]
+004e5f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO469:
+	Scope path: @MACRO347:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004e5e: 77
+004e60: 77
 
 [	DB ( 7 & 7 )]
-004e5f: 07
+004e61: 07
 
-[	INCLUDE ".//palette28.asm"] end
+[	INCLUDE ".//palette20.asm"] end
 
-[	INCLUDE ".//palette29.asm"] begin
+[	INCLUDE ".//palette21.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO470:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004e60: 00
-
-[	DB ( 0 & 7 )]
-004e61: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO471:
+	Scope path: @MACRO348:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004e62: 00
 
 [	DB ( 0 & 7 )]
 004e63: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO349:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004e64: 00
+
+[	DB ( 0 & 7 )]
+004e65: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO472:
+	Scope path: @MACRO350:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004e64: 22
+004e66: 22
 
 [	DB ( 6 & 7 )]
-004e65: 06
+004e67: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO473:
+	Scope path: @MACRO351:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e66: 34
+004e68: 34
 
 [	DB ( 7 & 7 )]
-004e67: 07
+004e69: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO474:
+	Scope path: @MACRO352:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e68: 37
+004e6a: 37
 
 [	DB ( 3 & 7 )]
-004e69: 03
+004e6b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO475:
+	Scope path: @MACRO353:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e6a: 47
+004e6c: 47
 
 [	DB ( 4 & 7 )]
-004e6b: 04
+004e6d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO476:
+	Scope path: @MACRO354:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e6c: 53
+004e6e: 53
 
 [	DB ( 3 & 7 )]
-004e6d: 03
+004e6f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO477:
+	Scope path: @MACRO355:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e6e: 47
+004e70: 47
 
 [	DB ( 6 & 7 )]
-004e6f: 06
+004e71: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO478:
+	Scope path: @MACRO356:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e70: 63
+004e72: 63
 
 [	DB ( 3 & 7 )]
-004e71: 03
+004e73: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO479:
+	Scope path: @MACRO357:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e72: 64
+004e74: 64
 
 [	DB ( 4 & 7 )]
-004e73: 04
+004e75: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO480:
+	Scope path: @MACRO358:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e74: 63
-
-[	DB ( 6 & 7 )]
-004e75: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO481:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e76: 65
+004e76: 63
 
 [	DB ( 6 & 7 )]
 004e77: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO482:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004e78: 11
-
-[	DB ( 5 & 7 )]
-004e79: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO483:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e7a: 56
-
-[	DB ( 3 & 7 )]
-004e7b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO484:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e7c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO359:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e78: 65
 
 [	DB ( 6 & 7 )]
-004e7d: 06
+004e79: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO360:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004e7a: 11
+
+[	DB ( 5 & 7 )]
+004e7b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO361:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004e7c: 56
+
+[	DB ( 3 & 7 )]
+004e7d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO362:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e7e: 66
+
+[	DB ( 6 & 7 )]
+004e7f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO485:
+	Scope path: @MACRO363:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004e7e: 77
+004e80: 77
 
 [	DB ( 7 & 7 )]
-004e7f: 07
+004e81: 07
 
-[	INCLUDE ".//palette29.asm"] end
+[	INCLUDE ".//palette21.asm"] end
 
-[	INCLUDE ".//palette30.asm"] begin
+[	INCLUDE ".//palette22.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO486:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004e80: 00
-
-[	DB ( 0 & 7 )]
-004e81: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO487:
+	Scope path: @MACRO364:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004e82: 00
 
 [	DB ( 0 & 7 )]
 004e83: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO365:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004e84: 00
+
+[	DB ( 0 & 7 )]
+004e85: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO488:
+	Scope path: @MACRO366:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004e84: 22
+004e86: 22
 
 [	DB ( 6 & 7 )]
-004e85: 06
+004e87: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO489:
+	Scope path: @MACRO367:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e86: 34
+004e88: 34
 
 [	DB ( 7 & 7 )]
-004e87: 07
+004e89: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO490:
+	Scope path: @MACRO368:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004e88: 37
+004e8a: 37
 
 [	DB ( 3 & 7 )]
-004e89: 03
+004e8b: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO491:
+	Scope path: @MACRO369:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e8a: 47
+004e8c: 47
 
 [	DB ( 4 & 7 )]
-004e8b: 04
+004e8d: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO492:
+	Scope path: @MACRO370:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e8c: 53
+004e8e: 53
 
 [	DB ( 3 & 7 )]
-004e8d: 03
+004e8f: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO493:
+	Scope path: @MACRO371:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004e8e: 47
+004e90: 47
 
 [	DB ( 6 & 7 )]
-004e8f: 06
+004e91: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO494:
+	Scope path: @MACRO372:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e90: 63
+004e92: 63
 
 [	DB ( 3 & 7 )]
-004e91: 03
+004e93: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO495:
+	Scope path: @MACRO373:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e92: 64
+004e94: 64
 
 [	DB ( 4 & 7 )]
-004e93: 04
+004e95: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO496:
+	Scope path: @MACRO374:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e94: 63
-
-[	DB ( 6 & 7 )]
-004e95: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO497:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e96: 65
+004e96: 63
 
 [	DB ( 6 & 7 )]
 004e97: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO498:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004e98: 11
-
-[	DB ( 5 & 7 )]
-004e99: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO499:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004e9a: 56
-
-[	DB ( 3 & 7 )]
-004e9b: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO500:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004e9c: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO375:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e98: 65
 
 [	DB ( 6 & 7 )]
-004e9d: 06
+004e99: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO376:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004e9a: 11
+
+[	DB ( 5 & 7 )]
+004e9b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO377:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004e9c: 56
+
+[	DB ( 3 & 7 )]
+004e9d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO378:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004e9e: 66
+
+[	DB ( 6 & 7 )]
+004e9f: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO501:
+	Scope path: @MACRO379:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004e9e: 77
+004ea0: 77
 
 [	DB ( 7 & 7 )]
-004e9f: 07
+004ea1: 07
 
-[	INCLUDE ".//palette30.asm"] end
+[	INCLUDE ".//palette22.asm"] end
 
-[	INCLUDE ".//palette31.asm"] begin
+[	INCLUDE ".//palette23.asm"] begin
 ((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO502:
-[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
-004ea0: 00
-
-[	DB ( 0 & 7 )]
-004ea1: 00
-
-((PALETTE 0 , 0 , 0))
-	Scope path: @MACRO503:
+	Scope path: @MACRO380:
 [	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
 004ea2: 00
 
 [	DB ( 0 & 7 )]
 004ea3: 00
 
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO381:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ea4: 00
+
+[	DB ( 0 & 7 )]
+004ea5: 00
+
 ((PALETTE 2 , 6 , 2))
-	Scope path: @MACRO504:
+	Scope path: @MACRO382:
 [	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004ea4: 22
+004ea6: 22
 
 [	DB ( 6 & 7 )]
-004ea5: 06
+004ea7: 06
 
 ((PALETTE 3 , 7 , 4))
-	Scope path: @MACRO505:
+	Scope path: @MACRO383:
 [	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ea6: 34
+004ea8: 34
 
 [	DB ( 7 & 7 )]
-004ea7: 07
+004ea9: 07
 
 ((PALETTE 3 , 3 , 7))
-	Scope path: @MACRO506:
+	Scope path: @MACRO384:
 [	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004ea8: 37
+004eaa: 37
 
 [	DB ( 3 & 7 )]
-004ea9: 03
+004eab: 03
 
 ((PALETTE 4 , 4 , 7))
-	Scope path: @MACRO507:
+	Scope path: @MACRO385:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004eaa: 47
+004eac: 47
 
 [	DB ( 4 & 7 )]
-004eab: 04
+004ead: 04
 
 ((PALETTE 5 , 3 , 3))
-	Scope path: @MACRO508:
+	Scope path: @MACRO386:
 [	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004eac: 53
+004eae: 53
 
 [	DB ( 3 & 7 )]
-004ead: 03
+004eaf: 03
 
 ((PALETTE 4 , 6 , 7))
-	Scope path: @MACRO509:
+	Scope path: @MACRO387:
 [	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004eae: 47
+004eb0: 47
 
 [	DB ( 6 & 7 )]
-004eaf: 06
+004eb1: 06
 
 ((PALETTE 6 , 3 , 3))
-	Scope path: @MACRO510:
+	Scope path: @MACRO388:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004eb0: 63
+004eb2: 63
 
 [	DB ( 3 & 7 )]
-004eb1: 03
+004eb3: 03
 
 ((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO511:
+	Scope path: @MACRO389:
 [	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004eb2: 64
+004eb4: 64
 
 [	DB ( 4 & 7 )]
-004eb3: 04
+004eb5: 04
 
 ((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO512:
+	Scope path: @MACRO390:
 [	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004eb4: 63
-
-[	DB ( 6 & 7 )]
-004eb5: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO513:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004eb6: 65
+004eb6: 63
 
 [	DB ( 6 & 7 )]
 004eb7: 06
 
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO514:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004eb8: 11
-
-[	DB ( 5 & 7 )]
-004eb9: 05
-
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO515:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004eba: 56
-
-[	DB ( 3 & 7 )]
-004ebb: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO516:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004ebc: 66
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO391:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004eb8: 65
 
 [	DB ( 6 & 7 )]
-004ebd: 06
+004eb9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO392:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004eba: 11
+
+[	DB ( 5 & 7 )]
+004ebb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO393:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004ebc: 56
+
+[	DB ( 3 & 7 )]
+004ebd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO394:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ebe: 66
+
+[	DB ( 6 & 7 )]
+004ebf: 06
 
 ((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO517:
+	Scope path: @MACRO395:
 [	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004ebe: 77
+004ec0: 77
 
 [	DB ( 7 & 7 )]
-004ebf: 07
+004ec1: 07
+
+[	INCLUDE ".//palette23.asm"] end
+
+[	INCLUDE ".//palette24.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO396:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ec2: 00
+
+[	DB ( 0 & 7 )]
+004ec3: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO397:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ec4: 00
+
+[	DB ( 0 & 7 )]
+004ec5: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO398:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004ec6: 22
+
+[	DB ( 6 & 7 )]
+004ec7: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO399:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004ec8: 34
+
+[	DB ( 7 & 7 )]
+004ec9: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO400:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004eca: 37
+
+[	DB ( 3 & 7 )]
+004ecb: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO401:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004ecc: 47
+
+[	DB ( 4 & 7 )]
+004ecd: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO402:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004ece: 53
+
+[	DB ( 3 & 7 )]
+004ecf: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO403:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004ed0: 47
+
+[	DB ( 6 & 7 )]
+004ed1: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO404:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ed2: 63
+
+[	DB ( 3 & 7 )]
+004ed3: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO405:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ed4: 64
+
+[	DB ( 4 & 7 )]
+004ed5: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO406:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ed6: 63
+
+[	DB ( 6 & 7 )]
+004ed7: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO407:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ed8: 65
+
+[	DB ( 6 & 7 )]
+004ed9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO408:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004eda: 11
+
+[	DB ( 5 & 7 )]
+004edb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO409:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004edc: 56
+
+[	DB ( 3 & 7 )]
+004edd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO410:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ede: 66
+
+[	DB ( 6 & 7 )]
+004edf: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO411:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004ee0: 77
+
+[	DB ( 7 & 7 )]
+004ee1: 07
+
+[	INCLUDE ".//palette24.asm"] end
+
+[	INCLUDE ".//palette25.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO412:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ee2: 00
+
+[	DB ( 0 & 7 )]
+004ee3: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO413:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004ee4: 00
+
+[	DB ( 0 & 7 )]
+004ee5: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO414:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004ee6: 22
+
+[	DB ( 6 & 7 )]
+004ee7: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO415:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004ee8: 34
+
+[	DB ( 7 & 7 )]
+004ee9: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO416:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004eea: 37
+
+[	DB ( 3 & 7 )]
+004eeb: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO417:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004eec: 47
+
+[	DB ( 4 & 7 )]
+004eed: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO418:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004eee: 53
+
+[	DB ( 3 & 7 )]
+004eef: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO419:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004ef0: 47
+
+[	DB ( 6 & 7 )]
+004ef1: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO420:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ef2: 63
+
+[	DB ( 3 & 7 )]
+004ef3: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO421:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ef4: 64
+
+[	DB ( 4 & 7 )]
+004ef5: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO422:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ef6: 63
+
+[	DB ( 6 & 7 )]
+004ef7: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO423:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004ef8: 65
+
+[	DB ( 6 & 7 )]
+004ef9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO424:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004efa: 11
+
+[	DB ( 5 & 7 )]
+004efb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO425:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004efc: 56
+
+[	DB ( 3 & 7 )]
+004efd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO426:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004efe: 66
+
+[	DB ( 6 & 7 )]
+004eff: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO427:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004f00: 77
+
+[	DB ( 7 & 7 )]
+004f01: 07
+
+[	INCLUDE ".//palette25.asm"] end
+
+[	INCLUDE ".//palette26.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO428:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f02: 00
+
+[	DB ( 0 & 7 )]
+004f03: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO429:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f04: 00
+
+[	DB ( 0 & 7 )]
+004f05: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO430:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004f06: 22
+
+[	DB ( 6 & 7 )]
+004f07: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO431:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f08: 34
+
+[	DB ( 7 & 7 )]
+004f09: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO432:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f0a: 37
+
+[	DB ( 3 & 7 )]
+004f0b: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO433:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f0c: 47
+
+[	DB ( 4 & 7 )]
+004f0d: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO434:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f0e: 53
+
+[	DB ( 3 & 7 )]
+004f0f: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO435:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f10: 47
+
+[	DB ( 6 & 7 )]
+004f11: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO436:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f12: 63
+
+[	DB ( 3 & 7 )]
+004f13: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO437:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f14: 64
+
+[	DB ( 4 & 7 )]
+004f15: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO438:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f16: 63
+
+[	DB ( 6 & 7 )]
+004f17: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO439:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f18: 65
+
+[	DB ( 6 & 7 )]
+004f19: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO440:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004f1a: 11
+
+[	DB ( 5 & 7 )]
+004f1b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO441:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f1c: 56
+
+[	DB ( 3 & 7 )]
+004f1d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO442:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f1e: 66
+
+[	DB ( 6 & 7 )]
+004f1f: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO443:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004f20: 77
+
+[	DB ( 7 & 7 )]
+004f21: 07
+
+[	INCLUDE ".//palette26.asm"] end
+
+[	INCLUDE ".//palette27.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO444:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f22: 00
+
+[	DB ( 0 & 7 )]
+004f23: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO445:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f24: 00
+
+[	DB ( 0 & 7 )]
+004f25: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO446:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004f26: 22
+
+[	DB ( 6 & 7 )]
+004f27: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO447:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f28: 34
+
+[	DB ( 7 & 7 )]
+004f29: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO448:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f2a: 37
+
+[	DB ( 3 & 7 )]
+004f2b: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO449:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f2c: 47
+
+[	DB ( 4 & 7 )]
+004f2d: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO450:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f2e: 53
+
+[	DB ( 3 & 7 )]
+004f2f: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO451:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f30: 47
+
+[	DB ( 6 & 7 )]
+004f31: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO452:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f32: 63
+
+[	DB ( 3 & 7 )]
+004f33: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO453:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f34: 64
+
+[	DB ( 4 & 7 )]
+004f35: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO454:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f36: 63
+
+[	DB ( 6 & 7 )]
+004f37: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO455:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f38: 65
+
+[	DB ( 6 & 7 )]
+004f39: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO456:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004f3a: 11
+
+[	DB ( 5 & 7 )]
+004f3b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO457:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f3c: 56
+
+[	DB ( 3 & 7 )]
+004f3d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO458:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f3e: 66
+
+[	DB ( 6 & 7 )]
+004f3f: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO459:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004f40: 77
+
+[	DB ( 7 & 7 )]
+004f41: 07
+
+[	INCLUDE ".//palette27.asm"] end
+
+[	INCLUDE ".//palette28.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO460:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f42: 00
+
+[	DB ( 0 & 7 )]
+004f43: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO461:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f44: 00
+
+[	DB ( 0 & 7 )]
+004f45: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO462:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004f46: 22
+
+[	DB ( 6 & 7 )]
+004f47: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO463:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f48: 34
+
+[	DB ( 7 & 7 )]
+004f49: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO464:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f4a: 37
+
+[	DB ( 3 & 7 )]
+004f4b: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO465:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f4c: 47
+
+[	DB ( 4 & 7 )]
+004f4d: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO466:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f4e: 53
+
+[	DB ( 3 & 7 )]
+004f4f: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO467:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f50: 47
+
+[	DB ( 6 & 7 )]
+004f51: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO468:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f52: 63
+
+[	DB ( 3 & 7 )]
+004f53: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO469:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f54: 64
+
+[	DB ( 4 & 7 )]
+004f55: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO470:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f56: 63
+
+[	DB ( 6 & 7 )]
+004f57: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO471:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f58: 65
+
+[	DB ( 6 & 7 )]
+004f59: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO472:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004f5a: 11
+
+[	DB ( 5 & 7 )]
+004f5b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO473:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f5c: 56
+
+[	DB ( 3 & 7 )]
+004f5d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO474:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f5e: 66
+
+[	DB ( 6 & 7 )]
+004f5f: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO475:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004f60: 77
+
+[	DB ( 7 & 7 )]
+004f61: 07
+
+[	INCLUDE ".//palette28.asm"] end
+
+[	INCLUDE ".//palette29.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO476:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f62: 00
+
+[	DB ( 0 & 7 )]
+004f63: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO477:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f64: 00
+
+[	DB ( 0 & 7 )]
+004f65: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO478:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004f66: 22
+
+[	DB ( 6 & 7 )]
+004f67: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO479:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f68: 34
+
+[	DB ( 7 & 7 )]
+004f69: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO480:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f6a: 37
+
+[	DB ( 3 & 7 )]
+004f6b: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO481:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f6c: 47
+
+[	DB ( 4 & 7 )]
+004f6d: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO482:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f6e: 53
+
+[	DB ( 3 & 7 )]
+004f6f: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO483:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f70: 47
+
+[	DB ( 6 & 7 )]
+004f71: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO484:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f72: 63
+
+[	DB ( 3 & 7 )]
+004f73: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO485:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f74: 64
+
+[	DB ( 4 & 7 )]
+004f75: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO486:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f76: 63
+
+[	DB ( 6 & 7 )]
+004f77: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO487:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f78: 65
+
+[	DB ( 6 & 7 )]
+004f79: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO488:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004f7a: 11
+
+[	DB ( 5 & 7 )]
+004f7b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO489:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f7c: 56
+
+[	DB ( 3 & 7 )]
+004f7d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO490:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f7e: 66
+
+[	DB ( 6 & 7 )]
+004f7f: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO491:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004f80: 77
+
+[	DB ( 7 & 7 )]
+004f81: 07
+
+[	INCLUDE ".//palette29.asm"] end
+
+[	INCLUDE ".//palette30.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO492:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f82: 00
+
+[	DB ( 0 & 7 )]
+004f83: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO493:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004f84: 00
+
+[	DB ( 0 & 7 )]
+004f85: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO494:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004f86: 22
+
+[	DB ( 6 & 7 )]
+004f87: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO495:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f88: 34
+
+[	DB ( 7 & 7 )]
+004f89: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO496:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004f8a: 37
+
+[	DB ( 3 & 7 )]
+004f8b: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO497:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f8c: 47
+
+[	DB ( 4 & 7 )]
+004f8d: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO498:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f8e: 53
+
+[	DB ( 3 & 7 )]
+004f8f: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO499:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004f90: 47
+
+[	DB ( 6 & 7 )]
+004f91: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO500:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f92: 63
+
+[	DB ( 3 & 7 )]
+004f93: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO501:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f94: 64
+
+[	DB ( 4 & 7 )]
+004f95: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO502:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f96: 63
+
+[	DB ( 6 & 7 )]
+004f97: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO503:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f98: 65
+
+[	DB ( 6 & 7 )]
+004f99: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO504:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004f9a: 11
+
+[	DB ( 5 & 7 )]
+004f9b: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO505:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004f9c: 56
+
+[	DB ( 3 & 7 )]
+004f9d: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO506:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004f9e: 66
+
+[	DB ( 6 & 7 )]
+004f9f: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO507:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004fa0: 77
+
+[	DB ( 7 & 7 )]
+004fa1: 07
+
+[	INCLUDE ".//palette30.asm"] end
+
+[	INCLUDE ".//palette31.asm"] begin
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO508:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004fa2: 00
+
+[	DB ( 0 & 7 )]
+004fa3: 00
+
+((PALETTE 0 , 0 , 0))
+	Scope path: @MACRO509:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004fa4: 00
+
+[	DB ( 0 & 7 )]
+004fa5: 00
+
+((PALETTE 2 , 6 , 2))
+	Scope path: @MACRO510:
+[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004fa6: 22
+
+[	DB ( 6 & 7 )]
+004fa7: 06
+
+((PALETTE 3 , 7 , 4))
+	Scope path: @MACRO511:
+[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004fa8: 34
+
+[	DB ( 7 & 7 )]
+004fa9: 07
+
+((PALETTE 3 , 3 , 7))
+	Scope path: @MACRO512:
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004faa: 37
+
+[	DB ( 3 & 7 )]
+004fab: 03
+
+((PALETTE 4 , 4 , 7))
+	Scope path: @MACRO513:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004fac: 47
+
+[	DB ( 4 & 7 )]
+004fad: 04
+
+((PALETTE 5 , 3 , 3))
+	Scope path: @MACRO514:
+[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004fae: 53
+
+[	DB ( 3 & 7 )]
+004faf: 03
+
+((PALETTE 4 , 6 , 7))
+	Scope path: @MACRO515:
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004fb0: 47
+
+[	DB ( 6 & 7 )]
+004fb1: 06
+
+((PALETTE 6 , 3 , 3))
+	Scope path: @MACRO516:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004fb2: 63
+
+[	DB ( 3 & 7 )]
+004fb3: 03
+
+((PALETTE 6 , 4 , 4))
+	Scope path: @MACRO517:
+[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004fb4: 64
+
+[	DB ( 4 & 7 )]
+004fb5: 04
+
+((PALETTE 6 , 6 , 3))
+	Scope path: @MACRO518:
+[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004fb6: 63
+
+[	DB ( 6 & 7 )]
+004fb7: 06
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO519:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004fb8: 65
+
+[	DB ( 6 & 7 )]
+004fb9: 06
+
+((PALETTE 1 , 5 , 1))
+	Scope path: @MACRO520:
+[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004fba: 11
+
+[	DB ( 5 & 7 )]
+004fbb: 05
+
+((PALETTE 5 , 3 , 6))
+	Scope path: @MACRO521:
+[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004fbc: 56
+
+[	DB ( 3 & 7 )]
+004fbd: 03
+
+((PALETTE 6 , 6 , 6))
+	Scope path: @MACRO522:
+[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004fbe: 66
+
+[	DB ( 6 & 7 )]
+004fbf: 06
+
+((PALETTE 7 , 7 , 7))
+	Scope path: @MACRO523:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004fc0: 77
+
+[	DB ( 7 & 7 )]
+004fc1: 07
 
 [	INCLUDE ".//palette31.asm"] end
 
@@ -6239,59 +6617,69 @@ Define macro {HASH_ENTRY MACRO VHASH , VPALETTE_SET_NUM}
 
 [	INCLUDE ".//hash_to_palette.asm"] begin
 [HASH_TABLE ::]
-	global label address: 0x004ec0
+	global label address: 0x004fc2
 
 ((HASH_ENTRY 0XFFFF , 0XFF))
-	Scope path: @MACRO518:
+	Scope path: @MACRO524:
 [	DW 0XFFFF]
-004ec0: ff ff
+004fc2: ff ff
 
 [	DB 0XFF]
-004ec2: ff
+004fc4: ff
 
 [	INCLUDE ".//hash_to_palette.asm"] end
 
 << label >>
 CARTRIDGE 49155 ( 0xc003 )
 CGPNT 63775 ( 0xf91f )
-CHECK_ESC_KEY 16848 ( 0x41d0 )
+CHECK_ESC_KEY 17090 ( 0x42c2 )
 CHGMOD 95 ( 0x5f )
+CPU_SPEED 49158 ( 0xc006 )
+CPU_TYPE 49159 ( 0xc007 )
+DETECT_CPU_TYPE 16709 ( 0x4145 )
+DETECT_CPU_TYPE:IS_MSX1_OR_MSX2 16739 ( 0x4163 )
+DETECT_CPU_TYPE:IS_MSX_TURBO_R 16744 ( 0x4168 )
+DETECT_CPU_TYPE:IS_PANASONIC_MSX2P 16733 ( 0x415d )
 ENASLT 36 ( 0x24 )
-ENTER_MENU 16436 ( 0x4034 )
-ENTRY:ST 16558 ( 0x40ae )
+ENTER_MENU 16439 ( 0x4037 )
+ENTRY:MAIN_LOOP 16442 ( 0x403a )
 EXPTBL 64705 ( 0xfcc1 )
-FONT_DATA 16929 ( 0x4221 )
-GAME_NOT_FOUND 16558 ( 0x40ae )
-GET_GAME_SLOT 16699 ( 0x413b )
-GET_GAME_SLOT:DETECT_CARTRIDGE 16779 ( 0x418b )
-GET_GAME_SLOT:GO_NEXT_EXTEND_SLOT 16756 ( 0x4174 )
-GET_GAME_SLOT:GO_NEXT_PRIMARY_SLOT 16763 ( 0x417b )
-GET_GAME_SLOT:GO_NEXT_SLOT 16752 ( 0x4170 )
-GET_GAME_SLOT:SLOT_LOOP 16718 ( 0x414e )
-GET_HASH 16784 ( 0x4190 )
-GET_HASH_SUB 49161 ( 0xc009 )
-GET_HASH_SUB:LOOP 49178 ( 0xc01a )
-GET_HASH_SUB_END 49211 ( 0xc03b )
-GET_HASH_SUB_ON_ROM 16798 ( 0x419e )
-GET_THIS_SLOT 16645 ( 0x4105 )
-GET_THIS_SLOT:NOT_EXTENDED 16682 ( 0x412a )
+FONT_DATA 17171 ( 0x4313 )
+GAME_NOT_FOUND 16573 ( 0x40bd )
+GET_GAME_SLOT 16941 ( 0x422d )
+GET_GAME_SLOT:DETECT_CARTRIDGE 17021 ( 0x427d )
+GET_GAME_SLOT:GO_NEXT_EXTEND_SLOT 16998 ( 0x4266 )
+GET_GAME_SLOT:GO_NEXT_PRIMARY_SLOT 17005 ( 0x426d )
+GET_GAME_SLOT:GO_NEXT_SLOT 16994 ( 0x4262 )
+GET_GAME_SLOT:SLOT_LOOP 16960 ( 0x4240 )
+GET_HASH 17026 ( 0x4282 )
+GET_HASH_SUB 49165 ( 0xc00d )
+GET_HASH_SUB:LOOP 49182 ( 0xc01e )
+GET_HASH_SUB_END 49215 ( 0xc03f )
+GET_HASH_SUB_ON_ROM 17040 ( 0x4290 )
+GET_THIS_SLOT 16887 ( 0x41f7 )
+GET_THIS_SLOT:NOT_EXTENDED 16924 ( 0x421c )
 GTSTCK 213 ( 0xd5 )
 GTTRIG 216 ( 0xd8 )
-HASH 49158 ( 0xc006 )
-HASH_SUB 49161 ( 0xc009 )
-HASH_TABLE 20160 ( 0x4ec0 )
-HASH_TO_PALETTE_NUM 16864 ( 0x41e0 )
-HASH_TO_PALETTE_NUM:LOOP 16871 ( 0x41e7 )
-HASH_TO_PALETTE_NUM:NOT_FOUND 16888 ( 0x41f8 )
+HASH 49162 ( 0xc00a )
+HASH_SUB 49165 ( 0xc00d )
+HASH_TABLE 20418 ( 0x4fc2 )
+HASH_TO_PALETTE_NUM 17106 ( 0x42d2 )
+HASH_TO_PALETTE_NUM:LOOP 17113 ( 0x42d9 )
+HASH_TO_PALETTE_NUM:NOT_FOUND 17130 ( 0x42ea )
+INITIALIZE_MENU 16451 ( 0x4043 )
 LDIRVM 92 ( 0x5c )
 PALETTE_SET_ADDRESS 49156 ( 0xc004 )
-PALETTE_SET_ARRAY 19136 ( 0x4ac0 )
-PALETTE_SET_NUM 49160 ( 0xc008 )
-PRINT_DE_STRING 16582 ( 0x40c6 )
-PRINT_HL_HEX 16590 ( 0x40ce )
-PRINT_HL_HEX:SKIP 16621 ( 0x40ed )
-PRINT_SLOT_NUM 16624 ( 0x40f0 )
-PUT_HEX_ONE 16611 ( 0x40e3 )
+PALETTE_SET_ARRAY 19394 ( 0x4bc2 )
+PALETTE_SET_NUM 49164 ( 0xc00c )
+PRESS_ARROW_BURRON 49161 ( 0xc009 )
+PRESS_A_BUTTON 49160 ( 0xc008 )
+PRINT_DE_STRING 16667 ( 0x411b )
+PRINT_HL_HEX2 16687 ( 0x412f )
+PRINT_HL_HEX4 16675 ( 0x4123 )
+PRINT_HL_HEX:SKIP 16706 ( 0x4142 )
+PRINT_SLOT_NUM 16866 ( 0x41e2 )
+PUT_HEX_ONE 16696 ( 0x4138 )
 RDSLT 12 ( 0xc )
 RG0SAV 62431 ( 0xf3df )
 RG1SAV 62432 ( 0xf3e0 )
@@ -6305,16 +6693,28 @@ RG8SAV 65511 ( 0xffe7 )
 ROMID 45 ( 0x2d )
 ROM_SLOT 49152 ( 0xc000 )
 SETWRT 83 ( 0x53 )
-SET_LOCATE 16562 ( 0x40b2 )
+SET_LOCATE 16647 ( 0x4107 )
+SHOW_CPU_SPEED 16750 ( 0x416e )
+SHOW_CPU_SPEED:PS_CPU_MODE 16773 ( 0x4185 )
+SHOW_CPU_SPEED:S_CPU_MODE0 16781 ( 0x418d )
+SHOW_CPU_SPEED:S_CPU_MODE1 16799 ( 0x419f )
+SHOW_CPU_SPEED:S_CPU_MODE2 16817 ( 0x41b1 )
+SHOW_CPU_SPEED:S_CPU_MODE3 16835 ( 0x41c3 )
+SHOW_CURSOR 16646 ( 0x4106 )
+SHOW_PALETTE_NUM 16853 ( 0x41d5 )
 SIGNATURE 49153 ( 0xc001 )
-SPRITE_ATTRIBUTE_DATA 19009 ( 0x4a41 )
-SPRITE_PATTERN_DATA 18977 ( 0x4a21 )
+SPRITE_ATTRIBUTE_DATA 19251 ( 0x4b33 )
+SPRITE_PATTERN_DATA 19219 ( 0x4b13 )
 START_ADDRESS 16400 ( 0x4010 )
-S_GAME_HASH 19113 ( 0x4aa9 )
-S_GAME_SLOT 19092 ( 0x4a94 )
-S_TITLE 19074 ( 0x4a82 )
-UPDATE_PALETTE 16911 ( 0x420f )
-UPDATE_PALETTE_SET_ADDRESS 16892 ( 0x41fc )
+S_CPU_SPEED 19379 ( 0x4bb3 )
+S_GAME_HASH 19356 ( 0x4b9c )
+S_GAME_SLOT 19334 ( 0x4b86 )
+S_PALETTE_NUM 19384 ( 0x4bb8 )
+S_TITLE 19316 ( 0x4b74 )
+UPDATE_INPUT 16612 ( 0x40e4 )
+UPDATE_INPUT:CHECK_ARROW_KEY 16630 ( 0x40f6 )
+UPDATE_PALETTE 17153 ( 0x4301 )
+UPDATE_PALETTE_SET_ADDRESS 17134 ( 0x42ee )
 VDP_PORT0 152 ( 0x98 )
 VDP_PORT1 153 ( 0x99 )
 VDP_PORT2 154 ( 0x9a )

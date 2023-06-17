@@ -68,6 +68,8 @@ start_address::
 			; カラーパレットセット番号 (palette_set_num) に対応するパレットをセットする
 			call	update_palette_set_address
 			call	update_palette
+			; CPU type をチェックする
+			call	detect_cpu_type
 			; [ESC]キーをチェックして、押されていればメニューへ入る
 			call	check_esc_key			; ESCが押されていれば Zf = 1, 押されていなければ Zf = 0
 			jp		z, enter_menu			; 押されている場合、メニューへ。
@@ -77,6 +79,27 @@ start_address::
 			or		a, a
 			ret		z
 		enter_menu::
+			; 初期化
+			call	initialize_menu
+		main_loop:
+			; キー入力
+			call	update_input
+			; カーソルを表示
+			call	show_cursor
+			jp		main_loop
+			endscope
+
+; =============================================================================
+;	initialize_menu
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	initialize_menu
+initialize_menu::
 			; 設定メニューのための初期化
 			ld		a, 1
 			call	chgmod					; SCREEN 1
@@ -124,11 +147,68 @@ start_address::
 			locate	2, 2
 			print	s_game_hash
 			ld		hl, [ hash ]
-			call	print_hl_hex
+			call	print_hl_hex4
 		game_not_found::
-		st:
-			jp		st
-			ret								; ★まだ作ってない
+			; CPU SPEED
+			locate	11, 3
+			print	s_cpu_speed
+			xor		a, a
+			ld		[ cpu_speed ], a
+			call	show_cpu_speed
+			; パレット番号
+			locate	11, 4
+			print	s_palette_num
+			ld		a, [ palette_set_num ]
+			call	show_palette_num
+			ei
+			ret
+			endscope
+
+; =============================================================================
+;	update_input
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	update_input
+update_input::
+			; スペースキーの状態を取得する
+			xor		a, a
+			call	gttrig
+			ld		[ press_a_button ], a
+			or		a, a
+			jp		nz, check_arrow_key
+			inc		a
+			call	gttrig
+			ld		[ press_a_button ], a
+			; 方向キーの状態を取得する
+		check_arrow_key:
+			xor		a, a
+			call	gtstck
+			push	af
+			ld		a, 1
+			call	gtstck
+			pop		bc
+			or		a, b
+			ld		[ press_arrow_burron ], a
+			ret
+			endscope
+
+; =============================================================================
+;	show_cursor
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	show_cursor
+show_cursor::
+			ret
 			endscope
 
 ; =============================================================================
@@ -137,7 +217,7 @@ start_address::
 ;		L .... X座標
 ;		H .... Y座標
 ;	output:
-;		なし
+;		none
 ;	break:
 ;		AF, HL
 ; =============================================================================
@@ -189,7 +269,7 @@ print_de_string::
 ;		AF, HL
 ; =============================================================================
 			scope	print_hl_hex
-print_hl_hex::
+print_hl_hex4::
 			ld		a, h
 			rrca
 			rrca
@@ -198,6 +278,7 @@ print_hl_hex::
 			call	put_hex_one
 			ld		a, h
 			call	put_hex_one
+print_hl_hex2::
 			ld		a, l
 			rrca
 			rrca
@@ -214,6 +295,101 @@ put_hex_one::
 		skip:
 			out		[ vdp_port0 ], a
 			ret
+			endscope
+
+; =============================================================================
+;	detect_cpu_type
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	detect_cpu_type
+detect_cpu_type::
+			ld		a, [ romid ]
+			cp		a, 2				; MSX1 or MSX2 ?
+			jp		c, is_msx1_or_msx2
+			cp		a, 3				; MSXturboR ?
+			jp		nc, is_msx_turbo_r
+			; パナの MSX2+ かどうかチェック
+			ld		a, 8				; PanasonicメーカーID
+			out		[ 0x40 ], a
+			in		a, [ 0x40 ]
+			cpl
+			cp		a, 8				; PanasonicメーカーIDが受理された？
+			jr		nz, is_msx1_or_msx2	; -- 受理されなかった場合、他のメーカーのMSX2+なので、Z80-3.58MHz固定。
+	is_panasonic_msx2p:
+			ld		a, 1
+			ld		[ cpu_type ], a
+			ret
+	is_msx1_or_msx2:
+			xor		a, a
+			ld		[ cpu_type ], a
+			ret
+	is_msx_turbo_r:
+			ld		a, 2
+			ld		[ cpu_type ], a
+			ret
+			endscope
+
+; =============================================================================
+;	show_cpu_speed
+;	input:
+;		cpu_speed ... 表示するモード
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	show_cpu_speed
+show_cpu_speed::
+			locate	15, 3
+			ld		a, [ cpu_speed ]
+			add		a, a
+			ld		l, a
+			ld		h, 0
+			ld		de, ps_cpu_mode
+			add		hl, de
+			ld		e, [hl]
+			inc		hl
+			ld		d, [hl]
+			jp		print_de_string
+	ps_cpu_mode:
+			dw		s_cpu_mode0
+			dw		s_cpu_mode1
+			dw		s_cpu_mode2
+			dw		s_cpu_mode3
+	s_cpu_mode0:
+			ds		"Z80-3.58MHz      "
+			db		0
+	s_cpu_mode1:
+			ds		"Z80-5.38MHz      "
+			db		0
+	s_cpu_mode2:
+			ds		"R800-7.16MHz(ROM)"
+			db		0
+	s_cpu_mode3:
+			ds		"R800-7.16MHz(RAM)"
+			db		0
+			endscope
+
+; =============================================================================
+;	パレット番号を表示する
+;	input:
+;		[palette_set_num] ... パレット番号
+;	output:
+;		none
+;	break:
+;		AF, DE, L
+; =============================================================================
+			scope	show_palette_num
+show_palette_num::
+			locate	20, 4
+			ld		a, [ palette_set_num ]
+			ld		l, a
+			jp		print_hl_hex2
 			endscope
 
 ; =============================================================================
@@ -594,11 +770,17 @@ s_title::
 			ds		"<PALETTE CHANGER>"
 			db		0
 s_game_slot::
-			ds		"GAME CARTRIDGE SLOT#"
+			ds		"GAME CARTRIDGE SLOT #"
 			db		0
 s_game_hash::
 			ds		"GAME CARTRIDGE HASH 0x"
 			db		0
+s_cpu_speed::
+			ds		"CPU:"
+			ds		0
+s_palette_num::
+			ds		"PALETTE#:"
+			ds		0
 
 ; =============================================================================
 ;	カラーパレットセット（32セット）
@@ -660,6 +842,10 @@ rom_slot			:= 0xC000						; 1byte  : このROMが装着されているスロットのスロット番
 signature			:= rom_slot + 1					; 2bytes : ゲームカートリッジの探索時のワークエリア
 cartridge			:= signature + 2				; 1byte  : ゲームカートリッジのスロット番号、見つからない場合は 0x00
 palette_set_address	:= cartridge + 1				; 2bytes : 選択したパレットセットのアドレス
-hash				:= palette_set_address + 2		; 2bytes : ゲームカートリッジのハッシュ値
+cpu_speed			:= palette_set_address + 2		; 1byte  : CPUスピード: 0=Z80-3.58MHz, 1=Z80-5.37MHz, 2=R800-ROM, 3=R800-RAM
+cpu_type			:= cpu_speed + 1				; 1byte  : CPU種別: 0=Normal, 1=Panasonic MSX2+, 2=MSXturboR
+press_a_button		:= cpu_type + 1					; 1byte  : Aボタンの状態: 0=解放, 0xFF=押下
+press_arrow_burron	:= press_a_button + 1			; 1byte  : 方向キー
+hash				:= press_arrow_burron + 1		; 2bytes : ゲームカートリッジのハッシュ値
 palette_set_num		:= hash + 2						; 1byte  : 選択中のパレットセット番号
 hash_sub			:= palette_set_num + 1			; hash_sub_size bytes: ハッシュ計算ルーチン置き場
