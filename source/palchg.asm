@@ -110,9 +110,22 @@ start_address::
 			ld		de, 0x1B00
 			ld		bc, 4 * 16 + 1
 			call	ldirvm
-			; 文字を表示
+			; タイトルを表示
 			locate	7, 0
 			print	s_title
+			; ゲームカートリッジ情報を表示
+			ld		a, [ cartridge ]
+			or		a, a
+			jp		z, game_not_found
+			locate	2, 1
+			print	s_game_slot
+			ld		a, [ cartridge ]
+			call	print_slot_num
+			locate	2, 2
+			print	s_game_hash
+			ld		hl, [ hash ]
+			call	print_hl_hex
+		game_not_found::
 		st:
 			jp		st
 			ret								; ★まだ作ってない
@@ -164,6 +177,69 @@ print_de_string::
 			out		[ vdp_port0 ], a
 			inc		de
 			jr		print_de_string
+			endscope
+
+; =============================================================================
+;	PRINT HL (HEX number)
+;	input:
+;		HL ... 表示する数値
+;	output:
+;		none
+;	break:
+;		AF, HL
+; =============================================================================
+			scope	print_hl_hex
+print_hl_hex::
+			ld		a, h
+			rrca
+			rrca
+			rrca
+			rrca
+			call	put_hex_one
+			ld		a, h
+			call	put_hex_one
+			ld		a, l
+			rrca
+			rrca
+			rrca
+			rrca
+			call	put_hex_one
+			ld		a, l
+put_hex_one::
+			and		a, 0x0F
+			add		a, '0'
+			cp		a, '9' + 1
+			jr		c, skip
+			add		a, 'A' - ('9' + 1)
+		skip:
+			out		[ vdp_port0 ], a
+			ret
+			endscope
+
+; =============================================================================
+;	PRINT A (SLOT#)
+;	input:
+;		A ... 表示するスロット番号
+;	output:
+;		none
+;	break:
+;		AF, DE, L
+; =============================================================================
+			scope	print_slot_num
+print_slot_num::
+			ld		l, a
+			and		a, 0b00000011			; primary slot number
+			call	put_hex_one
+			ld		a, l
+			or		a, a
+			ret		p						; 拡張スロットでなければここで戻る
+			ld		a, '-'
+			out		[ vdp_port0 ], a
+			ld		a, l
+			rrca
+			rrca
+			and		a, 0b00000011			; extended slot number
+			jp		put_hex_one
 			endscope
 
 ; =============================================================================
@@ -516,6 +592,12 @@ sprite_attribute_data::
 ; =============================================================================
 s_title::
 			ds		"<PALETTE CHANGER>"
+			db		0
+s_game_slot::
+			ds		"GAME CARTRIDGE SLOT#"
+			db		0
+s_game_hash::
+			ds		"GAME CARTRIDGE HASH 0x"
 			db		0
 
 ; =============================================================================
