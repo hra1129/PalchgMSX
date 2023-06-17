@@ -14,6 +14,7 @@ gtstck		:= 0x00D5
 gttrig		:= 0x00D8
 cgpnt		:= 0xF91F						; font address ( slot#(1byte), address(2bytes) )
 exptbl		:= 0xFCC1
+jiffy		:= 0xFC9E
 vdp_port0	:= 0x98
 vdp_port1	:= 0x99
 vdp_port2	:= 0x9A
@@ -84,8 +85,13 @@ start_address::
 		main_loop:
 			; ƒL[“ü—Í
 			call	update_input
+			locate	0, 5						; š
+			ld		hl, [ press_a_button ]		; š
+			call	print_hl_hex4				; š
 			; ƒJ[ƒ\ƒ‹‚ğ•\¦
 			call	show_cursor
+			call	change_cpu
+			call	change_palette
 			jp		main_loop
 			endscope
 
@@ -150,17 +156,19 @@ initialize_menu::
 			call	print_hl_hex4
 		game_not_found::
 			; CPU SPEED
-			locate	11, 3
+			locate	8, 3
 			print	s_cpu_speed
 			xor		a, a
 			ld		[ cpu_speed ], a
 			call	show_cpu_speed
 			; ƒpƒŒƒbƒg”Ô†
-			locate	11, 4
+			locate	8, 4
 			print	s_palette_num
-			ld		a, [ palette_set_num ]
 			call	show_palette_num
 			ei
+			; ƒJ[ƒ\ƒ‹‚ÍƒfƒtƒHƒ‹ƒg‚Å palette# ‚ğ‘I‘ğ
+			ld		a, 1
+			ld		[ cursor_y ], a
 			ret
 			endscope
 
@@ -193,7 +201,7 @@ update_input::
 			call	gtstck
 			pop		bc
 			or		a, b
-			ld		[ press_arrow_burron ], a
+			ld		[ press_arrow_button ], a
 			ret
 			endscope
 
@@ -208,7 +216,156 @@ update_input::
 ; =============================================================================
 			scope	show_cursor
 show_cursor::
+			; ƒJ[ƒ\ƒ‹•`‰æ
+			ld		a, [ cursor_y ]
+			add		a, 3
+			ld		h, a
+			ld		l, 7
+			call	set_locate
+			ld		a, [ jiffy ]
+			rrca
+			rrca
+			rrca
+			rrca
+			and		a, 1
+			add		a, 132				; › or œ
+			out		[ vdp_port0 ], a
+			; ã‚Ü‚½‚Í‰º‚ğ‰Ÿ‚³‚ê‚½‚ç”½“]
+			ld		a, [ press_arrow_button ]
+			cp		a, 1
+			jr		z, move_cursor
+			cp		a, 5
+			ret		nz
+		move_cursor:
+			; ƒJ[ƒ\ƒ‹‚ğÁ‚·
+			ld		a, [ cursor_y ]
+			add		a, 3
+			ld		h, a
+			ld		l, 7
+			call	set_locate
+			ld		a, ' '
+			out		[ vdp_port0 ], a
+			; ƒJ[ƒ\ƒ‹ƒL[•ú‚·‚Ü‚Å‘Ò‚Â
+			call	wait_release_arrow
+			; ˆÚ“®‚·‚é
+			ld		a, [ cursor_y ]
+			xor		a, 1
+			ld		[ cursor_y ], a
+			jp		show_cursor
+			endscope
+
+; =============================================================================
+;	wait_release_arrow
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	wait_release_arrow
+wait_release_arrow::
+			call	update_input
+			ld		a, [ press_arrow_button ]
+			or		a, a
+			jr		nz, wait_release_arrow
 			ret
+			endscope
+
+; =============================================================================
+;	change_cpu
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	change_cpu
+change_cpu::
+			; ƒJ[ƒ\ƒ‹ˆÊ’u‚ª CPU ‚É–³‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+			ld		a, [ cursor_y ]
+			or		a, a
+			ret		nz
+			; CPU type ‚ª 0 ‚È‚ç‰½‚à‚µ‚È‚¢ ( MSX1, MSX2, PanasonicˆÈŠO‚ÌMSX2+ )
+			ld		a, [ cpu_type ]
+			cp		a, 1
+			ret		c
+			; CPU type ‚ª 2 ‚È‚çê—p‚Ìˆ—‚Ö
+			jr		nz, is_turbo_r
+			; Panasonic MSX2+ ‚Ìê‡, 0‚Æ1‚ÅƒgƒOƒ‹‚·‚é
+			ld		a, [ press_arrow_button ]
+			cp		a, 3
+			jr		z, toggle_cpu_mode
+			cp		a, 7
+			ret		nz
+	toggle_cpu_mode:
+			ld		a, [ cpu_speed ]
+			xor		a, 1
+			ld		[ cpu_speed ], a
+			call	show_cpu_speed
+			jp		wait_release_arrow
+			; turboR ‚Ìê‡A0, 1, 2 ‚ÅzŠÂ‚·‚é
+	is_turbo_r:
+			ld		a, [ press_arrow_button ]
+			cp		a, 3
+			ld		b, 1
+			jr		z, change_cpu_mode
+			cp		a, 7
+			ld		b, -1
+			ret		nz
+	change_cpu_mode:
+			ld		a, [ cpu_speed ]
+			add		a, b
+			cp		a, 1
+			jr		nz, skip
+			add		a, b
+	skip:
+			cp		a, 4
+			jr		c, update_cpu		; 0, 2, 3 ‚Ìê‡‚Í–â‘è‚È‚µ
+			ld		a, 0				; ‚à‚µ 4 ‚¾‚Á‚½ê‡‚É”õ‚¦‚ÄAƒtƒ‰ƒO‚ğ•Ï‚¦‚¸‚É 0 ‚É‚·‚é
+			jr		z, update_cpu		; 4 ‚¾‚Á‚½ê‡A0 ‚É‚µ‚ÄXV‚Ö
+			ld		a, 3				; 255 ‚¾‚Á‚½‚Ì‚Å 3 ‚É‚·‚é
+	update_cpu:
+			ld		[ cpu_speed ], a
+			call	show_cpu_speed		; •\¦‚ğXV
+			jp		wait_release_arrow
+			endscope
+
+; =============================================================================
+;	change_palette
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	change_palette
+change_palette::
+			; ƒJ[ƒ\ƒ‹ˆÊ’u‚ª PALETTE ‚É–³‚¯‚ê‚Î‰½‚à‚µ‚È‚¢
+			ld		a, [ cursor_y ]
+			dec		a
+			ret		nz
+			; ¶‰E‚Å”Ô†‚ğ•ÏX
+			ld		a, [ press_arrow_button ]
+			cp		a, 3
+			ld		b, 1
+			jr		z, palette_set_change
+			cp		a, 7
+			ld		b, -1
+			ret		nz
+		palette_set_change:
+			ld		a, [ palette_set_num ]
+			add		a, b
+			and		a, 31
+			ld		[ palette_set_num ], a
+			; •\¦XV
+			call	show_palette_num
+			; ƒpƒŒƒbƒgXV
+			call	update_palette_set_address
+			call	update_palette
+			jp		wait_release_arrow
 			endscope
 
 ; =============================================================================
@@ -345,7 +502,7 @@ detect_cpu_type::
 ; =============================================================================
 			scope	show_cpu_speed
 show_cpu_speed::
-			locate	15, 3
+			locate	12, 3
 			ld		a, [ cpu_speed ]
 			add		a, a
 			ld		l, a
@@ -386,7 +543,7 @@ show_cpu_speed::
 ; =============================================================================
 			scope	show_palette_num
 show_palette_num::
-			locate	20, 4
+			locate	17, 4
 			ld		a, [ palette_set_num ]
 			ld		l, a
 			jp		print_hl_hex2
@@ -844,8 +1001,9 @@ cartridge			:= signature + 2				; 1byte  : ƒQ[ƒ€ƒJ[ƒgƒŠƒbƒW‚ÌƒXƒƒbƒg”Ô†AŒ©‚
 palette_set_address	:= cartridge + 1				; 2bytes : ‘I‘ğ‚µ‚½ƒpƒŒƒbƒgƒZƒbƒg‚ÌƒAƒhƒŒƒX
 cpu_speed			:= palette_set_address + 2		; 1byte  : CPUƒXƒs[ƒh: 0=Z80-3.58MHz, 1=Z80-5.37MHz, 2=R800-ROM, 3=R800-RAM
 cpu_type			:= cpu_speed + 1				; 1byte  : CPUí•Ê: 0=Normal, 1=Panasonic MSX2+, 2=MSXturboR
-press_a_button		:= cpu_type + 1					; 1byte  : Aƒ{ƒ^ƒ“‚Ìó‘Ô: 0=‰ğ•ú, 0xFF=‰Ÿ‰º
-press_arrow_burron	:= press_a_button + 1			; 1byte  : •ûŒüƒL[
-hash				:= press_arrow_burron + 1		; 2bytes : ƒQ[ƒ€ƒJ[ƒgƒŠƒbƒW‚ÌƒnƒbƒVƒ…’l
+cursor_y			:= cpu_type + 1					; 1byte  : ƒJ[ƒ\ƒ‹YÀ•W: 0=CPU SPEED, 1=PALETTE
+press_a_button		:= cursor_y + 1					; 1byte  : Aƒ{ƒ^ƒ“‚Ìó‘Ô: 0=‰ğ•ú, 0xFF=‰Ÿ‰º
+press_arrow_button	:= press_a_button + 1			; 1byte  : •ûŒüƒL[
+hash				:= press_arrow_button + 1		; 2bytes : ƒQ[ƒ€ƒJ[ƒgƒŠƒbƒW‚ÌƒnƒbƒVƒ…’l
 palette_set_num		:= hash + 2						; 1byte  : ‘I‘ğ’†‚ÌƒpƒŒƒbƒgƒZƒbƒg”Ô†
 hash_sub			:= palette_set_num + 1			; hash_sub_size bytes: ƒnƒbƒVƒ…ŒvZƒ‹[ƒ`ƒ“’u‚«ê
