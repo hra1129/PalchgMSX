@@ -12,6 +12,7 @@ ldirvm		:= 0x005C
 chgmod		:= 0x005F
 gtstck		:= 0x00D5
 gttrig		:= 0x00D8
+chgcpu		:= 0x0180
 cgpnt		:= 0xF91F						; font address ( slot#(1byte), address(2bytes) )
 exptbl		:= 0xFCC1
 jiffy		:= 0xFC9E
@@ -85,14 +86,32 @@ start_address::
 		main_loop:
 			; キー入力
 			call	update_input
-			locate	0, 5						; ★
-			ld		hl, [ press_a_button ]		; ★
-			call	print_hl_hex4				; ★
 			; カーソルを表示
 			call	show_cursor
 			call	change_cpu
 			call	change_palette
-			jp		main_loop
+			; Aボタンが押されたか？
+			ld		a, [ press_a_button ]
+			or		a, a
+			jp		z, main_loop
+			; 選択された CPUモードに変更する
+			call	set_cpu_speed
+			di
+			; パレット#0 の扱いを元に戻す
+			ld		a, [ rg8sav ]
+			out		[ vdp_port1 ], a
+			ld		a, 0x80 | 8
+			out		[ vdp_port1 ], a
+			; スプライトの扱いを元に戻す
+			ld		a, [ rg1sav ]
+			out		[ vdp_port1 ], a
+			ld		a, 0x80 | 1
+			out		[ vdp_port1 ], a
+			ei
+			; フォントを元に戻す
+			ld		a, 1
+			call	chgmod
+			ret
 			endscope
 
 ; =============================================================================
@@ -333,6 +352,36 @@ change_cpu::
 			endscope
 
 ; =============================================================================
+;	set_cpu_speed
+;	input:
+;		none
+;	output:
+;		none
+;	break:
+;		all
+; =============================================================================
+			scope	set_cpu_speed
+set_cpu_speed::
+			ld		a, [ cpu_speed ]
+			or		a, a
+			ret		z					; Z80-3.58MHz設定 なら何もしない
+			dec		a
+			jp		z, set_5_38mhz_mode
+			dec		a
+			jp		z, se_r800_rom_mode
+	set_r800_ram_mode:
+			ld		a, 0x82
+			jp		chgcpu
+	se_r800_rom_mode:
+			ld		a, 0x81
+			jp		chgcpu
+	set_5_38mhz_mode:
+			xor		a, a
+			out		[ 0x41 ], a
+			ret
+			endscope
+
+; =============================================================================
 ;	change_palette
 ;	input:
 ;		none
@@ -466,21 +515,27 @@ put_hex_one::
 			scope	detect_cpu_type
 detect_cpu_type::
 			ld		a, [ romid ]
-			cp		a, 2				; MSX1 or MSX2 ?
+			cp		a, 2					; MSX1 or MSX2 ?
 			jp		c, is_msx1_or_msx2
-			cp		a, 3				; MSXturboR ?
+			cp		a, 3					; MSXturboR ?
 			jp		nc, is_msx_turbo_r
 			; パナの MSX2+ かどうかチェック
-			ld		a, 8				; PanasonicメーカーID
+			in		a, [ 0x40 ]
+			cpl
+			ld		b, a					; Bにバックアップ
+			ld		a, 8					; PanasonicメーカーID
 			out		[ 0x40 ], a
 			in		a, [ 0x40 ]
 			cpl
-			cp		a, 8				; PanasonicメーカーIDが受理された？
-			jr		nz, is_msx1_or_msx2	; -- 受理されなかった場合、他のメーカーのMSX2+なので、Z80-3.58MHz固定。
+			cp		a, 8					; PanasonicメーカーIDが受理された？
+			jr		nz, is_normal_msx2p		; -- 受理されなかった場合、他のメーカーのMSX2+なので、Z80-3.58MHz固定。
 	is_panasonic_msx2p:
 			ld		a, 1
 			ld		[ cpu_type ], a
 			ret
+	is_normal_msx2p:
+			ld		a, b
+			out		[ 0x40 ], a
 	is_msx1_or_msx2:
 			xor		a, a
 			ld		[ cpu_type ], a
