@@ -2,4 +2,7 @@
 ;  hash値とパレットセット(0～31)の対応表
 ; =============================================================================
 hash_table::
+		hash_entry	0xEE20, 0x01			; 高橋名人の冒険島
+		hash_entry	0xA00B, 0x02			; ロマンシア MSX1
+		hash_entry	0x725C, 0x03			; シャロム
 		hash_entry	0xFFFF, 0xFF			; hash_table の終わりを示す番兵

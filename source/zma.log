@@ -3019,109 +3019,109 @@ Define macro {PALETTE MACRO VR , VG , VB}
 [	DB ( 0 & 7 )]
 004cef: 00
 
-((PALETTE 1 , 1 , 1))
+((PALETTE 2 , 6 , 0))
 	Scope path: @MACRO30:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004cf0: 11
+[	DB ( 0 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004cf0: 20
 
-[	DB ( 1 & 7 )]
-004cf1: 01
+[	DB ( 6 & 7 )]
+004cf1: 06
 
-((PALETTE 1 , 1 , 1))
+((PALETTE 3 , 7 , 0))
 	Scope path: @MACRO31:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004cf2: 11
+[	DB ( 0 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004cf2: 30
 
-[	DB ( 1 & 7 )]
-004cf3: 01
+[	DB ( 7 & 7 )]
+004cf3: 07
 
-((PALETTE 2 , 2 , 2))
+((PALETTE 2 , 5 , 7))
 	Scope path: @MACRO32:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004cf4: 22
+[	DB ( 7 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004cf4: 27
 
-[	DB ( 2 & 7 )]
-004cf5: 02
+[	DB ( 5 & 7 )]
+004cf5: 05
 
-((PALETTE 2 , 2 , 2))
+((PALETTE 3 , 6 , 7))
 	Scope path: @MACRO33:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004cf6: 22
+[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
+004cf6: 37
 
-[	DB ( 2 & 7 )]
-004cf7: 02
+[	DB ( 6 & 7 )]
+004cf7: 06
 
-((PALETTE 3 , 3 , 3))
+((PALETTE 5 , 3 , 0))
 	Scope path: @MACRO34:
-[	DB ( 3 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004cf8: 33
+[	DB ( 0 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004cf8: 50
 
 [	DB ( 3 & 7 )]
 004cf9: 03
 
-((PALETTE 3 , 3 , 3))
+((PALETTE 4 , 7 , 7))
 	Scope path: @MACRO35:
-[	DB ( 3 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004cfa: 33
+[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
+004cfa: 47
 
-[	DB ( 3 & 7 )]
-004cfb: 03
+[	DB ( 7 & 7 )]
+004cfb: 07
 
-((PALETTE 4 , 4 , 4))
+((PALETTE 7 , 4 , 0))
 	Scope path: @MACRO36:
-[	DB ( 4 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cfc: 44
+[	DB ( 0 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004cfc: 70
 
 [	DB ( 4 & 7 )]
 004cfd: 04
 
-((PALETTE 4 , 4 , 4))
+((PALETTE 7 , 5 , 2))
 	Scope path: @MACRO37:
-[	DB ( 4 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004cfe: 44
+[	DB ( 2 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004cfe: 72
 
-[	DB ( 4 & 7 )]
-004cff: 04
+[	DB ( 5 & 7 )]
+004cff: 05
 
-((PALETTE 5 , 5 , 5))
+((PALETTE 7 , 7 , 3))
 	Scope path: @MACRO38:
-[	DB ( 5 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d00: 55
-
-[	DB ( 5 & 7 )]
-004d01: 05
-
-((PALETTE 5 , 5 , 5))
-	Scope path: @MACRO39:
-[	DB ( 5 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d02: 55
-
-[	DB ( 5 & 7 )]
-004d03: 05
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO40:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d04: 66
-
-[	DB ( 6 & 7 )]
-004d05: 06
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO41:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d06: 66
-
-[	DB ( 6 & 7 )]
-004d07: 06
-
-((PALETTE 7 , 7 , 7))
-	Scope path: @MACRO42:
-[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
-004d08: 77
+[	DB ( 3 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d00: 73
 
 [	DB ( 7 & 7 )]
-004d09: 07
+004d01: 07
+
+((PALETTE 7 , 7 , 5))
+	Scope path: @MACRO39:
+[	DB ( 5 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d02: 75
+
+[	DB ( 7 & 7 )]
+004d03: 07
+
+((PALETTE 0 , 4 , 0))
+	Scope path: @MACRO40:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d04: 00
+
+[	DB ( 4 & 7 )]
+004d05: 04
+
+((PALETTE 7 , 2 , 6))
+	Scope path: @MACRO41:
+[	DB ( 6 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d06: 76
+
+[	DB ( 2 & 7 )]
+004d07: 02
+
+((PALETTE 6 , 6 , 5))
+	Scope path: @MACRO42:
+[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
+004d08: 65
+
+[	DB ( 6 & 7 )]
+004d09: 06
 
 ((PALETTE 7 , 7 , 7))
 	Scope path: @MACRO43:
@@ -3150,109 +3150,109 @@ Define macro {PALETTE MACRO VR , VG , VB}
 [	DB ( 0 & 7 )]
 004d0f: 00
 
-((PALETTE 2 , 6 , 2))
+((PALETTE 1 , 6 , 0))
 	Scope path: @MACRO46:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d10: 22
+[	DB ( 0 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d10: 10
 
 [	DB ( 6 & 7 )]
 004d11: 06
 
-((PALETTE 3 , 7 , 4))
+((PALETTE 2 , 7 , 0))
 	Scope path: @MACRO47:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d12: 34
+[	DB ( 0 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004d12: 20
 
 [	DB ( 7 & 7 )]
 004d13: 07
 
-((PALETTE 3 , 3 , 7))
+((PALETTE 1 , 2 , 7))
 	Scope path: @MACRO48:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d14: 37
+[	DB ( 7 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d14: 17
 
-[	DB ( 3 & 7 )]
-004d15: 03
+[	DB ( 2 & 7 )]
+004d15: 02
 
-((PALETTE 4 , 4 , 7))
+((PALETTE 2 , 4 , 7))
 	Scope path: @MACRO49:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d16: 47
+[	DB ( 7 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004d16: 27
 
 [	DB ( 4 & 7 )]
 004d17: 04
 
-((PALETTE 5 , 3 , 3))
+((PALETTE 7 , 2 , 0))
 	Scope path: @MACRO50:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d18: 53
+[	DB ( 0 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d18: 70
 
-[	DB ( 3 & 7 )]
-004d19: 03
+[	DB ( 2 & 7 )]
+004d19: 02
 
-((PALETTE 4 , 6 , 7))
+((PALETTE 5 , 7 , 7))
 	Scope path: @MACRO51:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d1a: 47
+[	DB ( 7 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d1a: 57
 
-[	DB ( 6 & 7 )]
-004d1b: 06
+[	DB ( 7 & 7 )]
+004d1b: 07
 
-((PALETTE 6 , 3 , 3))
+((PALETTE 7 , 5 , 3))
 	Scope path: @MACRO52:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d1c: 63
-
-[	DB ( 3 & 7 )]
-004d1d: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO53:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d1e: 64
-
-[	DB ( 4 & 7 )]
-004d1f: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO54:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d20: 63
-
-[	DB ( 6 & 7 )]
-004d21: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO55:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d22: 65
-
-[	DB ( 6 & 7 )]
-004d23: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO56:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d24: 11
+[	DB ( 3 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d1c: 73
 
 [	DB ( 5 & 7 )]
-004d25: 05
+004d1d: 05
 
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO57:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d26: 56
-
-[	DB ( 3 & 7 )]
-004d27: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO58:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d28: 66
+((PALETTE 7 , 6 , 4))
+	Scope path: @MACRO53:
+[	DB ( 4 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d1e: 74
 
 [	DB ( 6 & 7 )]
-004d29: 06
+004d1f: 06
+
+((PALETTE 7 , 7 , 5))
+	Scope path: @MACRO54:
+[	DB ( 5 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d20: 75
+
+[	DB ( 7 & 7 )]
+004d21: 07
+
+((PALETTE 7 , 7 , 6))
+	Scope path: @MACRO55:
+[	DB ( 6 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d22: 76
+
+[	DB ( 7 & 7 )]
+004d23: 07
+
+((PALETTE 0 , 4 , 0))
+	Scope path: @MACRO56:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d24: 00
+
+[	DB ( 4 & 7 )]
+004d25: 04
+
+((PALETTE 7 , 4 , 7))
+	Scope path: @MACRO57:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d26: 77
+
+[	DB ( 4 & 7 )]
+004d27: 04
+
+((PALETTE 5 , 5 , 5))
+	Scope path: @MACRO58:
+[	DB ( 5 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d28: 55
+
+[	DB ( 5 & 7 )]
+004d29: 05
 
 ((PALETTE 7 , 7 , 7))
 	Scope path: @MACRO59:
@@ -3281,109 +3281,109 @@ Define macro {PALETTE MACRO VR , VG , VB}
 [	DB ( 0 & 7 )]
 004d2f: 00
 
-((PALETTE 2 , 6 , 2))
+((PALETTE 1 , 6 , 0))
 	Scope path: @MACRO62:
-[	DB ( 2 & 7 ) | ( ( 2 & 7 ) << 4 )]
-004d30: 22
+[	DB ( 0 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d30: 10
 
 [	DB ( 6 & 7 )]
 004d31: 06
 
-((PALETTE 3 , 7 , 4))
+((PALETTE 2 , 7 , 0))
 	Scope path: @MACRO63:
-[	DB ( 4 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d32: 34
+[	DB ( 0 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004d32: 20
 
 [	DB ( 7 & 7 )]
 004d33: 07
 
-((PALETTE 3 , 3 , 7))
+((PALETTE 1 , 2 , 7))
 	Scope path: @MACRO64:
-[	DB ( 7 & 7 ) | ( ( 3 & 7 ) << 4 )]
-004d34: 37
+[	DB ( 7 & 7 ) | ( ( 1 & 7 ) << 4 )]
+004d34: 17
 
-[	DB ( 3 & 7 )]
-004d35: 03
+[	DB ( 2 & 7 )]
+004d35: 02
 
-((PALETTE 4 , 4 , 7))
+((PALETTE 2 , 4 , 7))
 	Scope path: @MACRO65:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d36: 47
+[	DB ( 7 & 7 ) | ( ( 2 & 7 ) << 4 )]
+004d36: 27
 
 [	DB ( 4 & 7 )]
 004d37: 04
 
-((PALETTE 5 , 3 , 3))
+((PALETTE 7 , 2 , 0))
 	Scope path: @MACRO66:
-[	DB ( 3 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d38: 53
+[	DB ( 0 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d38: 70
 
-[	DB ( 3 & 7 )]
-004d39: 03
+[	DB ( 2 & 7 )]
+004d39: 02
 
-((PALETTE 4 , 6 , 7))
+((PALETTE 5 , 7 , 7))
 	Scope path: @MACRO67:
-[	DB ( 7 & 7 ) | ( ( 4 & 7 ) << 4 )]
-004d3a: 47
+[	DB ( 7 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d3a: 57
 
-[	DB ( 6 & 7 )]
-004d3b: 06
+[	DB ( 7 & 7 )]
+004d3b: 07
 
-((PALETTE 6 , 3 , 3))
+((PALETTE 7 , 5 , 3))
 	Scope path: @MACRO68:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d3c: 63
-
-[	DB ( 3 & 7 )]
-004d3d: 03
-
-((PALETTE 6 , 4 , 4))
-	Scope path: @MACRO69:
-[	DB ( 4 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d3e: 64
-
-[	DB ( 4 & 7 )]
-004d3f: 04
-
-((PALETTE 6 , 6 , 3))
-	Scope path: @MACRO70:
-[	DB ( 3 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d40: 63
-
-[	DB ( 6 & 7 )]
-004d41: 06
-
-((PALETTE 6 , 6 , 5))
-	Scope path: @MACRO71:
-[	DB ( 5 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d42: 65
-
-[	DB ( 6 & 7 )]
-004d43: 06
-
-((PALETTE 1 , 5 , 1))
-	Scope path: @MACRO72:
-[	DB ( 1 & 7 ) | ( ( 1 & 7 ) << 4 )]
-004d44: 11
+[	DB ( 3 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d3c: 73
 
 [	DB ( 5 & 7 )]
-004d45: 05
+004d3d: 05
 
-((PALETTE 5 , 3 , 6))
-	Scope path: @MACRO73:
-[	DB ( 6 & 7 ) | ( ( 5 & 7 ) << 4 )]
-004d46: 56
-
-[	DB ( 3 & 7 )]
-004d47: 03
-
-((PALETTE 6 , 6 , 6))
-	Scope path: @MACRO74:
-[	DB ( 6 & 7 ) | ( ( 6 & 7 ) << 4 )]
-004d48: 66
+((PALETTE 7 , 6 , 4))
+	Scope path: @MACRO69:
+[	DB ( 4 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d3e: 74
 
 [	DB ( 6 & 7 )]
-004d49: 06
+004d3f: 06
+
+((PALETTE 7 , 7 , 5))
+	Scope path: @MACRO70:
+[	DB ( 5 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d40: 75
+
+[	DB ( 7 & 7 )]
+004d41: 07
+
+((PALETTE 7 , 7 , 6))
+	Scope path: @MACRO71:
+[	DB ( 6 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d42: 76
+
+[	DB ( 7 & 7 )]
+004d43: 07
+
+((PALETTE 0 , 4 , 0))
+	Scope path: @MACRO72:
+[	DB ( 0 & 7 ) | ( ( 0 & 7 ) << 4 )]
+004d44: 00
+
+[	DB ( 4 & 7 )]
+004d45: 04
+
+((PALETTE 7 , 4 , 7))
+	Scope path: @MACRO73:
+[	DB ( 7 & 7 ) | ( ( 7 & 7 ) << 4 )]
+004d46: 77
+
+[	DB ( 4 & 7 )]
+004d47: 04
+
+((PALETTE 5 , 5 , 5))
+	Scope path: @MACRO74:
+[	DB ( 5 & 7 ) | ( ( 5 & 7 ) << 4 )]
+004d48: 55
+
+[	DB ( 5 & 7 )]
+004d49: 05
 
 ((PALETTE 7 , 7 , 7))
 	Scope path: @MACRO75:
@@ -7069,13 +7069,37 @@ Define macro {HASH_ENTRY MACRO VHASH , VPALETTE_SET_NUM}
 [HASH_TABLE ::]
 	global label address: 0x0050cc
 
-((HASH_ENTRY 0XFFFF , 0XFF))
+((HASH_ENTRY 0XEE20 , 0X01))
 	Scope path: @MACRO524:
+[	DW 0XEE20]
+0050cc: 20 ee
+
+[	DB 0X01]
+0050ce: 01
+
+((HASH_ENTRY 0XA00B , 0X02))
+	Scope path: @MACRO525:
+[	DW 0XA00B]
+0050cf: 0b a0
+
+[	DB 0X02]
+0050d1: 02
+
+((HASH_ENTRY 0X725C , 0X03))
+	Scope path: @MACRO526:
+[	DW 0X725C]
+0050d2: 5c 72
+
+[	DB 0X03]
+0050d4: 03
+
+((HASH_ENTRY 0XFFFF , 0XFF))
+	Scope path: @MACRO527:
 [	DW 0XFFFF]
-0050cc: ff ff
+0050d5: ff ff
 
 [	DB 0XFF]
-0050ce: ff
+0050d7: ff
 
 [	INCLUDE ".//hash_to_palette.asm"] end
 

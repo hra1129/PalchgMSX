@@ -1,20 +1,20 @@
 ; =============================================================================
-;  MSX1風パレット
+;  ロマンシア MSX1 カスタムパレット
 ; =============================================================================
 ; -----		R, G, B
 palette		0, 0, 0				; #0
 palette		0, 0, 0				; #1
-palette		2, 6, 2				; #2
-palette		3, 7, 4				; #3
-palette		3, 3, 7				; #4
-palette		4, 4, 7				; #5
-palette		5, 3, 3				; #6
-palette		4, 6, 7				; #7
-palette		6, 3, 3				; #8
-palette		6, 4, 4				; #9
-palette		6, 6, 3				; #10
-palette		6, 6, 5				; #11
-palette		1, 5, 1				; #12
-palette		5, 3, 6				; #13
-palette		6, 6, 6				; #14
+palette		1, 6, 0				; #2
+palette		2, 7, 0				; #3
+palette		1, 2, 7				; #4
+palette		2, 4, 7				; #5
+palette		7, 2, 0				; #6
+palette		5, 7, 7				; #7
+palette		7, 5, 3				; #8
+palette		7, 6, 4				; #9
+palette		7, 7, 5				; #10
+palette		7, 7, 6				; #11
+palette		0, 4, 0				; #12
+palette		7, 4, 7				; #13
+palette		5, 5, 5				; #14
 palette		7, 7, 7				; #15
