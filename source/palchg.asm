@@ -12,6 +12,7 @@ ldirvm		:= 0x005C
 chgmod		:= 0x005F
 gtstck		:= 0x00D5
 gttrig		:= 0x00D8
+snsmat		:= 0x0141
 chgcpu		:= 0x0180
 cgpnt		:= 0xF91F						; font address ( slot#(1byte), address(2bytes) )
 exptbl		:= 0xFCC1
@@ -818,14 +819,8 @@ get_hash_sub_end::
 ; =============================================================================
 			scope	check_esc_key
 check_esc_key::
-			di
-			in		a, [ 0xAA ]			; PPI port B
-			and		a, 0b11110000
-			or		a, 7				; MSXキーマトリクス 行7 (bit2 が ESC に対応。押されてると 0)
-			out		[ 0xAA ], a			; PPI port B : キーマトリクス 行7 を選択する
-			nop
-			in		a, [ 0xA9 ]			; MSXキーマトリクス
-			ei
+			ld		a, 7
+			call	snsmat
 			and		a, 0b00000100		; ESCキーを抽出。押されてれば 0 になるので Zf = 1, 押されていなければ Zf = 0
 			ret
 			endscope
